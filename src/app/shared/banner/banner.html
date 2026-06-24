@@ -1,9 +1,15 @@
 <div class="banner">
-    <div class="app-name">Oltre</div>
-    <div class="user-section">
-        <div class="username">
-            {{ username }}
+  <div class="app-name">Oltre</div>
+
+  <div class="user-section">
+    
+        <div class="user-info">
+            @if (user) {
+          <div class="username">{{ user.username }}</div>            
+          <div class="user-meta">{{ user?.age }} ans</div>
+           }
         </div>
-         <img class="avatar" src="assets/avatar.png" alt="avatar">
-    </div>
+
+    <img class="avatar" src="assets/avatar.png" alt="avatar" />
+  </div>
 </div>

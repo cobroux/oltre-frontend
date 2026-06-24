@@ -1,13 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { UserService } from '../../core/services/user.service';
+import { UserDTO } from '../../core/models/user.dto';
+
 
 @Component({
   selector: 'app-banner',
-  imports: [],
+  standalone: true,
   templateUrl: './banner.html',
-  styleUrl: './banner.css'
+  styleUrls: ['./banner.css'],
 })
-export class BannerComponent {
+export class BannerComponent implements OnInit {
 
-  username: string = "Enzo";
+  user: UserDTO | null = null;
+  loading = true;
+  error = false;
 
+  private userService = inject(UserService);
+  
+  ngOnInit(): void {
+  
+    this.userService.loadUser().subscribe({
+      next: (u) => {
+        this.user = u;
+        this.loading = false;
+        console.log("user -> " + u.username)
+      },
+      error: () => {
+        this.error = true;
+        this.loading = false;
+      }
+    });
+  }
 }

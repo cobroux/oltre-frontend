@@ -1,19 +1,18 @@
 .banner {
-  height: 60px;
-  background-color: white;
-
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  padding: 0 20px;
-
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 56px;
+  background: #fff;
+  border-bottom: 0.5px solid #e8e8e8;
 }
 
 .app-name {
-  font-weight: bold;
   font-size: 18px;
+  font-weight: 600;
+  color: #534AB7;
+  letter-spacing: -0.3px;
 }
 
 .user-section {
@@ -22,13 +21,30 @@
   gap: 10px;
 }
 
+.user-info {
+  text-align: right;
+}
+
 .username {
+  font-size: 14px;
   font-weight: 500;
+  color: #222;
+}
+
+.username.error {
+  color: #e24b4a;
+  font-size: 12px;
+}
+
+.user-meta {
+  font-size: 11px;
+  color: #aaa;
 }
 
 .avatar {
-  width: 35px;
-  height: 35px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1.5px solid #e8e8e8;
 }
