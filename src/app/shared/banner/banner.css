@@ -1,18 +1,20 @@
 .banner {
+  height: 48px;
+  background: #ffffff;
+  border-bottom: 0.5px solid #2C2C2A;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 1.5rem;
-  height: 56px;
-  background: #fff;
-  border-bottom: 0.5px solid #e8e8e8;
+  padding: 0 1.25rem;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .app-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #534AB7;
+  font-size: 30px;
+  font-weight: 500;
+  color: #07006b;
   letter-spacing: -0.3px;
+  flex: 1;
 }
 
 .user-section {
@@ -26,25 +28,21 @@
 }
 
 .username {
-  font-size: 14px;
+  font-size: 30px;
   font-weight: 500;
-  color: #222;
-}
-
-.username.error {
-  color: #e24b4a;
-  font-size: 12px;
+  color: #07006b;
 }
 
 .user-meta {
   font-size: 11px;
-  color: #aaa;
+  color: #444441;
 }
 
 .avatar {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #e8e8e8;
+  border: 0.5px solid #2C2C2A;
+  background: #26215C;
 }

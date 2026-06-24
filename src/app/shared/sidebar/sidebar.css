@@ -1,0 +1,154 @@
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 0.5px solid #2C2C2A;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+/* Logo */
+.logo-block {
+  padding: 1.1rem 1rem;
+  border-bottom: 0.5px solid #2C2C2A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #26215C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon i {
+  font-size: 16px;
+  color: #AFA9EC;
+}
+
+.logo-text {
+  font-size: 30px;
+  font-weight: 500;
+  color: #07006b;
+  letter-spacing: -0.3px;
+}
+
+/* Nav */
+.nav-group {
+  padding: 0.6rem 0;
+  border-bottom: 0.5px solid #2C2C2A;
+}
+
+.nav-label {
+  font-size: 10px;
+  color: #444441;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 0.875rem 0.35rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 0.875rem;
+  font-size: 13px;
+  color: #5F5E5A;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.12s;
+  cursor: pointer;
+}
+
+.nav-item i {
+  font-size: 15px;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover {
+  background: #131312;
+  color: #B4B2A9;
+}
+
+.nav-item.active {
+  background: #131312;
+  color: #AFA9EC;
+  border-left-color: #534AB7;
+}
+
+.nav-item.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 0.875rem 1rem;
+  border-top: 0.5px solid #2C2C2A;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.avatar-initials {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #26215C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: #AFA9EC;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #D3D1C7;
+}
+
+.user-age {
+  font-size: 10px;
+  color: #444441;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 5px;
+  font-size: 11px;
+  background: none;
+  border: 0.5px solid #2C2C2A;
+  border-radius: 6px;
+  color: #5F5E5A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.12s;
+}
+
+.logout-btn:hover {
+  background: #1a1a18;
+  color: #888780;
+}
