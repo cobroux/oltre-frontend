@@ -2,14 +2,14 @@
   <div class="app-name">Oltre</div>
 
   <div class="user-section">
-    
-        <div class="user-info">
-            @if (user) {
-          <div class="username">{{ user.username }}</div>            
-          <div class="user-meta">{{ user?.age }} ans</div>
-           }
-        </div>
-
+    <div class="user-info">
+      @if (loading()) {
+        <div class="username">Chargement...</div>
+      } @else if (user()) {
+        <div class="username">{{ user()?.username }}</div>
+        <div class="user-meta">{{ user()?.age }} ans</div>
+      }
+    </div>
     <img class="avatar" src="assets/avatar.png" alt="avatar" />
   </div>
 </div>
