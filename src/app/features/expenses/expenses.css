@@ -1,0 +1,60 @@
+.page-title {
+  font-size: 20px;
+  color: #07006b;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.add-item-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.add-item-box input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 0.5px solid #2C2C2A;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-btn {
+  padding: 0 16px;
+  background: #26215C;
+  color: #AFA9EC;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 0.5px solid #2C2C2A;
+}
+
+.item-text {
+  font-size: 14px;
+  color: #444441;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e05d5d;
+  cursor: pointer;
+  font-size: 16px;
+}
