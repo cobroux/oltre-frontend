@@ -3,11 +3,11 @@
 
   <div class="user-section">
     <div class="user-info">
-      @if (loading()) {
-        <div class="username">Chargement...</div>
-      } @else if (user()) {
+      @if (user()) {
         <div class="username">{{ user()?.username }}</div>
         <div class="user-meta">{{ user()?.age }} ans</div>
+      } @else {
+        <div class="username">Chargement...</div>
       }
     </div>
     <img class="avatar" src="assets/avatar.png" alt="avatar" />
