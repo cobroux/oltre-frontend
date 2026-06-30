@@ -1,0 +1,30 @@
+<div class="content-card">
+  <h2 class="page-title">Suivi des Dépenses (Aperçu)</h2>
+
+  <div class="add-item-box">
+    <form action ="" [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <input type="text" placeholder="Ex: Courses de la semaine..." formControlName="expensesName" />
+    <input type="text" placeholder="prix" formControlName="amount" />
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" formControlName="startDate">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button class="add-btn">
+      <i class="ti ti-plus"></i> Ajouter
+    </button>
+    </form>
+  </div>
+
+  <ul class="items-list">
+    @for(expense of allExpenses(); track expense.expensesName){
+       <li class="item-row">
+          <span class="item-text">{{expense.expensesName}} — {{expense.amount}} €</span>
+          <button class="delete-btn">
+            <i class="ti ti-trash"></i>
+          </button>
+        </li>
+       }
+  </ul>
+</div>
