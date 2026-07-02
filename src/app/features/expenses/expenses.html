@@ -1,30 +1,77 @@
 <div class="content-card">
-  <h2 class="page-title">Suivi des Dépenses (Aperçu)</h2>
+  <h2 class="page-title">Suivi des Dépenses</h2>
 
-  <div class="add-item-box">
-    <form action ="" [formGroup]="addForm" (ngSubmit)="onSubmit()">
-    <input type="text" placeholder="Ex: Courses de la semaine..." formControlName="expensesName" />
-    <input type="text" placeholder="prix" formControlName="amount" />
-    <mat-form-field>
-      <input matInput [matDatepicker]="picker" formControlName="startDate">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <button class="add-btn">
-      <i class="ti ti-plus"></i> Ajouter
-    </button>
-    </form>
+  <!-- Total + stats -->
+  <div class="stats-row">
+    <div class="stat-card accent">
+      <span class="stat-label">Total du mois</span>
+      <span class="stat-value">{{ amountPerMonth() }} €</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Nombre</span>
+      <span class="stat-value">{{ allExpenses().length }}</span>
+    </div>
   </div>
 
+  <!-- Formulaire -->
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
+    <input type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />
+    <input type="number" placeholder="Prix (€)" formControlName="amount" />
+    <select formControlName="recType">
+      <option [ngValue]="null" disabled>Récurrence</option>
+      <option value="Daily">Quotidien</option>
+      <option value="Monthly">Mensuel</option>
+      <option value="Yearly">Annuel</option>
+    </select>
+    <input type="date" formControlName="startDate" />
+    <button class="add-btn" type="submit">
+      <i class="ti ti-plus"></i> Ajouter
+    </button>
+  </form>
+
+  <!-- Liste -->
   <ul class="items-list">
-    @for(expense of allExpenses(); track expense.expensesName){
-       <li class="item-row">
-          <span class="item-text">{{expense.expensesName}} — {{expense.amount}} €</span>
-          <button class="delete-btn">
+    @for(expense of allExpenses(); track expense.id) {
+      <li class="item-row">
+        <div class="item-left">
+          <div class="item-icon" [class]="getIconClass(expense.recType ?? '')">       
+            <i [class]="'ti ' + getIcon(expense.recType ?? '')"></i>
+          </div>
+          <div class="item-info">
+            <span class="item-text">{{ expense.expensesName }}</span>
+            <div class="item-meta">
+              @if(expense.recType) {
+                <span class="badge-rec" [class]="'rec-' + (expense.recType?.toLowerCase() ?? '')">
+                  {{ getRecLabel(expense.recType ?? '') }}
+                </span>
+              }
+              @if(expense.startDate) {
+                <span class="item-date">
+                  <i class="ti ti-calendar"></i>
+                  Depuis le {{ expense.startDate | date:'dd/MM/yyyy' }}
+                </span>
+              }
+              @if(expense.recType && expense.startDate) {
+                <span class="item-next">
+                  <i class="ti ti-clock"></i>
+                  Prochain : {{ expense.nextPaymentDate | date:'dd/MM/yyyy' }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="item-right">
+          <span class="item-amount">{{ expense.amount }} €</span>
+          <button class="delete-btn" (click)="deleteExpenses(expense.id)">
             <i class="ti ti-trash"></i>
           </button>
-        </li>
-       }
+        </div>
+      </li>
+    } @empty {
+      <p class="empty-state">
+        <i class="ti ti-mood-empty"></i>
+        Aucune dépense enregistrée.
+      </p>
+    }
   </ul>
 </div>
