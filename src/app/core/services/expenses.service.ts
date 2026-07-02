@@ -7,7 +7,8 @@ import { ExpensesDTO } from '../models/expenses.dto';
 export class ExpensesSevice {
   private readonly API = 'http://localhost:8080/api/expenses';
 
-  //expensesSignal = signal<ExpensesDTO | null>(null);
+  intSignal = signal<number | null>(null);
+  expensesSignal = signal<ExpensesDTO | null>(null);
   expensesListSignal = signal<ExpensesDTO[]>([]);
   constructor(private http: HttpClient) {}
 
@@ -18,6 +19,26 @@ export class ExpensesSevice {
   }
 
   addExpense(expense: ExpensesDTO) {
-  return this.http.post<ExpensesDTO>(this.API+"/save", expense);
+  return this.http.post<ExpensesDTO>(this.API + "/save", expense).pipe(
+    tap(() => {
+      this.loadAllExpenses().subscribe();
+      this.getAmountPerMonth().subscribe();
+      })
+    );  
 }
+
+  deleteExpenses(id: number) {
+  return this.http.delete<void>(this.API + "/" + id).pipe(
+    tap(() => {
+      this.loadAllExpenses().subscribe();
+      this.getAmountPerMonth().subscribe();
+      })
+    );  
+}
+
+
+  getAmountPerMonth(){
+    return this.http.get<number>(this.API+"/amountPerMonth").pipe(
+      tap(amount => this.intSignal  .set(amount))
+    );  }
 }
