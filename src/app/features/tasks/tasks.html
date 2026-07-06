@@ -1,0 +1,97 @@
+<div class="content-card">
+  <h2 class="page-title">Mes Tâches</h2>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card accent">
+      <span class="stat-label">Total</span>
+      <span class="stat-value">{{ allTasks().length }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">À faire</span>
+      <span class="stat-value">{{ pendingCount() }}</span>
+    </div>
+    <div class="stat-card success">
+      <span class="stat-label">Terminées</span>
+      <span class="stat-value">{{ doneCount() }}</span>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
+    <input type="text" placeholder="Titre de la tâche..." formControlName="tasksName" />
+    <select formControlName="tasksPriority">
+      <option [ngValue]="null" disabled>Priorité</option>
+      <option value="LOW">Basse</option>
+      <option value="MEDIUM">Moyenne</option>
+      <option value="HIGH">Haute</option>
+    </select>
+    <select formControlName="tasksType">
+      <option [ngValue]="null" disabled>Catégorie</option>
+      <option value="PERSO">Perso</option>
+      <option value="TRAVAIL">Travail</option>
+      <option value="SPORT">Sport</option>
+      <option value="AUTRE">Autre</option>
+    </select>
+    <input type="date" formControlName="tasksDate" />
+    <button class="add-btn" type="submit">
+      <i class="ti ti-plus"></i> Ajouter
+    </button>
+  </form>
+
+  <!-- Filtres -->
+  <div class="filters-row">
+    <div class="filter-group">
+      <button [class.active]="filter() === 'ALL'"     (click)="filter.set('ALL')">Toutes</button>
+      <button [class.active]="filter() === 'PENDING'" (click)="filter.set('PENDING')">À faire</button>
+      <button [class.active]="filter() === 'DONE'"    (click)="filter.set('DONE')">Terminées</button>
+    </div>
+    <div class="filter-group">
+      <button [class.active]="catFilter() === 'ALL'"     (click)="catFilter.set('ALL')">Tout</button>
+      <button [class.active]="catFilter() === 'PERSO'"   (click)="catFilter.set('PERSO')">Perso</button>
+      <button [class.active]="catFilter() === 'TRAVAIL'" (click)="catFilter.set('TRAVAIL')">Travail</button>
+      <button [class.active]="catFilter() === 'SPORT'"   (click)="catFilter.set('SPORT')">Sport</button>
+      <button [class.active]="catFilter() === 'AUTRE'"   (click)="catFilter.set('AUTRE')">Autre</button>
+    </div>
+  </div>
+
+  <!-- Liste -->
+  <ul class="items-list">
+    @for (task of filteredTasks(); track task.id) {
+      <li class="item-row" [class.done]="task.tasksStatus === 'DONE'">
+        <div class="item-left">
+          <button class="check-btn" (click)="toggleTask(task.id)">
+            <i [class]="task.tasksStatus === 'DONE' ? 'ti ti-circle-check' : 'ti ti-circle'"></i>
+          </button>
+          <div class="item-info">
+            <span class="item-text">{{ task.tasksName }}</span>
+            <div class="item-meta">
+              <span class="badge-cat" [class]="'cat-' + task.tasksType.toLowerCase()">
+                {{ getCatLabel(task.tasksType) }}
+              </span>
+              @if (task.tasksDate) {
+                <span class="item-date" [class.urgent]="isUrgent(task)">
+                  <i class="ti ti-calendar"></i>
+                  {{ task.tasksDate | date:'dd/MM/yyyy' }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="item-right">
+          <span class="priority-badge" [class]="'priority-' + task.tasksPriority.toLowerCase()">
+            {{ getPriorityLabel(task.tasksPriority) }}
+          </span>
+          <button class="delete-btn" (click)="deleteTasks(task.id)">
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <div class="empty-state">
+        <i class="ti ti-mood-happy"></i>
+        <span>Aucune tâche ici !</span>
+      </div>
+    }
+  </ul>
+</div>

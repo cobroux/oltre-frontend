@@ -75,8 +75,6 @@ export class ExpensesComponent implements OnInit {
       recType: (formValue.recType || 'Monthly') as 'Daily' | 'Monthly' | 'Yearly'
     };
 
-    console.log('Payload envoyé :', expense);
-
     this.expensesService.addExpense(expense).subscribe({
       next: () => {
         this.expensesService.loadAllExpenses().subscribe();
