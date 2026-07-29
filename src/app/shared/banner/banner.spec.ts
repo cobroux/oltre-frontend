@@ -1,22 +1,46 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
+import { vi } from 'vitest';
+import { BannerComponent } from './banner';
+import { UserService } from '../../core/services/user.service';
+import { of } from 'rxjs';
 
-import { Banner } from './banner';
+describe('BannerComponent', () => {
+  let component: BannerComponent;
+  let fixture: ComponentFixture<BannerComponent>;
 
-describe('Banner', () => {
-  let component: Banner;
-  let fixture: ComponentFixture<Banner>;
+  const mockUserService = {
+    currentUser: signal({ username: 'Admin', age: 30, birthDate: '1996-05-12' }),
+    loadUser: vi.fn(() => of(null))
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Banner],
+      imports: [BannerComponent],
+      providers: [
+        { provide: UserService, useValue: mockUserService },
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Banner);
+    fixture = TestBed.createComponent(BannerComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('devrait être créé', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('devrait afficher le bon utilisateur', () => {
+    expect(component.user()?.username).toBe('Admin');
+    expect(component.user()?.age).toBe(30);
+  });
+
+  it('devrait appeler loadUser au démarrage', () => {
+    expect(mockUserService.loadUser).toHaveBeenCalled();
   });
 });
