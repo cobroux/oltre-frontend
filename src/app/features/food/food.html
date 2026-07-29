@@ -1,108 +1,114 @@
 <div class="content-card">
-  <h2 class="page-title">Alimentation</h2>
+  <h2 class="page-title">Planificateur de repas</h2>
 
-  <!-- Stats calories + progression -->
-  <div class="stats-row">
-    <div class="stat-card accent">
-      <span class="stat-label">Calories du jour</span>
-      <span class="stat-value"> kcal</span>
-      <div class="progress-wrap">
-        <div class="progress-bar">
-          <div class="progress-fill"></div>
-        </div>
-        <span class="progress-label">0 %</span>
-      </div>
-      <span class="stat-sub">Objectif : {{ CALORIE_GOAL }} kcal</span>
-    </div>
-
-    <div class="macros-grid">
-      <div class="macro-card prot">
-        <span class="macro-label">Protéines</span>
-        <span class="macro-value">0 g</span>
-        <div class="macro-bar"><div class="macro-fill" ></div></div>
-        <span class="macro-goal">/ {{ PROTEIN_GOAL }}g</span>
-      </div>
-      <div class="macro-card gluc">
-        <span class="macro-label">Glucides</span>
-        <span class="macro-value">0 g</span>
-        <div class="macro-bar"><div class="macro-fill" ></div></div>
-        <span class="macro-goal">/ {{ CARB_GOAL }}g</span>
-      </div>
-      <div class="macro-card lip">
-        <span class="macro-label">Lipides</span>
-        <span class="macro-value">0 g</span>
-        <div class="macro-bar"><div class="macro-fill" ></div></div>
-        <span class="macro-goal">/ {{ FAT_GOAL }}g</span>
-      </div>
-    </div>
+  <!-- Navigation semaine -->
+  <div class="week-nav">
+    <button class="nav-arrow" (click)="prevWeek()"><i class="ti ti-chevron-left"></i></button>
+    <span class="week-title">{{ weekTitle() }}</span>
+    <button class="nav-arrow" (click)="nextWeek()"><i class="ti ti-chevron-right"></i></button>
+    <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
   </div>
 
-  <!-- Formulaire -->
-  <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
-    <input type="text"   placeholder="Nom du repas..."  formControlName="mealName" />
-    <select formControlName="mealType">
-      <option [ngValue]="null" disabled>Repas</option>
-      <option value="PETIT_DEJ">Petit-déj</option>
-      <option value="DEJEUNER">Déjeuner</option>
-      <option value="DINER">Dîner</option>
-      <option value="COLLATION">Collation</option>
-    </select>
-    <input type="date" formControlName="mealDate" />
-    <button class="add-btn" type="submit">
-      <i class="ti ti-plus"></i> Ajouter
-    </button>
-  </form>
-
-  <!-- Groupes par type de repas -->
-  @for (group of mealGroups(); track group.type) {
-    <div class="meal-group">
-      <div class="group-header">
-        <div class="group-left">
-          <div class="group-icon" [class]="'icon-' + group.type.toLowerCase()">
-            <i [class]="'ti ' + getMealIcon(group.type)"></i>
-          </div>
-          <span class="group-title">{{ getMealLabel(group.type) }}</span>
+  <!-- Vue semaine -->
+  <div class="week-grid">
+    @for (day of weekDays(); track day.toISOString()) {
+      <div class="day-col"
+           [class.today]="isToday(day)"
+           [class.selected]="isSelected(day)"
+           (click)="selectDay(day)">
+        <div class="day-head">
+          <div class="day-name">{{ getDayName(day) }}</div>
+          <div class="day-num">{{ day.getDate() }}</div>
         </div>
-        <span class="group-calories">0 kcal</span>
+        <div class="day-body">
+          @let dayMeals = getMealsForDay(day);
+          @if (dayMeals.length === 0) {
+            <div class="empty-day"><i class="ti ti-plus"></i> Planifier</div>
+          } @else {
+            @for (meal of dayMeals.slice(0, 3); track meal.id) {
+              <div class="meal-dot">
+                <div class="dot" [class]="getDotClass(meal.mealType)"></div>
+                <span class="meal-preview">{{ meal.mealName }}</span>
+              </div>
+            }
+            @if (dayMeals.length > 3) {
+              <div class="more-meals">+{{ dayMeals.length - 3 }} autre{{ dayMeals.length - 3 > 1 ? 's' : '' }}</div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Détail du jour sélectionné -->
+  @if (selectedDay()) {
+    <div class="detail-panel">
+      <div class="detail-header">
+        <span class="detail-title">{{ getDayLabel(selectedDay()!) }}</span>
+        @if (selectedDay() === toDateStr(today)) {
+          <span class="today-badge">Aujourd'hui</span>
+        }
       </div>
 
-      <ul class="items-list">
-        @for (meal of group.meals; track meal.id) {
-          <li class="item-row">
-            <div class="item-left">
-              <div class="item-info">
-                <span class="item-text">{{ meal.mealName }}</span>
-                <div class="item-meta">
-                  
-                    <span class="macro-tag prot-tag">P: 0 g</span>
-                
-                  
-                    <span class="macro-tag gluc-tag">G: 0 g</span>
-                 
-                    <span class="macro-tag lip-tag">L: 0g</span>
-                  
-                    <span class="item-date">
-                      <i class="ti ti-calendar"></i>
-                      {{ meal.mealDate | date:'dd/MM' }}
-                    </span>
-                  
-                </div>
+      <!-- Formulaire d'ajout -->
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
+        <input type="text" placeholder="Nom du repas..." formControlName="mealName" />
+        <select formControlName="mealType">
+          <option [ngValue]="null" disabled>Repas</option>
+          <option value="PETIT_DEJ">Petit-déj</option>
+          <option value="DEJEUNER">Déjeuner</option>
+          <option value="DINER">Dîner</option>
+          <option value="COLLATION">Collation</option>
+        </select>
+        <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" />
+        <button class="add-btn" type="submit">
+          <i class="ti ti-plus"></i> Ajouter
+        </button>
+      </form>
+
+      <!-- Groupes par type de repas -->
+      @for (group of mealGroups(); track group.type) {
+        <div class="meal-group">
+          <div class="group-header">
+            <div class="group-left">
+              <div class="group-icon" [class]="'icon-' + group.type.toLowerCase()">
+                <i [class]="'ti ' + getMealIcon(group.type)"></i>
               </div>
+              <span class="group-title">{{ getMealLabel(group.type) }}</span>
             </div>
-            <div class="item-right">
-              <span class="item-calories">0 kcal</span>
-              <button class="delete-btn" (click)="deleteMeal(meal.id)">
-                <i class="ti ti-trash"></i>
-              </button>
-            </div>
-          </li>
-        }
-      </ul>
+          </div>
+
+          <ul class="items-list">
+            @for (meal of group.meals; track meal.id) {
+              <li class="item-row">
+                <div class="item-left">
+                  <div class="item-info">
+                    <span class="item-text">{{ meal.mealName }}</span>
+                    @if (meal.mealDescript) {
+                      <span class="item-desc">{{ meal.mealDescript }}</span>
+                    }
+                  </div>
+                </div>
+                <div class="item-right">
+                  <button class="delete-btn" (click)="deleteMeal(meal.id)">
+                    <i class="ti ti-trash"></i>
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="ti ti-salad"></i>
+          <span>Aucun repas planifié ce jour.</span>
+        </div>
+      }
     </div>
-  } @empty {
-    <div class="empty-state">
-      <i class="ti ti-salad"></i>
-      <span>Aucun repas enregistré aujourd'hui.</span>
+  } @else {
+    <div class="empty-detail">
+      <i class="ti ti-calendar"></i>
+      <span>Clique sur un jour pour planifier tes repas</span>
     </div>
   }
 </div>

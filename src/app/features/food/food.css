@@ -350,3 +350,38 @@
 }
 
 .empty-state i { font-size: 28px; color: var(--color-sport); }
+
+/* ── Navigation semaine ─────────────────────────────── */
+.week-nav { display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; padding-bottom:1.25rem; border-bottom:0.5px solid var(--color-border); }
+.week-title { flex:1; font-size:15px; font-weight:500; color:var(--color-text-primary); }
+.nav-arrow { width:32px; height:32px; border-radius:var(--radius-md); background:none; border:0.5px solid var(--color-border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--color-text-secondary); font-size:16px; transition:all .15s; }
+.nav-arrow:hover { background:var(--color-accent-subtle); color:var(--color-accent); border-color:var(--color-accent-border); }
+.today-btn { padding:5px 14px; border-radius:var(--radius-md); background:none; border:0.5px solid var(--color-accent-border); color:var(--color-accent); font-size:13px; cursor:pointer; font-family:var(--font-sans); transition:all .15s; }
+.today-btn:hover { background:var(--color-accent-subtle); }
+
+/* ── Grille semaine ─────────────────────────────────── */
+.week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:1.5rem; }
+.day-col { border-radius:var(--radius-md); border:0.5px solid var(--color-border); background:var(--color-surface); overflow:hidden; cursor:pointer; transition:all .15s; }
+.day-col:hover { border-color:var(--color-accent-border); }
+.day-col.selected { border-color:var(--color-accent); border-width:1.5px; }
+.day-head { padding:8px; text-align:center; border-bottom:0.5px solid var(--color-border); background:var(--color-bg); }
+.day-col.today .day-head { background:var(--color-accent-subtle); }
+.day-name { font-size:10px; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:.05em; }
+.day-num { font-size:15px; font-weight:500; color:var(--color-text-primary); margin-top:2px; }
+.day-col.today .day-num { color:var(--color-accent); }
+.day-body { padding:6px; }
+.empty-day { display:flex; align-items:center; gap:4px; padding:4px 5px; font-size:11px; color:var(--color-text-muted); }
+.meal-dot { display:flex; align-items:center; gap:5px; padding:3px 5px; border-radius:6px; margin-bottom:2px; }
+.dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.dot-pj { background:#92400e; } .dot-dj { background:#059669; } .dot-dn { background:#534AB7; } .dot-co { background:#be185d; }
+.meal-preview { font-size:11px; color:var(--color-text-secondary); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.more-meals { font-size:10px; color:var(--color-text-muted); padding:2px 5px; }
+
+/* ── Détail ─────────────────────────────────────────── */
+.detail-panel { background:var(--color-bg); border:0.5px solid var(--color-border); border-radius:var(--radius-lg); padding:1.25rem; }
+.detail-header { display:flex; align-items:center; gap:10px; margin-bottom:1rem; }
+.detail-title { font-size:15px; font-weight:500; color:var(--color-text-primary); text-transform:capitalize; }
+.today-badge { font-size:11px; padding:2px 8px; border-radius:var(--radius-full); background:var(--color-accent-subtle); color:var(--color-accent); font-weight:500; }
+.item-desc { font-size:11px; color:var(--color-text-muted); display:block; margin-top:2px; }
+.empty-detail { display:flex; flex-direction:column; align-items:center; gap:8px; padding:2rem 0; color:var(--color-text-muted); font-size:14px; }
+.empty-detail i { font-size:28px; }

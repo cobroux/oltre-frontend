@@ -1,12 +1,7 @@
-import { FoodDTO } from "./food.dto";
-
-export interface Meal {
+export interface MealDTO {
   id: number;
   mealName: string;
-  calories: number;
-  proteins: number;
-  carbs: number;
-  fats: number;
+  mealDescript?: string;
   mealType: 'PETIT_DEJ' | 'DEJEUNER' | 'DINER' | 'COLLATION';
   mealDate: string;
 }
