@@ -60,9 +60,13 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-          "tsConfig": "tsconfig.spec.json",
-          "runner": "vitest",
-          "vitest": {     
+            "tsConfig": "tsconfig.spec.json",
+            "runner": "vitest",
+            "vitest": {
+              "globals": true
+            }
+          }
+        }
       }
     }
   }
