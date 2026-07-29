@@ -63,7 +63,8 @@
             "tsConfig": "tsconfig.spec.json",
             "runner": "vitest",
             "vitest": {
-              "globals": true
+              "globals": true,
+              "reporters": ["default"]
             }
           }
         }
