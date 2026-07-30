@@ -25,7 +25,7 @@ describe('ExpensesComponent', () => {
   addExpense: vi.fn((_expense: ExpensesDTO) => of({})),
   deleteExpenses: vi.fn((_id: number) => of(undefined)),
   getAmountPerMonth: vi.fn(() => of(813))
-};0
+};
 
   beforeEach(async () => {
     vi.clearAllMocks();
