@@ -1,0 +1,125 @@
+<div class="content-card">
+  <h2 class="page-title">Rendez-vous</h2>
+
+  <!-- Navigation semaine -->
+  <div class="week-nav">
+    <button class="nav-arrow" (click)="prevWeek()"><i class="ti ti-chevron-left"></i></button>
+    <span class="week-title">{{ weekTitle() }}</span>
+    <button class="nav-arrow" (click)="nextWeek()"><i class="ti ti-chevron-right"></i></button>
+    <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
+  </div>
+
+  <!-- Vue semaine -->
+  <div class="week-grid">
+    @for (day of weekDays(); track day.toISOString()) {
+      <div class="day-col"
+           [class.today]="isToday(day)"
+           [class.selected]="isSelected(day)"
+           (click)="selectDay(day)">
+        <div class="day-head">
+          <div class="day-name">{{ getDayName(day) }}</div>
+          <div class="day-num">{{ day.getDate() }}</div>
+        </div>
+        <div class="day-body">
+          @let dayAppts = getApptForDay(day);
+          @if (dayAppts.length === 0) {
+            <div class="empty-day"><i class="ti ti-plus"></i> Ajouter</div>
+          } @else {
+            @for (appt of dayAppts.slice(0, 2); track appt.id) {
+              <div class="appt-dot">
+                <div class="dot" [class]="getDotClass(appt.apptType)"></div>
+                <span class="appt-preview">
+                  @if (appt.apptTime) {
+                    <span class="appt-time-mini">{{ appt.apptTime }}</span>
+                  }
+                  {{ appt.title }}
+                </span>
+              </div>
+            }
+            @if (dayAppts.length > 2) {
+              <div class="more-appts">+{{ dayAppts.length - 2 }} autre{{ dayAppts.length - 2 > 1 ? 's' : '' }}</div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Détail du jour -->
+  @if (selectedDay()) {
+    <div class="detail-panel">
+      <div class="detail-header">
+        <span class="detail-title">{{ getDayLabel(selectedDay()!) }}</span>
+        @if (selectedDay() === toDateStr(today)) {
+          <span class="today-badge">Aujourd'hui</span>
+        }
+      </div>
+
+      <!-- Formulaire -->
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
+        <input type="text"  placeholder="Titre du rendez-vous..." formControlName="title" />
+        <input type="time"  formControlName="apptTime" />
+        <input type="text"  placeholder="Lieu..."                 formControlName="location" />
+        <select formControlName="apptType">
+          <option [ngValue]="null" disabled>Catégorie</option>
+          <option value="MEDICAL">Médical</option>
+          <option value="SPORT">Sport</option>
+          <option value="PERSO">Perso</option>
+          <option value="TRAVAIL">Travail</option>
+          <option value="AUTRE">Autre</option>
+        </select>
+        <input type="text"  placeholder="Description..."          formControlName="description" />
+        <button class="add-btn" type="submit">
+          <i class="ti ti-plus"></i> Ajouter
+        </button>
+      </form>
+
+      <!-- Liste des rdv -->
+      @if (selectedDayAppts().length === 0) {
+        <div class="empty-state">
+          <i class="ti ti-calendar-off"></i>
+          <span>Aucun rendez-vous ce jour.</span>
+        </div>
+      } @else {
+        <div class="appt-list">
+          @for (appt of selectedDayAppts(); track appt.id) {
+            <div class="appt-item">
+              <div class="appt-time-col">
+                @if (appt.apptTime) {
+                  <span class="appt-time">{{ appt.apptTime }}</span>
+                } @else {
+                  <span class="appt-time muted">—</span>
+                }
+              </div>
+              <div class="appt-line"></div>
+              <div class="appt-content">
+                <div class="appt-header">
+                  <span class="appt-title">{{ appt.title }}</span>
+                  <span class="appt-badge" [class]="getTypeClass(appt.apptType)">
+                    {{ getTypeLabel(appt.apptType) }}
+                  </span>
+                </div>
+                @if (appt.location) {
+                  <div class="appt-meta">
+                    <i class="ti ti-map-pin"></i> {{ appt.location }}
+                  </div>
+                }
+                @if (appt.description) {
+                  <div class="appt-desc">{{ appt.description }}</div>
+                }
+              </div>
+              <button class="delete-btn" (click)="deleteAppt(appt.id)">
+                <i class="ti ti-trash"></i>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-detail">
+      <i class="ti ti-calendar"></i>
+      <span>Clique sur un jour pour voir ou ajouter des rendez-vous</span>
+    </div>
+  }
+</div>
