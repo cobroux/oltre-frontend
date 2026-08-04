@@ -14,7 +14,7 @@ const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','aoû
   templateUrl: './appointment.html',
   styleUrl: './appointment.css'
 })
-export class AppointmentsComponent implements OnInit {
+export class AppointmentComponent implements OnInit {
 
   private apptService = inject(AppointmentService);
   readonly today = new Date();
