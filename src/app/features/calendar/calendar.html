@@ -1,0 +1,119 @@
+<div class="content-card">
+  <h2 class="page-title">Calendrier</h2>
+
+  <!-- Stats du mois -->
+  <div class="stats-row">
+    <div class="stat-card accent">
+      <span class="stat-label">Dépenses du mois</span>
+      <span class="stat-value">{{ totalExpenses() }} €</span>
+      <span class="stat-sub">{{ expenses().length }} abonnement{{ expenses().length > 1 ? 's' : '' }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Rendez-vous</span>
+      <span class="stat-value">{{ nbAppts() }}</span>
+      <span class="stat-sub">ce mois-ci</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Tâches</span>
+      <span class="stat-value">{{ nbTasks() }}</span>
+      <span class="stat-sub">planifiées</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Repas</span>
+      <span class="stat-value">{{ nbMeals() }}</span>
+      <span class="stat-sub">planifiés</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="cal-nav">
+    <button class="nav-arrow" (click)="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+    <span class="cal-title">{{ monthTitle() }}</span>
+    <button class="nav-arrow" (click)="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+    <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
+  </div>
+
+  <!-- Légende -->
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot dot-appt"></div> Rendez-vous</div>
+    <div class="leg-item"><div class="leg-dot dot-meal"></div> Repas</div>
+    <div class="leg-item"><div class="leg-dot dot-task"></div> Tâches</div>
+    <div class="leg-item"><div class="leg-dot dot-expense"></div> Dépenses</div>
+  </div>
+
+  <!-- Grille -->
+  @if (isLoading()) {
+    <div class="loading"><i class="ti ti-loader-2 spin"></i> Chargement...</div>
+  } @else {
+    <div class="cal-grid">
+      @for (day of DAYS_FR; track day) {
+        <div class="dow">{{ day }}</div>
+      }
+      @for (day of calendarDays(); track day.dateStr) {
+        <div class="day-cell"
+             [class.other-month]="!day.isCurrentMonth"
+             [class.today]="day.isToday"
+             [class.selected]="isSelected(day)"
+             (click)="selectDay(day)">
+          <div class="day-n">
+            <span>{{ day.date.getDate() }}</span>
+            @if (day.isCurrentMonth && day.events.length > 0) {
+              <span class="ev-count">{{ day.events.length }}</span>
+            }
+          </div>
+          @if (day.isCurrentMonth) {
+            @for (ev of day.events.slice(0, 2); track ev.label) {
+              <div class="event-chip" [class]="ev.cls">
+                <i [class]="'ti ' + ev.icon" aria-hidden="true"></i>
+                {{ ev.label }}
+              </div>
+            }
+            @if (day.events.length > 2) {
+              <div class="more-events">+{{ day.events.length - 2 }} autre{{ day.events.length - 2 > 1 ? 's' : '' }}</div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Détail du jour -->
+  @if (selectedDay()) {
+    <div class="detail-panel">
+      <div class="detail-header">
+        <i class="ti ti-calendar" style="font-size:18px;color:var(--color-accent)"></i>
+        <span class="detail-title">{{ selectedDayLabel() }}</span>
+        @if (selectedDay() === toDateStr(today)) {
+          <span class="today-badge">Aujourd'hui</span>
+        }
+      </div>
+      @if (selectedDayEvents().length === 0) {
+        <div class="empty-state">
+          <i class="ti ti-calendar-off"></i>
+          <span>Aucun événement ce jour.</span>
+        </div>
+      } @else {
+        <div class="ev-list">
+          @for (ev of selectedDayEvents(); track ev.label) {
+            <div class="ev-item">
+              <div class="ev-icon" [class]="ev.cls">
+                <i [class]="'ti ' + ev.icon" aria-hidden="true"></i>
+              </div>
+              <div class="ev-info">
+                <div class="ev-name">{{ ev.label }}</div>
+                @if (ev.sub) {
+                  <div class="ev-sub">{{ ev.sub }}</div>
+                }
+              </div>
+              <span class="ev-badge" [class]="ev.cls">{{ ev.badge }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-detail">
+      <i class="ti ti-calendar"></i>
+      <span>Clique sur un jour pour voir le détail</span>
+    </div>
+  }
