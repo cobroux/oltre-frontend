@@ -1,0 +1,72 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-header">
+      <div class="logo-icon">
+        <i class="ti ti-layout-dashboard"></i>
+      </div>
+      <h1 class="logo-text">Oltre</h1>
+      <p class="login-subtitle">Ton tableau de bord personnel</p>
+    </div>
+
+    <!-- Formulaire -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+      @if (errorMsg()) {
+        <div class="error-banner">
+          <i class="ti ti-alert-circle"></i>
+          {{ errorMsg() }}
+        </div>
+      }
+
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <div class="field-wrap">
+          <i class="ti ti-mail field-icon"></i>
+          <input
+            type="email"
+            class="field-input"
+            placeholder="admin@oltre.app"
+            formControlName="email"
+            autocomplete="email"
+          />
+        </div>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <span class="field-error">Email invalide</span>
+        }
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Mot de passe</label>
+        <div class="field-wrap">
+          <i class="ti ti-lock field-icon"></i>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            class="field-input"
+            placeholder="••••••••"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+          <button type="button" class="toggle-pwd" (click)="togglePassword()">
+            <i [class]="'ti ' + (showPassword() ? 'ti-eye-off' : 'ti-eye')"></i>
+          </button>
+        </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <span class="field-error">Mot de passe requis (min. 6 caractères)</span>
+        }
+      </div>
+
+      <button class="login-btn" type="submit" [disabled]="loginForm.invalid || isLoading()">
+        @if (isLoading()) {
+          <i class="ti ti-loader-2 spin"></i> Connexion...
+        } @else {
+          <i class="ti ti-login"></i> Se connecter
+        }
+      </button>
+
+    </form>
+
+    <p class="login-footer">Oltre · Tableau de bord personnel</p>
+  </div>
+</div>
