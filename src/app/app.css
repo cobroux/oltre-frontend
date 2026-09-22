@@ -4,7 +4,6 @@
 }
 
 .main-layout {
-  margin-left: var(--sidebar-width); /* 210px */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -13,6 +12,16 @@
 
 .page-content {
   flex: 1;
-  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--color-bg);
+}
+
+.page-content-login {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;        /* ← pas de padding sur login */
   background: var(--color-bg);
 }
