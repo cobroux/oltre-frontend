@@ -1,27 +1,52 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StravaService } from '../../core/services/strava.service';
-import { StravaActivity } from '../../core/models/strava.dto';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { GarminService } from '../../core/services/garmin.service';
+import { GarminActivity } from '../../core/models/garmin.dto';
 
 @Component({
   selector: 'app-sport',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sport.html',
   styleUrl: './sport.css'
 })
 export class SportComponent implements OnInit {
 
-  private stravaService = inject(StravaService);
+  private garminService = inject(GarminService);
 
-  activities = this.stravaService.activitiesSignal;
-  weekStats  = this.stravaService.weekStatsSignal;
-  isLoading  = this.stravaService.isLoading;
+  activities   = this.garminService.activitiesSignal;
+  weekStats    = this.garminService.weekStatsSignal;
+  isLoading    = this.garminService.isLoading;
+  isConnected  = this.garminService.isConnected;
+  connectError = this.garminService.connectError;
+
+  connectForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required)
+  });
 
   ngOnInit() {
-    this.stravaService.loadActivities().subscribe({
-      error: err => console.error('Erreur Strava :', err)
+    this.garminService.checkStatus().subscribe(status => {
+      if (status.connected) {
+        this.garminService.loadActivities().subscribe();
+      }
     });
+  }
+
+  onConnect() {
+    if (this.connectForm.invalid) return;
+    const { email, password } = this.connectForm.value;
+    this.garminService.connect(email!, password!).subscribe(() => {
+      if (this.isConnected()) {
+        this.connectForm.reset();
+        this.garminService.loadActivities().subscribe();
+      }
+    });
+  }
+
+  onDisconnect() {
+    this.garminService.disconnect().subscribe();
   }
 
   // ── Helpers affichage ────────────────────────────────
@@ -50,41 +75,44 @@ export class SportComponent implements OnInit {
     return `${d.getDate()}/${d.getMonth()+1} ${d.getHours()}h${String(d.getMinutes()).padStart(2,'0')}`;
   }
 
+  private matchType(type: string, ...needles: string[]): boolean {
+    return needles.some(n => type?.includes(n));
+  }
+
   getIcon(type: string): string {
-    const icons: Record<string, string> = {
-      Run: 'ti-run', Ride: 'ti-bike',
-      WeightTraining: 'ti-barbell', Swim: 'ti-swimming',
-      Walk: 'ti-walk'
-    };
-    return icons[type] ?? 'ti-activity';
+    if (this.matchType(type, 'running')) return 'ti-run';
+    if (this.matchType(type, 'cycling', 'biking')) return 'ti-bike';
+    if (this.matchType(type, 'strength')) return 'ti-barbell';
+    if (this.matchType(type, 'swim')) return 'ti-swimming';
+    if (this.matchType(type, 'walking', 'hiking')) return 'ti-walk';
+    return 'ti-activity';
   }
 
   getIconClass(type: string): string {
-    const classes: Record<string, string> = {
-      Run: 'icon-run', Ride: 'icon-ride',
-      WeightTraining: 'icon-weight', Swim: 'icon-swim',
-      Walk: 'icon-walk'
-    };
-    return classes[type] ?? 'icon-other';
+    if (this.matchType(type, 'running')) return 'icon-run';
+    if (this.matchType(type, 'cycling', 'biking')) return 'icon-ride';
+    if (this.matchType(type, 'strength')) return 'icon-weight';
+    if (this.matchType(type, 'swim')) return 'icon-swim';
+    if (this.matchType(type, 'walking', 'hiking')) return 'icon-walk';
+    return 'icon-other';
   }
 
-  
   getBadgeClass(type: string): string {
-    const classes: Record<string, string> = {
-      Run: 'badge-run', Ride: 'badge-ride',
-      WeightTraining: 'badge-weight'
-    };
-    return classes[type] ?? 'badge-other';
+    if (this.matchType(type, 'running')) return 'badge-run';
+    if (this.matchType(type, 'cycling', 'biking')) return 'badge-ride';
+    if (this.matchType(type, 'strength')) return 'badge-weight';
+    return 'badge-other';
   }
 
   getBadgeLabel(type: string): string {
-    const labels: Record<string, string> = {
-      Run: 'Course', Ride: 'Vélo',
-      WeightTraining: 'Musculation', Swim: 'Natation', Walk: 'Marche'
-    };
-    return labels[type] ?? type;
+    if (this.matchType(type, 'running')) return 'Course';
+    if (this.matchType(type, 'cycling', 'biking')) return 'Vélo';
+    if (this.matchType(type, 'strength')) return 'Musculation';
+    if (this.matchType(type, 'swim')) return 'Natation';
+    if (this.matchType(type, 'walking', 'hiking')) return 'Marche';
+    return type;
   }
 
-  hasDistance(a: StravaActivity): boolean { return a.distance > 0; }
-  hasElevation(a: StravaActivity): boolean { return a.elevationGain > 0; }
+  hasDistance(a: GarminActivity): boolean { return a.distance > 0; }
+  hasElevation(a: GarminActivity): boolean { return a.elevationGain > 0; }
 }
