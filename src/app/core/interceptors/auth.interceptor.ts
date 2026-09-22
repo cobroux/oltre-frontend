@@ -16,7 +16,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(authReq).pipe(
      catchError(err => {
-        if (err.status === 401) {
+        const isGarminRequest = req.url.includes('/api/garmin/');
+        if (err.status === 401 && !isGarminRequest) {
           authService.logout();
          router.navigate(['/login']);
         }
