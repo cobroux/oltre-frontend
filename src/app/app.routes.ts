@@ -5,13 +5,16 @@ import { FoodComponent } from './features/food/food';
 import { AppointmentComponent } from './features/appointment/appointment';
 import { CalendarComponent } from './features/calendar/calendar';
 import { SportComponent } from './features/sport/sport';
+import { LoginComponent } from './features/login/login';
+import { authGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
-  { path: 'expenses', component: ExpensesComponent },
-  { path: 'tasks', component: TasksComponent },
-  { path: 'habits', component: AppointmentComponent },
-  { path: 'food', component: FoodComponent },
-  { path: 'calendar', component: CalendarComponent },
-  { path: 'sport', component: SportComponent }
-
+  { path: 'login', component: LoginComponent },
+  { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
+  { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
+  { path: 'food', component: FoodComponent, canActivate: [authGuard] },
+  { path: 'calendar', component: CalendarComponent, canActivate: [authGuard] },
+  { path: 'sport', component: SportComponent, canActivate: [authGuard] },
+  { path: 'habits', component: AppointmentComponent, canActivate: [authGuard] },
+  { path: '', redirectTo: 'expenses', pathMatch: 'full' }
 ];
