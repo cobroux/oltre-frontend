@@ -1,8 +1,8 @@
-export interface StravaActivity {
+export interface GarminActivity {
   id: string;
   name: string;
   sportType: string;
-  startLocal: string; 
+  startLocal: string;
   description?: string;
   distance: number;
   movingTime: number;
@@ -10,13 +10,9 @@ export interface StravaActivity {
   avgSpeed: number;
   maxSpeed: number;
   calories: number;
-  relativeEffort: number;
-  kudosCount: number;
-  achievementCount: number;
-  prCount: number;
 }
 
-export interface StravaWeekStats {
+export interface GarminWeekStats {
   totalCalories: number;
   runCount: number;
   runDistance: number;
@@ -26,9 +22,9 @@ export interface StravaWeekStats {
   rideCalories: number;
   weightCount: number;
   weightCalories: number;
-  swimCount: number; 
+  swimCount: number;
   swimDistance: number;
   runElevation: number;
-  rideElevation: number; 
+  rideElevation: number;
   totalActivities: number;
 }

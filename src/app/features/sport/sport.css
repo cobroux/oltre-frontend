@@ -15,13 +15,86 @@
   gap: 10px;
 }
 
-.strava-badge {
+.garmin-badge {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: var(--radius-full);
-  background: #FC4C02;
+  background: #007cc3;
   color: #fff;
   font-weight: 600;
+}
+
+/* ── Connexion Garmin ─────────────────────────────────── */
+.connect-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.connect-icon { font-size: 32px; color: var(--color-text-secondary); }
+
+.connect-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+}
+
+.connect-form input {
+  padding: 10px 12px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+.connect-form button {
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: #007cc3;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+.connect-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.connect-error {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.connect-note {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  max-width: 320px;
+}
+
+.connected-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+.connected-bar i { color: #059669; }
+
+.disconnect-btn {
+  background: none;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
 }
 
 /* ── Loading ─────────────────────────────────────────── */
