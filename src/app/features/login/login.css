@@ -166,13 +166,6 @@
   color: var(--color-text-muted);
 }
 
-.login-link {
-  color: var(--color-accent);
-  font-weight: 500;
-  text-decoration: none;
-}
-.login-link:hover { text-decoration: underline; }
-
 :host {
   display: flex;
   flex: 1;
