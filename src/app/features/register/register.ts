@@ -5,13 +5,13 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
+  templateUrl: './register.html',
+  styleUrl: './register.css'
 })
-export class LoginComponent {
+export class RegisterComponent {
 
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -20,26 +20,33 @@ export class LoginComponent {
   errorMsg  = signal<string | null>(null);
   showPassword = signal(false);
 
-  loginForm = new FormGroup({
+  registerForm = new FormGroup({
+    username: new FormControl('', [Validators.required]),
     email:    new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    confirmPassword: new FormControl('', [Validators.required])
   });
 
   onSubmit() {
-    if (this.loginForm.invalid) return;
+    if (this.registerForm.invalid) return;
+
+    const { username, email, password, confirmPassword } = this.registerForm.getRawValue();
+    if (password !== confirmPassword) {
+      this.errorMsg.set('Les mots de passe ne correspondent pas');
+      return;
+    }
+
     this.isLoading.set(true);
     this.errorMsg.set(null);
 
-    const { email, password } = this.loginForm.getRawValue();
-
-    this.authService.login(email!, password!).subscribe({
+    this.authService.register(username!, email!, password!).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/expenses']);
       },
       error: err => {
         this.isLoading.set(false);
-        this.errorMsg.set(err.error?.message ?? 'Email ou mot de passe incorrect');
+        this.errorMsg.set(err.error?.message ?? 'Inscription impossible.');
       }
     });
   }
