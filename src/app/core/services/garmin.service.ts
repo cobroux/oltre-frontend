@@ -19,7 +19,11 @@ export class GarminService {
 
   checkStatus() {
     return this.http.get<{ connected: boolean }>(`${this.API}/${this.userId}/status`).pipe(
-      tap(res => this.isConnected.set(res.connected))
+      tap(res => this.isConnected.set(res.connected)),
+      catchError(() => {
+        this.isConnected.set(false);
+        return of({ connected: false });
+      })
     );
   }
 
@@ -41,7 +45,8 @@ export class GarminService {
         this.isConnected.set(false);
         this.activitiesSignal.set([]);
         this.weekStatsSignal.set(null);
-      })
+      }),
+      catchError(() => of(null))
     );
   }
 
