@@ -90,9 +90,18 @@
                   </div>
                 </div>
                 <div class="item-right">
-                  <button class="delete-btn" (click)="deleteMeal(meal.id)">
-                    <i class="ti ti-trash"></i>
-                  </button>
+                  @if (confirmDeleteId() === meal.id) {
+                    <button class="delete-btn confirm" (click)="requestDelete(meal.id)" title="Confirmer la suppression">
+                      <i class="ti ti-check"></i>
+                    </button>
+                    <button class="delete-btn cancel" (click)="cancelDelete()" title="Annuler">
+                      <i class="ti ti-x"></i>
+                    </button>
+                  } @else {
+                    <button class="delete-btn" (click)="requestDelete(meal.id)" title="Supprimer">
+                      <i class="ti ti-trash"></i>
+                    </button>
+                  }
                 </div>
               </li>
             }

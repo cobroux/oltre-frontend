@@ -68,9 +68,18 @@
         </div>
         <div class="item-right">
           <span class="item-amount">{{ expense.amount }} €</span>
-          <button class="delete-btn" (click)="deleteExpenses(expense.id)">
-            <i class="ti ti-trash"></i>
-          </button>
+          @if (confirmDeleteId() === expense.id) {
+            <button class="delete-btn confirm" (click)="requestDelete(expense.id)" title="Confirmer la suppression">
+              <i class="ti ti-check"></i>
+            </button>
+            <button class="delete-btn cancel" (click)="cancelDelete()" title="Annuler">
+              <i class="ti ti-x"></i>
+            </button>
+          } @else {
+            <button class="delete-btn" (click)="requestDelete(expense.id)" title="Supprimer">
+              <i class="ti ti-trash"></i>
+            </button>
+          }
         </div>
       </li>
     } @empty {

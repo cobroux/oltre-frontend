@@ -279,6 +279,10 @@
 }
 
 .delete-btn:hover { color: #dc2626; background: #fff0f0; }
+.delete-btn.confirm { color: #059669; }
+.delete-btn.confirm:hover { background: #d1fae5; }
+.delete-btn.cancel { color: var(--color-text-muted); }
+.delete-btn.cancel:hover { background: var(--color-bg); color: var(--color-text-primary); }
 
 .empty-state {
   display: flex;

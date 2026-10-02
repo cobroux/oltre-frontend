@@ -121,9 +121,18 @@
                   <div class="appt-desc">{{ appt.description }}</div>
                 }
               </div>
-              <button class="delete-btn" (click)="deleteAppt(appt.id)">
-                <i class="ti ti-trash"></i>
-              </button>
+              @if (confirmDeleteId() === appt.id) {
+                <button class="delete-btn confirm" (click)="requestDelete(appt.id)" title="Confirmer la suppression">
+                  <i class="ti ti-check"></i>
+                </button>
+                <button class="delete-btn cancel" (click)="cancelDelete()" title="Annuler">
+                  <i class="ti ti-x"></i>
+                </button>
+              } @else {
+                <button class="delete-btn" (click)="requestDelete(appt.id)" title="Supprimer">
+                  <i class="ti ti-trash"></i>
+                </button>
+              }
             </div>
           }
         </div>
