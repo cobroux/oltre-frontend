@@ -10,28 +10,37 @@
   <nav class="nav-group">
     <p class="nav-label">Menu</p>
     <a routerLink="/calendar" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-calendar-week"></i> Calendrier
+      <span class="nav-icon icon-calendar"><i class="ti ti-calendar-week"></i></span> Calendrier
     </a>
     <a routerLink="/tasks" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-checkbox"></i> Tâches
+      <span class="nav-icon icon-tasks"><i class="ti ti-checkbox"></i></span> Tâches
     </a>
     <a routerLink="/habits" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-repeat"></i> Habitudes
+      <span class="nav-icon icon-habits"><i class="ti ti-repeat"></i></span> Habitudes
     </a>
     <a routerLink="/expenses" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-wallet"></i> Dépenses
+      <span class="nav-icon icon-expenses"><i class="ti ti-wallet"></i></span> Dépenses
     </a>
     <a routerLink="/food" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-salad"></i> Alimentation
+      <span class="nav-icon icon-food"><i class="ti ti-salad"></i></span> Alimentation
     </a>
     <a routerLink="/sport" routerLinkActive="active" class="nav-item">
-      <i class="ti ti-sport"></i> Sport
+      <span class="nav-icon icon-sport"><i class="ti ti-sport"></i></span> Sport
     </a>
   </nav>
 
 
   <div class="sidebar-footer">
-  <button class="logout-btn" (click)="logout()">
+    <a routerLink="/profile" class="user-row">
+      <div class="avatar-initials">{{ initials() }}</div>
+      <div>
+        <div class="user-name">{{ user()?.username ?? 'Chargement...' }}</div>
+        @if (user()?.age) {
+          <div class="user-age">{{ user()?.age }} ans</div>
+        }
+      </div>
+    </a>
+    <button class="logout-btn" (click)="logout()">
       <i class="ti ti-logout"></i> Déconnexion
     </button>
   </div>

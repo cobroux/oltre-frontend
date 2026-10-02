@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
 import { UserStatsDTO } from '../../core/models/user.dto';
 import { RunningRecord, SportRecord } from '../../core/models/garmin.dto';
+import { initialsOf } from '../../core/utils/user.utils';
 
 @Component({
   selector: 'app-profile',
@@ -50,8 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   initials(): string {
-    const name = this.user()?.username ?? '';
-    return name.slice(0, 2).toUpperCase();
+    return initialsOf(this.user()?.username);
   }
 
   formatDuration(seconds: number): string {

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
+import { initialsOf } from '../../core/utils/user.utils';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,7 +19,6 @@ export class SidebarComponent {
   logout() { this.authService.logout(); }
 
   initials(): string {
-    const name = this.user()?.username ?? '';
-    return name.slice(0, 2).toUpperCase();
+    return initialsOf(this.user()?.username);
   }
 }
