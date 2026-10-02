@@ -1,11 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
 import { UserStatsDTO } from '../../core/models/user.dto';
-import { RunningRecord, SportRecord } from '../../core/models/garmin.dto';
+import { GarminRecordsResponse } from '../../core/models/garmin.dto';
 import { initialsOf } from '../../core/utils/user.utils';
+
+type RecordsPeriod = 'allTime' | 'thisYear';
 
 @Component({
   selector: 'app-profile',
@@ -21,10 +23,17 @@ export class ProfileComponent implements OnInit {
 
   user = this.userService.currentUser;
   stats = signal<UserStatsDTO | null>(null);
-  runningRecords = signal<RunningRecord[]>([]);
-  otherRecords = signal<SportRecord[]>([]);
   isLoading = signal(true);
   userLoadError = signal(false);
+
+  period = signal<RecordsPeriod>('allTime');
+  private records = signal<GarminRecordsResponse>({
+    allTime: { runningRecords: [], otherRecords: [] },
+    thisYear: { runningRecords: [], otherRecords: [] }
+  });
+
+  runningRecords = computed(() => this.records()[this.period()].runningRecords);
+  otherRecords = computed(() => this.records()[this.period()].otherRecords);
 
   ngOnInit(): void {
     this.userService.loadUser().subscribe({
@@ -38,12 +47,15 @@ export class ProfileComponent implements OnInit {
 
     this.garminService.getRecords().subscribe({
       next: r => {
-        this.runningRecords.set(r.runningRecords);
-        this.otherRecords.set(r.otherRecords);
+        this.records.set(r);
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false)
     });
+  }
+
+  setPeriod(period: RecordsPeriod) {
+    this.period.set(period);
   }
 
   logout() {
@@ -89,5 +101,13 @@ export class ProfileComponent implements OnInit {
     if (this.matchType(type, 'swim')) return 'icon-swim';
     if (this.matchType(type, 'walking', 'hiking')) return 'icon-walk';
     return 'icon-other';
+  }
+
+  sportTileClass(type: string): string {
+    if (this.matchType(type, 'cycling', 'biking')) return 'tile-ride';
+    if (this.matchType(type, 'strength')) return 'tile-weight';
+    if (this.matchType(type, 'swim')) return 'tile-swim';
+    if (this.matchType(type, 'walking', 'hiking')) return 'tile-walk';
+    return 'tile-other';
   }
 }
