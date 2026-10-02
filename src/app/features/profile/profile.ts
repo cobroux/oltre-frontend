@@ -22,9 +22,12 @@ export class ProfileComponent implements OnInit {
   stats = signal<UserStatsDTO | null>(null);
   records = signal<SportRecord[]>([]);
   isLoading = signal(true);
+  userLoadError = signal(false);
 
   ngOnInit(): void {
-    this.userService.loadUser().subscribe();
+    this.userService.loadUser().subscribe({
+      error: () => this.userLoadError.set(true)
+    });
 
     this.userService.getStats().subscribe({
       next: s => this.stats.set(s),

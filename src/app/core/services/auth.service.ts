@@ -16,7 +16,11 @@ export class AuthService {
 
   currentUser = signal<AuthUser | null>(this.loadFromStorage());
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    if (this.currentUser() && this.isTokenExpired(this.currentUser()!.token)) {
+      this.clearSession();
+    }
+  }
 
   login(email: string, password: string) {
     return this.http.post<AuthUser>(`${this.API}/login`, { email, password }).pipe(
@@ -37,8 +41,7 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.TOKEN_KEY);
-    this.currentUser.set(null);
+    this.clearSession();
     this.router.navigate(['/login']);
   }
 
@@ -47,7 +50,33 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.currentUser() !== null;
+    const user = this.currentUser();
+    if (!user) return false;
+    if (this.isTokenExpired(user.token)) {
+      this.clearSession();
+      return false;
+    }
+    return true;
+  }
+
+  private clearSession() {
+    localStorage.removeItem(this.TOKEN_KEY);
+    this.currentUser.set(null);
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const payload = this.decodeTokenPayload(token);
+    if (!payload?.exp) return true;
+    return Date.now() >= payload.exp * 1000;
+  }
+
+  private decodeTokenPayload(token: string): { exp?: number } | null {
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    } catch {
+      return null;
+    }
   }
 
   private loadFromStorage(): AuthUser | null {
