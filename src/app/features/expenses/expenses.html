@@ -3,13 +3,19 @@
 
   <!-- Total + stats -->
   <div class="stats-row">
-    <div class="stat-card accent">
-      <span class="stat-label">Total du mois</span>
-      <span class="stat-value">{{ amountPerMonth() }} €</span>
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><i class="ti ti-wallet"></i></div>
+      <div class="stat-body">
+        <span class="stat-label">Total du mois</span>
+        <span class="stat-value">{{ amountPerMonth() }} €</span>
+      </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-label">Nombre</span>
-      <span class="stat-value">{{ allExpenses().length }}</span>
+    <div class="stat-card stat-count">
+      <div class="stat-icon"><i class="ti ti-list-numbers"></i></div>
+      <div class="stat-body">
+        <span class="stat-label">Nombre</span>
+        <span class="stat-value">{{ allExpenses().length }}</span>
+      </div>
     </div>
   </div>
 

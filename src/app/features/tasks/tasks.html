@@ -3,17 +3,26 @@
 
   <!-- Stats -->
   <div class="stats-row">
-    <div class="stat-card accent">
-      <span class="stat-label">Total</span>
-      <span class="stat-value">{{ allTasks().length }}</span>
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><i class="ti ti-list-check"></i></div>
+      <div class="stat-body">
+        <span class="stat-label">Total</span>
+        <span class="stat-value">{{ allTasks().length }}</span>
+      </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-label">À faire</span>
-      <span class="stat-value">{{ pendingCount() }}</span>
+    <div class="stat-card stat-pending">
+      <div class="stat-icon"><i class="ti ti-clock"></i></div>
+      <div class="stat-body">
+        <span class="stat-label">À faire</span>
+        <span class="stat-value">{{ pendingCount() }}</span>
+      </div>
     </div>
-    <div class="stat-card success">
-      <span class="stat-label">Terminées</span>
-      <span class="stat-value">{{ doneCount() }}</span>
+    <div class="stat-card stat-done">
+      <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="stat-body">
+        <span class="stat-label">Terminées</span>
+        <span class="stat-value">{{ doneCount() }}</span>
+      </div>
     </div>
   </div>
 
