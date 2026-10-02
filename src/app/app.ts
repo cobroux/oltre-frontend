@@ -16,12 +16,15 @@ export class App {
   protected readonly title = signal('oltre-frontend');
   private router = inject(Router);
 
-  // Vrai quand on est sur /login
-  isLoginPage = toSignal(
+  private static readonly AUTH_ROUTES = ['/login', '/register'];
+
+  // Vrai quand on est sur une page d'authentification (login/register),
+  // qui s'affiche en pleine page sans sidebar ni banner.
+  isAuthPage = toSignal(
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map(e => (e as NavigationEnd).url === '/login')
+      map(e => App.AUTH_ROUTES.includes((e as NavigationEnd).url))
     ),
-    { initialValue: this.router.url === '/login' }
+    { initialValue: App.AUTH_ROUTES.includes(this.router.url) }
   );
 }

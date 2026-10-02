@@ -5,7 +5,7 @@ import { UserDTO } from '../models/user.dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly API = 'http://localhost:8080/api/users/1';
+  private readonly API = 'http://localhost:8080/api/users/me';
 
   currentUser = signal<UserDTO | null>(null);
 

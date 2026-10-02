@@ -7,7 +7,6 @@ import { GarminActivity, GarminWeekStats } from '../models/garmin.dto';
 @Injectable({ providedIn: 'root' })
 export class GarminService {
   private readonly API = 'http://localhost:8080/api/garmin';
-  private readonly userId = 1;
 
   activitiesSignal = signal<GarminActivity[]>([]);
   weekStatsSignal  = signal<GarminWeekStats | null>(null);
@@ -18,7 +17,7 @@ export class GarminService {
   constructor(private http: HttpClient) {}
 
   checkStatus() {
-    return this.http.get<{ connected: boolean }>(`${this.API}/${this.userId}/status`).pipe(
+    return this.http.get<{ connected: boolean }>(`${this.API}/status`).pipe(
       tap(res => this.isConnected.set(res.connected)),
       catchError(() => {
         this.isConnected.set(false);
@@ -29,7 +28,7 @@ export class GarminService {
 
   connect(email: string, password: string) {
     this.connectError.set(null);
-    return this.http.post<void>(`${this.API}/${this.userId}/connect`, { email, password }).pipe(
+    return this.http.post<void>(`${this.API}/connect`, { email, password }).pipe(
       tap(() => this.isConnected.set(true)),
       catchError((err: HttpErrorResponse) => {
         this.connectError.set(err.error?.error ?? 'Connexion Garmin impossible. Vérifie tes identifiants.');
@@ -40,7 +39,7 @@ export class GarminService {
   }
 
   disconnect() {
-    return this.http.delete<void>(`${this.API}/${this.userId}/connect`).pipe(
+    return this.http.delete<void>(`${this.API}/connect`).pipe(
       tap(() => {
         this.isConnected.set(false);
         this.activitiesSignal.set([]);
@@ -58,7 +57,7 @@ export class GarminService {
     const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day + 1));
     const mondayStr = monday.toISOString().split('T')[0];
 
-    return this.http.get<GarminActivity[]>(`${this.API}/${this.userId}/activities?monday=${mondayStr}`).pipe(
+    return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${mondayStr}`).pipe(
       tap(activities => {
         this.activitiesSignal.set(activities);
         this.weekStatsSignal.set(this.computeWeekStats(activities));
