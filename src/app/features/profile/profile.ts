@@ -47,15 +47,39 @@ export class ProfileComponent implements OnInit {
     this.authService.logout();
   }
 
+  initials(): string {
+    const name = this.user()?.username ?? '';
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  private matchType(type: string, ...needles: string[]): boolean {
+    return needles.some(n => type?.includes(n));
+  }
+
   sportLabel(type: string): string {
-    const labels: Record<string, string> = {
-      running: 'Course à pied',
-      cycling: 'Vélo',
-      road_biking: 'Vélo',
-      swimming: 'Natation',
-      strength_training: 'Musculation',
-      walking: 'Marche'
-    };
-    return labels[type] ?? type;
+    if (this.matchType(type, 'running')) return 'Course à pied';
+    if (this.matchType(type, 'cycling', 'biking')) return 'Vélo';
+    if (this.matchType(type, 'strength')) return 'Musculation';
+    if (this.matchType(type, 'swim')) return 'Natation';
+    if (this.matchType(type, 'walking', 'hiking')) return 'Marche';
+    return type;
+  }
+
+  sportIcon(type: string): string {
+    if (this.matchType(type, 'running')) return 'ti-run';
+    if (this.matchType(type, 'cycling', 'biking')) return 'ti-bike';
+    if (this.matchType(type, 'strength')) return 'ti-barbell';
+    if (this.matchType(type, 'swim')) return 'ti-swimming';
+    if (this.matchType(type, 'walking', 'hiking')) return 'ti-walk';
+    return 'ti-activity';
+  }
+
+  sportIconClass(type: string): string {
+    if (this.matchType(type, 'running')) return 'icon-run';
+    if (this.matchType(type, 'cycling', 'biking')) return 'icon-ride';
+    if (this.matchType(type, 'strength')) return 'icon-weight';
+    if (this.matchType(type, 'swim')) return 'icon-swim';
+    if (this.matchType(type, 'walking', 'hiking')) return 'icon-walk';
+    return 'icon-other';
   }
 }
