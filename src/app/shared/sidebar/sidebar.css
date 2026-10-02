@@ -67,7 +67,6 @@
   font-family: var(--font-sans);
 }
 
-.nav-item i { font-size: 17px; width: 18px; flex-shrink: 0; }
 .nav-item:hover { background: var(--color-accent-subtle); color: var(--color-accent); }
 
 .nav-item.active {
@@ -76,6 +75,24 @@
   border-left-color: var(--color-accent);
   font-weight: 500;
 }
+
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.icon-calendar { background: #ede9ff; color: #6C63FF; }
+.icon-tasks    { background: #e0e7ff; color: #4F46E5; }
+.icon-habits   { background: #ccfbf1; color: #0D9488; }
+.icon-expenses { background: #fef3c7; color: #D97706; }
+.icon-food     { background: #fce7f3; color: #DB2777; }
+.icon-sport    { background: #d1fae5; color: #059669; }
 
 .nav-badge {
   margin-left: auto;
@@ -95,14 +112,24 @@
   border-top: 0.5px solid var(--color-border);
 }
 
-.user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+.user-row:hover { background: var(--color-bg); }
 
 .avatar-initials {
   width: 34px; height: 34px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 500; color: #fff;
+  font-size: 12px; font-weight: 600; color: #fff;
   flex-shrink: 0;
 }
 
