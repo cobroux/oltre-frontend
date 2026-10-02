@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ExpensesSevice } from '../../core/services/expenses.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -85,11 +85,21 @@ export class ExpensesComponent implements OnInit {
 
   }
 
- deleteExpenses(id: number) {
-  console.log("id " + id);
-  this.expensesService.deleteExpenses(id).subscribe({
-    error: err => console.error(err)
-  });
+  confirmDeleteId = signal<number | null>(null);
+
+  requestDelete(id: number) {
+    if (this.confirmDeleteId() === id) {
+      this.expensesService.deleteExpenses(id).subscribe({
+        error: err => console.error(err)
+      });
+      this.confirmDeleteId.set(null);
+    } else {
+      this.confirmDeleteId.set(id);
+    }
+  }
+
+  cancelDelete() {
+    this.confirmDeleteId.set(null);
   }
 
   allExpenses = this.expensesService.expensesListSignal;

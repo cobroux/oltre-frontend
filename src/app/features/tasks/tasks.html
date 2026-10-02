@@ -91,9 +91,18 @@
           <span class="priority-badge" [class]="'priority-' + task.tasksPriority.toLowerCase()">
             {{ getPriorityLabel(task.tasksPriority) }}
           </span>
-          <button class="delete-btn" (click)="deleteTasks(task.id)">
-            <i class="ti ti-trash"></i>
-          </button>
+          @if (confirmDeleteId() === task.id) {
+            <button class="delete-btn confirm" (click)="requestDelete(task.id)" title="Confirmer la suppression">
+              <i class="ti ti-check"></i>
+            </button>
+            <button class="delete-btn cancel" (click)="cancelDelete()" title="Annuler">
+              <i class="ti ti-x"></i>
+            </button>
+          } @else {
+            <button class="delete-btn" (click)="requestDelete(task.id)" title="Supprimer">
+              <i class="ti ti-trash"></i>
+            </button>
+          }
         </div>
       </li>
     } @empty {

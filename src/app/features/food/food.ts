@@ -29,6 +29,7 @@ export class FoodComponent implements OnInit {
   // Navigation semaine
   weekOffset  = signal(0);
   selectedDay = signal<string | null>(null);
+  confirmDeleteId = signal<number | null>(null);
 
   monday = computed(() => this.getMonday(this.weekOffset()));
 
@@ -113,10 +114,19 @@ export class FoodComponent implements OnInit {
     });
   }
 
-  deleteMeal(id: number) {
-    this.mealService.delete(id).subscribe({
-      error: err => console.error('Erreur suppression :', err)
-    });
+  requestDelete(id: number) {
+    if (this.confirmDeleteId() === id) {
+      this.mealService.delete(id).subscribe({
+        error: err => console.error('Erreur suppression :', err)
+      });
+      this.confirmDeleteId.set(null);
+    } else {
+      this.confirmDeleteId.set(id);
+    }
+  }
+
+  cancelDelete() {
+    this.confirmDeleteId.set(null);
   }
 
   // ── Helpers ──────────────────────────────────────────

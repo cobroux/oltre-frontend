@@ -25,6 +25,7 @@ export class TasksComponent {
   // Signals
   filter    = signal<'ALL' | 'PENDING' | 'DONE'>('ALL');
   catFilter = signal<'ALL' | 'PERSO' | 'TRAVAIL' | 'SPORT' | 'AUTRE'>('ALL');
+  confirmDeleteId = signal<number | null>(null);
 /* */
   // Computed
   pendingCount = computed(() => this.allTasks().filter(t => !t.tasksStatus).length);
@@ -83,11 +84,19 @@ export class TasksComponent {
     });
   }
 
-  deleteTasks(id: number) {
-    console.log("id " + id);
-    this.tasksService.deleteTasks(id).subscribe({
-      error: err => console.error(err)
-    });
+  requestDelete(id: number) {
+    if (this.confirmDeleteId() === id) {
+      this.tasksService.deleteTasks(id).subscribe({
+        error: err => console.error(err)
+      });
+      this.confirmDeleteId.set(null);
+    } else {
+      this.confirmDeleteId.set(id);
+    }
+  }
+
+  cancelDelete() {
+    this.confirmDeleteId.set(null);
   }
 
   isUrgent(taskDto: TasksDTO): boolean {

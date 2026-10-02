@@ -59,6 +59,7 @@ export class AppointmentComponent implements OnInit {
   });
 
   formError = signal<string | null>(null);
+  confirmDeleteId = signal<number | null>(null);
 
   ngOnInit() { this.loadWeek(); }
 
@@ -104,10 +105,19 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  deleteAppt(id: number) {
-    this.apptService.delete(id).subscribe({
-      error: err => console.error('Erreur suppression :', err)
-    });
+  requestDelete(id: number) {
+    if (this.confirmDeleteId() === id) {
+      this.apptService.delete(id).subscribe({
+        error: err => console.error('Erreur suppression :', err)
+      });
+      this.confirmDeleteId.set(null);
+    } else {
+      this.confirmDeleteId.set(id);
+    }
+  }
+
+  cancelDelete() {
+    this.confirmDeleteId.set(null);
   }
 
   getApptForDay(date: Date): AppointmentDTO[] {
