@@ -354,10 +354,10 @@
 /* ── Navigation semaine ─────────────────────────────── */
 .week-nav { display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; padding-bottom:1.25rem; border-bottom:0.5px solid var(--color-border); }
 .week-title { flex:1; font-size:15px; font-weight:500; color:var(--color-text-primary); }
-.nav-arrow { width:32px; height:32px; border-radius:var(--radius-md); background:none; border:0.5px solid var(--color-border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--color-text-secondary); font-size:16px; transition:all .15s; }
-.nav-arrow:hover { background:var(--color-accent-subtle); color:var(--color-accent); border-color:var(--color-accent-border); }
-.today-btn { padding:5px 14px; border-radius:var(--radius-md); background:none; border:0.5px solid var(--color-accent-border); color:var(--color-accent); font-size:13px; cursor:pointer; font-family:var(--font-sans); transition:all .15s; }
-.today-btn:hover { background:var(--color-accent-subtle); }
+.nav-arrow { width:34px; height:34px; border-radius:50%; background:var(--color-accent-subtle); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--color-accent); font-size:16px; transition:all .15s; }
+.nav-arrow:hover { background:var(--color-accent); color:#fff; transform:scale(1.05); }
+.today-btn { padding:7px 16px; border-radius:var(--radius-full); background:var(--color-accent); border:none; color:#fff; font-size:13px; font-weight:500; cursor:pointer; font-family:var(--font-sans); transition:background .15s; }
+.today-btn:hover { background:var(--color-accent-hover); }
 
 /* ── Grille semaine ─────────────────────────────────── */
 .week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:1.5rem; }
