@@ -4,8 +4,9 @@
     Profil
   </h2>
 
+  <!-- En-tête compte -->
   <div class="account-block">
-    <img class="avatar-lg" src="assets/avatar.png" alt="avatar" />
+    <div class="avatar-lg">{{ initials() }}</div>
     <div class="account-info">
       @if (user()) {
         <div class="account-name">{{ user()?.username }}</div>
@@ -15,7 +16,7 @@
       } @else if (userLoadError()) {
         <div class="account-name error">Impossible de charger ton profil.</div>
       } @else {
-        <div class="account-name">Chargement...</div>
+        <div class="account-name muted">Chargement...</div>
       }
     </div>
     <button type="button" class="logout-btn" (click)="logout()">
@@ -29,21 +30,33 @@
       <i class="ti ti-chart-bar"></i> Récap
     </div>
     <div class="stats-row">
-      <div class="stat-card run">
-        <span class="stat-label">Séances sport (30j)</span>
-        <span class="stat-value">{{ s.sportSessionsLast30Days }}</span>
+      <div class="stat-tile tile-sport">
+        <div class="tile-icon"><i class="ti ti-run"></i></div>
+        <div class="tile-body">
+          <span class="tile-value">{{ s.sportSessionsLast30Days }}</span>
+          <span class="tile-label">Séances sport (30j)</span>
+        </div>
       </div>
-      <div class="stat-card ride">
-        <span class="stat-label">Distance (30j)</span>
-        <span class="stat-value">{{ s.sportDistanceKmLast30Days | number:'1.0-1' }} km</span>
+      <div class="stat-tile tile-distance">
+        <div class="tile-icon"><i class="ti ti-map-pin"></i></div>
+        <div class="tile-body">
+          <span class="tile-value">{{ s.sportDistanceKmLast30Days | number:'1.0-1' }} km</span>
+          <span class="tile-label">Distance (30j)</span>
+        </div>
       </div>
-      <div class="stat-card weight">
-        <span class="stat-label">Dépenses ce mois</span>
-        <span class="stat-value">{{ s.expensesThisMonth }} €</span>
+      <div class="stat-tile tile-expenses">
+        <div class="tile-icon"><i class="ti ti-wallet"></i></div>
+        <div class="tile-body">
+          <span class="tile-value">{{ s.expensesThisMonth }} €</span>
+          <span class="tile-label">Dépenses ce mois</span>
+        </div>
       </div>
-      <div class="stat-card elevation">
-        <span class="stat-label">Tâches en cours</span>
-        <span class="stat-value">{{ s.tasksInProgress }}</span>
+      <div class="stat-tile tile-tasks">
+        <div class="tile-icon"><i class="ti ti-checkbox"></i></div>
+        <div class="tile-body">
+          <span class="tile-value">{{ s.tasksInProgress }}</span>
+          <span class="tile-label">Tâches en cours</span>
+        </div>
       </div>
     </div>
   }
@@ -61,6 +74,9 @@
     <div class="records-list">
       @for (record of records(); track record.sportType) {
         <div class="record-item">
+          <div class="record-icon" [class]="sportIconClass(record.sportType)">
+            <i [class]="'ti ' + sportIcon(record.sportType)"></i>
+          </div>
           <div class="record-sport">{{ sportLabel(record.sportType) }}</div>
           <div class="record-values">
             @if (record.bestDistanceKm) {
