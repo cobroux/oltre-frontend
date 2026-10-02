@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { GarminActivity, GarminWeekStats } from '../models/garmin.dto';
+import { GarminActivity, GarminWeekStats, SportRecord } from '../models/garmin.dto';
 
 @Injectable({ providedIn: 'root' })
 export class GarminService {
@@ -68,6 +68,12 @@ export class GarminService {
         if (err.status === 401) this.isConnected.set(false);
         return of(null);
       })
+    );
+  }
+
+  getRecords() {
+    return this.http.get<SportRecord[]>(`${this.API}/records`).pipe(
+      catchError(() => of([] as SportRecord[]))
     );
   }
 

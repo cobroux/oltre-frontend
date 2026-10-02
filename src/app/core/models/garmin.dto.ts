@@ -12,6 +12,16 @@ export interface GarminActivity {
   calories: number;
 }
 
+export interface SportRecord {
+  sportType: string;
+  bestDistanceKm?: number;
+  bestDistanceDate?: string;
+  bestElevationGainM?: number;
+  bestElevationDate?: string;
+  bestAvgSpeedKmh?: number;
+  bestAvgSpeedDate?: string;
+}
+
 export interface GarminWeekStats {
   totalCalories: number;
   runCount: number;
