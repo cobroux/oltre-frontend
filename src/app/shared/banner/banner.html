@@ -1,17 +1,13 @@
 <div class="banner">
-  <div class="app-name">Oltre</div>
-
-  <div class="user-section">
-    <div class="user-info">
-      @if (user()) {
-        <div class="username">{{ user()?.username }}</div>
-        <div class="user-meta">{{ user()?.age }} ans</div>
-      } @else {
-        <div class="username">Chargement...</div>
-      }
-    </div>
-    <a routerLink="/profile" class="avatar" aria-label="Voir le profil">
-      {{ initials() }}
-    </a>
+  <div class="greeting">
+    @if (user()) {
+      Bonjour, {{ user()?.username }} 👋
+    } @else {
+      Bonjour 👋
+    }
   </div>
+
+  <a routerLink="/profile" class="avatar" aria-label="Voir le profil">
+    {{ initials() }}
+  </a>
 </div>
