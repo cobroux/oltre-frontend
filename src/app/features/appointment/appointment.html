@@ -58,7 +58,8 @@
       <!-- Formulaire -->
       <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
         <input type="text"  placeholder="Titre du rendez-vous..." formControlName="title" />
-        <input type="time"  formControlName="apptTime" />
+        <input type="time"  formControlName="apptTime" title="Heure de début" />
+        <input type="time"  formControlName="apptEndTime" title="Heure de fin" />
         <input type="text"  placeholder="Lieu..."                 formControlName="location" />
         <select formControlName="apptType">
           <option [ngValue]="null" disabled>Catégorie</option>
@@ -74,6 +75,10 @@
         </button>
       </form>
 
+      @if (formError()) {
+        <div class="form-error">{{ formError() }}</div>
+      }
+
       <!-- Liste des rdv -->
       @if (selectedDayAppts().length === 0) {
         <div class="empty-state">
@@ -86,7 +91,9 @@
             <div class="appt-item">
               <div class="appt-time-col">
                 @if (appt.apptTime) {
-                  <span class="appt-time">{{ appt.apptTime }}</span>
+                  <span class="appt-time">
+                    {{ appt.apptTime }}@if (appt.apptEndTime) { – {{ appt.apptEndTime }} }
+                  </span>
                 } @else {
                   <span class="appt-time muted">—</span>
                 }

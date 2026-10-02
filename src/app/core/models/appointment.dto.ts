@@ -5,5 +5,6 @@ export interface AppointmentDTO {
   location?: string;
   apptDate: string;
   apptTime?: string;
+  apptEndTime?: string;
   apptType: 'MEDICAL' | 'SPORT' | 'PERSO' | 'TRAVAIL' | 'AUTRE';
 }
