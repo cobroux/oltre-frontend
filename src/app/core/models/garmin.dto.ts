@@ -22,6 +22,19 @@ export interface SportRecord {
   bestAvgSpeedDate?: string;
 }
 
+export interface RunningRecord {
+  label: string;
+  targetDistanceKm: number;
+  distanceKm: number;
+  durationSeconds: number;
+  date: string;
+}
+
+export interface GarminRecords {
+  runningRecords: RunningRecord[];
+  otherRecords: SportRecord[];
+}
+
 export interface GarminWeekStats {
   totalCalories: number;
   runCount: number;

@@ -94,13 +94,13 @@
 /* ── Stats récap (tuiles) ─────────────────────────────── */
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 2rem;
 }
 
-@media (max-width: 900px) {
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 700px) {
+  .stats-row { grid-template-columns: 1fr; }
 }
 
 .stat-tile {
@@ -132,7 +132,6 @@
 
 .tile-sport .tile-icon     { background: var(--color-sport-bg); color: var(--color-sport); }
 .tile-distance .tile-icon  { background: var(--color-accent-subtle); color: var(--color-accent); }
-.tile-expenses .tile-icon  { background: var(--color-food-bg); color: var(--color-food); }
 .tile-tasks .tile-icon     { background: var(--color-tasks-bg); color: var(--color-tasks); }
 
 .tile-body {
@@ -152,6 +151,44 @@
   font-size: 11px;
   color: var(--color-text-muted);
   white-space: nowrap;
+}
+
+/* ── Records course à pied (par distance) ─────────────── */
+.running-records-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.running-record-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  background: var(--color-sport-bg);
+  border-radius: var(--radius-md);
+  padding: 14px 10px;
+}
+
+.running-record-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-sport);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.running-record-time {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.running-record-meta {
+  font-size: 11px;
+  color: var(--color-text-muted);
 }
 
 /* ── Records sportifs ─────────────────────────────────── */
