@@ -1,0 +1,85 @@
+<div class="content-card">
+  <h2 class="page-title">
+    <i class="ti ti-user-circle"></i>
+    Profil
+  </h2>
+
+  <div class="account-block">
+    <img class="avatar-lg" src="assets/avatar.png" alt="avatar" />
+    <div class="account-info">
+      <div class="account-name">{{ user()?.username ?? 'Chargement...' }}</div>
+      @if (user()?.age) {
+        <div class="account-meta">{{ user()?.age }} ans</div>
+      }
+    </div>
+    <button type="button" class="logout-btn" (click)="logout()">
+      <i class="ti ti-logout"></i> Déconnexion
+    </button>
+  </div>
+
+  <!-- Stats récap -->
+  @if (stats(); as s) {
+    <div class="section-title">
+      <i class="ti ti-chart-bar"></i> Récap
+    </div>
+    <div class="stats-row">
+      <div class="stat-card run">
+        <span class="stat-label">Séances sport (30j)</span>
+        <span class="stat-value">{{ s.sportSessionsLast30Days }}</span>
+      </div>
+      <div class="stat-card ride">
+        <span class="stat-label">Distance (30j)</span>
+        <span class="stat-value">{{ s.sportDistanceKmLast30Days | number:'1.0-1' }} km</span>
+      </div>
+      <div class="stat-card weight">
+        <span class="stat-label">Dépenses ce mois</span>
+        <span class="stat-value">{{ s.expensesThisMonth }} €</span>
+      </div>
+      <div class="stat-card elevation">
+        <span class="stat-label">Tâches en cours</span>
+        <span class="stat-value">{{ s.tasksInProgress }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Records sportifs -->
+  <div class="section-title">
+    <i class="ti ti-trophy"></i> Records personnels
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <i class="ti ti-loader-2 spin"></i> Chargement...
+    </div>
+  } @else {
+    <div class="records-list">
+      @for (record of records(); track record.sportType) {
+        <div class="record-item">
+          <div class="record-sport">{{ sportLabel(record.sportType) }}</div>
+          <div class="record-values">
+            @if (record.bestDistanceKm) {
+              <span class="record-stat">
+                <i class="ti ti-map-pin"></i> {{ record.bestDistanceKm | number:'1.0-1' }} km
+              </span>
+            }
+            @if (record.bestElevationGainM) {
+              <span class="record-stat">
+                <i class="ti ti-mountain"></i> {{ record.bestElevationGainM | number:'1.0-0' }}m D+
+              </span>
+            }
+            @if (record.bestAvgSpeedKmh) {
+              <span class="record-stat">
+                <i class="ti ti-gauge"></i> {{ record.bestAvgSpeedKmh | number:'1.0-1' }} km/h
+              </span>
+            }
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="ti ti-trophy"></i>
+          <span>Aucun record pour l'instant — connecte ton compte Garmin et enregistre des activités.</span>
+        </div>
+      }
+    </div>
+  }
+</div>
