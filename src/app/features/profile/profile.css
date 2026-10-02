@@ -24,6 +24,12 @@
   color: var(--color-text-primary);
 }
 
+.account-name.error {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .account-meta {
   font-size: 12px;
   color: var(--color-text-muted);

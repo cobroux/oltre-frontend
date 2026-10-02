@@ -7,9 +7,15 @@
   <div class="account-block">
     <img class="avatar-lg" src="assets/avatar.png" alt="avatar" />
     <div class="account-info">
-      <div class="account-name">{{ user()?.username ?? 'Chargement...' }}</div>
-      @if (user()?.age) {
-        <div class="account-meta">{{ user()?.age }} ans</div>
+      @if (user()) {
+        <div class="account-name">{{ user()?.username }}</div>
+        @if (user()?.age) {
+          <div class="account-meta">{{ user()?.age }} ans</div>
+        }
+      } @else if (userLoadError()) {
+        <div class="account-name error">Impossible de charger ton profil.</div>
+      } @else {
+        <div class="account-name">Chargement...</div>
       }
     </div>
     <button type="button" class="logout-btn" (click)="logout()">
