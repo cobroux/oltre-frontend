@@ -22,7 +22,7 @@ export class LoginComponent {
 
   loginForm = new FormGroup({
     email:    new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    password: new FormControl('', [Validators.required])
   });
 
   onSubmit() {
@@ -35,7 +35,7 @@ export class LoginComponent {
     this.authService.login(email!, password!).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/expenses']);
+        this.router.navigate(['/calendar']);
       },
       error: err => {
         this.isLoading.set(false);

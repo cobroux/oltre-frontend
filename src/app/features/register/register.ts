@@ -42,7 +42,7 @@ export class RegisterComponent {
     this.authService.register(username!, email!, password!).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/expenses']);
+        this.router.navigate(['/calendar']);
       },
       error: err => {
         this.isLoading.set(false);
