@@ -35,6 +35,11 @@ export interface GarminRecords {
   otherRecords: SportRecord[];
 }
 
+export interface GarminRecordsResponse {
+  allTime: GarminRecords;
+  thisYear: GarminRecords;
+}
+
 export interface GarminWeekStats {
   totalCalories: number;
   runCount: number;

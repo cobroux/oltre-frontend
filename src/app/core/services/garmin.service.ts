@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { GarminActivity, GarminWeekStats, GarminRecords } from '../models/garmin.dto';
+import { GarminActivity, GarminWeekStats, GarminRecords, GarminRecordsResponse } from '../models/garmin.dto';
 
 @Injectable({ providedIn: 'root' })
 export class GarminService {
@@ -72,8 +72,9 @@ export class GarminService {
   }
 
   getRecords() {
-    const empty: GarminRecords = { runningRecords: [], otherRecords: [] };
-    return this.http.get<GarminRecords>(`${this.API}/records`).pipe(
+    const emptyPeriod: GarminRecords = { runningRecords: [], otherRecords: [] };
+    const empty: GarminRecordsResponse = { allTime: emptyPeriod, thisYear: emptyPeriod };
+    return this.http.get<GarminRecordsResponse>(`${this.API}/records`).pipe(
       catchError(() => of(empty))
     );
   }

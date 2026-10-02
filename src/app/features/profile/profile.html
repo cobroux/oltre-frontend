@@ -54,9 +54,17 @@
     </div>
   }
 
-  <!-- Records course à pied -->
-  <div class="section-title">
-    <i class="ti ti-run"></i> Course à pied — records personnels
+  <!-- Records personnels -->
+  <div class="section-title records-header">
+    <i class="ti ti-trophy"></i> Records personnels
+    <div class="period-toggle">
+      <button type="button" [class.active]="period() === 'allTime'" (click)="setPeriod('allTime')">
+        Depuis toujours
+      </button>
+      <button type="button" [class.active]="period() === 'thisYear'" (click)="setPeriod('thisYear')">
+        Cette année
+      </button>
+    </div>
   </div>
 
   @if (isLoading()) {
@@ -64,50 +72,38 @@
       <i class="ti ti-loader-2 spin"></i> Chargement...
     </div>
   } @else {
-    <div class="running-records-grid">
+    <div class="records-subtitle"><i class="ti ti-run"></i> Course à pied</div>
+    <div class="records-grid">
       @for (record of runningRecords(); track record.label) {
-        <div class="running-record-card">
-          <span class="running-record-label">{{ record.label }}</span>
-          <span class="running-record-time">{{ formatDuration(record.durationSeconds) }}</span>
-          <span class="running-record-meta">{{ record.distanceKm | number:'1.1-2' }} km</span>
+        <div class="record-tile tile-run">
+          <span class="record-tile-label">{{ record.label }}</span>
+          <span class="record-tile-value">{{ formatDuration(record.durationSeconds) }}</span>
+          <span class="record-tile-meta">{{ record.distanceKm | number:'1.1-2' }} km</span>
         </div>
       } @empty {
         <div class="empty-state">
           <i class="ti ti-run"></i>
-          <span>Aucun record de course pour l'instant — connecte ton compte Garmin et enregistre des sorties.</span>
+          <span>Aucun record de course — connecte ton compte Garmin et enregistre des sorties.</span>
         </div>
       }
     </div>
 
-    <!-- Records autres sports -->
-    <div class="section-title">
-      <i class="ti ti-trophy"></i> Autres sports — records personnels
-    </div>
-
-    <div class="records-list">
+    <div class="records-subtitle"><i class="ti ti-medal"></i> Autres sports</div>
+    <div class="records-grid">
       @for (record of otherRecords(); track record.sportType) {
-        <div class="record-item">
-          <div class="record-icon" [class]="sportIconClass(record.sportType)">
-            <i [class]="'ti ' + sportIcon(record.sportType)"></i>
-          </div>
-          <div class="record-sport">{{ sportLabel(record.sportType) }}</div>
-          <div class="record-values">
+        <div class="record-tile" [class]="sportTileClass(record.sportType)">
+          <i class="ti record-tile-icon" [class]="sportIcon(record.sportType)"></i>
+          <span class="record-tile-label">{{ sportLabel(record.sportType) }}</span>
+          <span class="record-tile-value">
             @if (record.bestDistanceKm) {
-              <span class="record-stat">
-                <i class="ti ti-map-pin"></i> {{ record.bestDistanceKm | number:'1.0-1' }} km
-              </span>
+              {{ record.bestDistanceKm | number:'1.0-1' }} km
+            } @else if (record.bestAvgSpeedKmh) {
+              {{ record.bestAvgSpeedKmh | number:'1.0-1' }} km/h
             }
-            @if (record.bestElevationGainM) {
-              <span class="record-stat">
-                <i class="ti ti-mountain"></i> {{ record.bestElevationGainM | number:'1.0-0' }}m D+
-              </span>
-            }
-            @if (record.bestAvgSpeedKmh) {
-              <span class="record-stat">
-                <i class="ti ti-gauge"></i> {{ record.bestAvgSpeedKmh | number:'1.0-1' }} km/h
-              </span>
-            }
-          </div>
+          </span>
+          @if (record.bestElevationGainM) {
+            <span class="record-tile-meta">{{ record.bestElevationGainM | number:'1.0-0' }}m D+</span>
+          }
         </div>
       } @empty {
         <div class="empty-state">
