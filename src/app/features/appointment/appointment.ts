@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppointmentDTO } from '../../core/models/appointment.dto';
 import { AppointmentService } from '../../core/services/appointment.service';
@@ -51,10 +52,13 @@ export class AppointmentComponent implements OnInit {
   addForm = new FormGroup({
     title:       new FormControl('', [Validators.required, Validators.minLength(2)]),
     apptTime:    new FormControl<string | null>(null),
+    apptEndTime: new FormControl<string | null>(null),
     location:    new FormControl(''),
     description: new FormControl(''),
     apptType:    new FormControl<string | null>(null, [Validators.required]),
   });
+
+  formError = signal<string | null>(null);
 
   ngOnInit() { this.loadWeek(); }
 
@@ -75,17 +79,28 @@ export class AppointmentComponent implements OnInit {
 
   onSubmit() {
     if (this.addForm.invalid || !this.selectedDay()) return;
+    this.formError.set(null);
     const v = this.addForm.getRawValue();
     this.apptService.save({
       title:       v.title!,
       apptTime:    v.apptTime || undefined,
+      apptEndTime: v.apptEndTime || undefined,
       location:    v.location || undefined,
       description: v.description || undefined,
       apptType:    v.apptType as AppointmentDTO['apptType'],
       apptDate:    this.selectedDay()!
     }).subscribe({
       next: () => this.addForm.reset(),
-      error: err => console.error('Erreur ajout :', err)
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 409) {
+          this.formError.set('Ce rendez-vous chevauche un autre rendez-vous existant.');
+        } else if (err.status === 400) {
+          this.formError.set("L'heure de fin doit être après l'heure de début.");
+        } else {
+          this.formError.set("Erreur lors de l'ajout du rendez-vous.");
+        }
+        console.error('Erreur ajout :', err);
+      }
     });
   }
 
