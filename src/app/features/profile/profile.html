@@ -44,13 +44,6 @@
           <span class="tile-label">Distance (30j)</span>
         </div>
       </div>
-      <div class="stat-tile tile-expenses">
-        <div class="tile-icon"><i class="ti ti-wallet"></i></div>
-        <div class="tile-body">
-          <span class="tile-value">{{ s.expensesThisMonth }} €</span>
-          <span class="tile-label">Dépenses ce mois</span>
-        </div>
-      </div>
       <div class="stat-tile tile-tasks">
         <div class="tile-icon"><i class="ti ti-checkbox"></i></div>
         <div class="tile-body">
@@ -61,9 +54,9 @@
     </div>
   }
 
-  <!-- Records sportifs -->
+  <!-- Records course à pied -->
   <div class="section-title">
-    <i class="ti ti-trophy"></i> Records personnels
+    <i class="ti ti-run"></i> Course à pied — records personnels
   </div>
 
   @if (isLoading()) {
@@ -71,8 +64,28 @@
       <i class="ti ti-loader-2 spin"></i> Chargement...
     </div>
   } @else {
+    <div class="running-records-grid">
+      @for (record of runningRecords(); track record.label) {
+        <div class="running-record-card">
+          <span class="running-record-label">{{ record.label }}</span>
+          <span class="running-record-time">{{ formatDuration(record.durationSeconds) }}</span>
+          <span class="running-record-meta">{{ record.distanceKm | number:'1.1-2' }} km</span>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="ti ti-run"></i>
+          <span>Aucun record de course pour l'instant — connecte ton compte Garmin et enregistre des sorties.</span>
+        </div>
+      }
+    </div>
+
+    <!-- Records autres sports -->
+    <div class="section-title">
+      <i class="ti ti-trophy"></i> Autres sports — records personnels
+    </div>
+
     <div class="records-list">
-      @for (record of records(); track record.sportType) {
+      @for (record of otherRecords(); track record.sportType) {
         <div class="record-item">
           <div class="record-icon" [class]="sportIconClass(record.sportType)">
             <i [class]="'ti ' + sportIcon(record.sportType)"></i>
@@ -99,7 +112,7 @@
       } @empty {
         <div class="empty-state">
           <i class="ti ti-trophy"></i>
-          <span>Aucun record pour l'instant — connecte ton compte Garmin et enregistre des activités.</span>
+          <span>Aucun autre record pour l'instant.</span>
         </div>
       }
     </div>
