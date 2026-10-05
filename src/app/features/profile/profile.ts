@@ -4,10 +4,15 @@ import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
 import { UserStatsDTO } from '../../core/models/user.dto';
-import { GarminRecordsResponse } from '../../core/models/garmin.dto';
+import { GarminActivity, GarminRecordsResponse } from '../../core/models/garmin.dto';
 import { initialsOf } from '../../core/utils/user.utils';
 
 type RecordsPeriod = 'allTime' | 'thisYear';
+
+interface WeeklyDistance {
+  label: string;
+  km: number;
+}
 
 @Component({
   selector: 'app-profile',
@@ -35,6 +40,9 @@ export class ProfileComponent implements OnInit {
   runningRecords = computed(() => this.records()[this.period()].runningRecords);
   otherRecords = computed(() => this.records()[this.period()].otherRecords);
 
+  weeklyDistance = signal<WeeklyDistance[]>([]);
+  maxWeeklyKm = computed(() => Math.max(1, ...this.weeklyDistance().map(w => w.km)));
+
   ngOnInit(): void {
     this.userService.loadUser().subscribe({
       error: () => this.userLoadError.set(true)
@@ -51,6 +59,11 @@ export class ProfileComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false)
+    });
+
+    const eightWeeksAgo = this.toDateStr(this.mondayOf(new Date(Date.now() - 7 * 7 * 86400000)));
+    this.garminService.getActivitiesSince(eightWeeksAgo, 300).subscribe(activities => {
+      this.weeklyDistance.set(this.bucketWeeklyDistance(activities));
     });
   }
 
@@ -73,6 +86,39 @@ export class ProfileComponent implements OnInit {
     return h > 0
       ? `${h}h${String(m).padStart(2, '0')}`
       : `${m}min${String(s).padStart(2, '0')}`;
+  }
+
+  private mondayOf(date: Date): Date {
+    const day = date.getDay() || 7;
+    const m = new Date(date);
+    m.setDate(date.getDate() - day + 1);
+    m.setHours(0, 0, 0, 0);
+    return m;
+  }
+
+  private toDateStr(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  private bucketWeeklyDistance(activities: GarminActivity[]): WeeklyDistance[] {
+    const thisMonday = this.mondayOf(new Date());
+    const weeks: { start: Date; km: number }[] = Array.from({ length: 8 }, (_, i) => {
+      const start = new Date(thisMonday);
+      start.setDate(thisMonday.getDate() - (7 - i) * 7);
+      return { start, km: 0 };
+    });
+
+    for (const a of activities) {
+      if (!a.distance) continue;
+      const weekStart = this.mondayOf(new Date(a.startLocal)).getTime();
+      const bucket = weeks.find(w => w.start.getTime() === weekStart);
+      if (bucket) bucket.km += a.distance / 1000;
+    }
+
+    return weeks.map(w => ({
+      label: `${w.start.getDate()}/${w.start.getMonth() + 1}`,
+      km: Math.round(w.km * 10) / 10
+    }));
   }
 
   private matchType(type: string, ...needles: string[]): boolean {

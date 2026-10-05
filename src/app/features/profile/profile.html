@@ -54,6 +54,27 @@
     </div>
   }
 
+  <!-- Graphique distance sport -->
+  @if (weeklyDistance().length > 0) {
+    <div class="section-title">
+      <i class="ti ti-chart-histogram"></i> Distance par semaine (8 dernières semaines)
+    </div>
+    <div class="weekly-chart">
+      @for (week of weeklyDistance(); track week.label) {
+        <div class="chart-col">
+          <div class="chart-bar-track">
+            <div class="chart-bar" [style.height.%]="(week.km / maxWeeklyKm()) * 100">
+              @if (week.km > 0) {
+                <span class="chart-bar-value">{{ week.km | number:'1.0-1' }}</span>
+              }
+            </div>
+          </div>
+          <span class="chart-col-label">{{ week.label }}</span>
+        </div>
+      }
+    </div>
+  }
+
   <!-- Records personnels -->
   <div class="section-title records-header">
     <i class="ti ti-trophy"></i> Records personnels

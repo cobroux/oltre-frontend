@@ -71,6 +71,12 @@ export class GarminService {
     );
   }
 
+  getActivitiesSince(sinceDate: string, limit = 200) {
+    return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${sinceDate}&limit=${limit}`).pipe(
+      catchError(() => of([] as GarminActivity[]))
+    );
+  }
+
   getRecords() {
     const emptyPeriod: GarminRecords = { runningRecords: [], otherRecords: [] };
     const empty: GarminRecordsResponse = { allTime: emptyPeriod, thisYear: emptyPeriod };
