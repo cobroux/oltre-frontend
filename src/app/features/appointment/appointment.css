@@ -96,9 +96,9 @@
 
 /* ── Formulaire ─────────────────────────────────────── */
 .add-item-box {
-  display: flex; gap: 8px; align-items: center;
-  margin-bottom: 1.25rem; padding-bottom: 1.25rem;
-  border-bottom: 0.5px solid var(--color-border); flex-wrap: wrap;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 1.5rem; padding: 16px;
+  background: var(--color-bg); border-radius: var(--radius-md);
 }
 
 .add-item-box input[type="text"],
