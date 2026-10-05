@@ -6,8 +6,9 @@
 }
 
 .page-title {
-  font-size: var(--font-size-lg);
-  font-weight: 500;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  letter-spacing: -0.3px;
   color: var(--color-text-primary);
   margin-bottom: 1.25rem;
   display: flex;
@@ -153,7 +154,7 @@
 /* ── Section titre ───────────────────────────────────── */
 .section-title {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 10px;
   display: flex;
