@@ -3,6 +3,11 @@
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
 }
 
 .page-title {
@@ -18,7 +23,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-bottom: 1.5rem;
 }
 
 .stat-card {
