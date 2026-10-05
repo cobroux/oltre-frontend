@@ -91,8 +91,10 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <i class="ti ti-loader-2 spin"></i> Chargement...
+    <div class="records-grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton skeleton-tile"></div>
+      }
     </div>
   } @else {
     <div class="records-subtitle"><i class="ti ti-run"></i> Course à pied</div>
