@@ -3,10 +3,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { GarminActivity, GarminWeekStats, GarminRecords, GarminRecordsResponse } from '../models/garmin.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class GarminService {
-  private readonly API = 'http://localhost:8080/api/garmin';
+  private readonly API = `${getApiUrl()}/api/garmin`;
 
   activitiesSignal = signal<GarminActivity[]>([]);
   weekStatsSignal  = signal<GarminWeekStats | null>(null);

@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { AppointmentDTO } from '../models/appointment.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class AppointmentService {
-  private readonly API = 'http://localhost:8080/api/appointments';
+  private readonly API = `${getApiUrl()}/api/appointments`;
   appointmentsSignal = signal<AppointmentDTO[]>([]);
   constructor(private http: HttpClient) {}
 
