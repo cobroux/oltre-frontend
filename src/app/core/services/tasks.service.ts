@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { TasksDTO } from '../models/tasks.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
-  private readonly API = 'http://localhost:8080/api/tasks';
+  private readonly API = `${getApiUrl()}/api/tasks`;
 
   tasksListSignal = signal<TasksDTO[]>([]);
   constructor(private http: HttpClient) {}

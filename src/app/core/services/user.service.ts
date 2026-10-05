@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { UserDTO, UserStatsDTO } from '../models/user.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly API = 'http://localhost:8080/api/users/me';
+  private readonly API = `${getApiUrl()}/api/users/me`;
 
   currentUser = signal<UserDTO | null>(null);
 

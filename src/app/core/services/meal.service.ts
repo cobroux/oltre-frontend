@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { MealDTO } from '../models/meal.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class MealService {
-  private readonly API = 'http://localhost:8080/api/meals';
+  private readonly API = `${getApiUrl()}/api/meals`;
 
   mealsSignal = signal<MealDTO[]>([]);
 

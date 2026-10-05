@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { ExpensesDTO } from '../models/expenses.dto';
+import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
 export class ExpensesSevice {
-  private readonly API = 'http://localhost:8080/api/expenses';
+  private readonly API = `${getApiUrl()}/api/expenses`;
 
   intSignal = signal<number | null>(null);
   expensesSignal = signal<ExpensesDTO | null>(null);

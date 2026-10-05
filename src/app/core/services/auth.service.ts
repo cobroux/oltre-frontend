@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { getApiUrl } from '../config/runtime-config';
 
 export interface AuthUser {
   token: string;
@@ -11,7 +12,7 @@ export interface AuthUser {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'http://localhost:8080/auth';
+  private readonly API = `${getApiUrl()}/auth`;
   private readonly TOKEN_KEY = 'oltre_token';
 
   currentUser = signal<AuthUser | null>(this.loadFromStorage());
