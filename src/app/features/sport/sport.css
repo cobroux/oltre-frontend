@@ -108,6 +108,26 @@
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spin { animation: spin 0.8s linear infinite; }
 
+/* ── Skeleton loader ───────────────────────────────────── */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg) 25%, var(--color-border) 37%, var(--color-bg) 63%);
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-stat { height: 72px; }
+
+.skeleton-activity {
+  height: 64px;
+  margin-bottom: 8px;
+}
+
 /* ── Stats semaine ───────────────────────────────────── */
 .week-label {
   font-size: 13px;

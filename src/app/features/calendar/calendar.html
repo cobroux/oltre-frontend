@@ -57,7 +57,16 @@
 
   <!-- Grille -->
   @if (isLoading()) {
-    <div class="loading"><i class="ti ti-loader-2 spin"></i> Chargement...</div>
+    <div class="cal-grid">
+      @for (day of DAYS_FR; track day) {
+        <div class="dow">{{ day }}</div>
+      }
+      @for (cell of skeletonCells; track $index) {
+        <div class="day-cell">
+          <div class="skeleton skeleton-cell"></div>
+        </div>
+      }
+    </div>
   } @else {
     <div class="cal-grid">
       @for (day of DAYS_FR; track day) {

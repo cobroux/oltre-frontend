@@ -55,6 +55,7 @@ export class CalendarComponent implements OnInit {
   monthOffset  = signal(0);
   selectedDay  = signal<string | null>(null);
   isLoading    = signal(false);
+  skeletonCells = Array.from({ length: 35 });
 
   // Données brutes
   appointments = signal<AppointmentDTO[]>([]);

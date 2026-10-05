@@ -31,8 +31,15 @@
       </p>
     </div>
   } @else if (isLoading()) {
-    <div class="loading">
-      <i class="ti ti-loader-2 spin"></i> Chargement de tes activités...
+    <div class="stats-row">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton skeleton-stat"></div>
+      }
+    </div>
+    <div class="activities-list">
+      @for (i of [1,2,3,4,5]; track i) {
+        <div class="skeleton skeleton-activity"></div>
+      }
     </div>
   } @else {
 
