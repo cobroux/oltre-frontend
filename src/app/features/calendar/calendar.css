@@ -155,8 +155,8 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  background: var(--color-border);
-  border: 0.5px solid var(--color-border);
+  background: #c7cce0;
+  border: 1px solid #c7cce0;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 1.5rem;
