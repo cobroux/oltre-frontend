@@ -1,4 +1,4 @@
-<div class="content-card">
+<div class="page-header">
   <h2 class="page-title">Mes Tâches</h2>
 
   <!-- Stats -->
@@ -25,7 +25,9 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="content-card">
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
     <input type="text" placeholder="Titre de la tâche..." formControlName="tasksName" />

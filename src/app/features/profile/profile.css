@@ -4,6 +4,11 @@
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
 }
 
 .page-title {
@@ -22,9 +27,11 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 0.5rem 0 1.5rem;
-  border-bottom: 0.5px solid var(--color-border);
-  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
 }
 
 .avatar-lg {
