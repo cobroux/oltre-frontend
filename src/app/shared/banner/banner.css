@@ -19,21 +19,17 @@
   flex: 1;
 }
 
-.avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+.today-date {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
-  color: #fff;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: transform 0.15s;
+  color: var(--color-text-secondary);
+  background: var(--color-bg);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.avatar:hover { transform: scale(1.05); }
+.today-date i { color: var(--color-accent); font-size: 15px; }

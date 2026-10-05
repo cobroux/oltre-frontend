@@ -1,15 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { initialsOf } from '../../core/utils/user.utils';
 
 
 @Component({
   selector: 'app-banner',
   standalone: true,
   templateUrl: './banner.html',
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule],
   styleUrls: ['./banner.css'],
 })
 export class BannerComponent implements OnInit {
@@ -20,12 +18,19 @@ export class BannerComponent implements OnInit {
 
     user = this.userService.currentUser;
 
+  todayLabel = this.formatToday();
+
     ngOnInit(): void {
       this.userService.loadUser().subscribe();
 
   }
 
-  initials(): string {
-    return initialsOf(this.user()?.username);
+  private formatToday(): string {
+    const label = new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    });
+    return label.charAt(0).toUpperCase() + label.slice(1);
   }
 }
