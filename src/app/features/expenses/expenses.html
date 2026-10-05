@@ -19,6 +19,36 @@
     </div>
   </div>
 
+  <!-- Répartition par récurrence -->
+  @if (recTypeBreakdown().length > 0) {
+    <div class="section-title">
+      <i class="ti ti-chart-donut-2"></i> Répartition par récurrence
+    </div>
+    <div class="breakdown-row">
+      <svg viewBox="0 0 100 100" class="donut-chart">
+        @for (slice of recTypeBreakdown(); track slice.recType) {
+          <circle
+            cx="50" cy="50" r="40"
+            fill="none"
+            [attr.stroke]="slice.color"
+            stroke-width="16"
+            [attr.stroke-dasharray]="slice.dasharray"
+            [attr.stroke-dashoffset]="slice.dashoffset"
+          />
+        }
+      </svg>
+      <div class="breakdown-legend">
+        @for (slice of recTypeBreakdown(); track slice.recType) {
+          <div class="legend-row">
+            <span class="legend-dot" [style.background]="slice.color"></span>
+            <span class="legend-label">{{ slice.label }}</span>
+            <span class="legend-value">{{ slice.amount }} € <span class="legend-percent">({{ slice.percent }}%)</span></span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
     <input type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />

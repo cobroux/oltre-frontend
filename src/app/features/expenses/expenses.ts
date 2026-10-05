@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ExpensesSevice } from '../../core/services/expenses.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -138,6 +138,39 @@ export class ExpensesComponent implements OnInit {
     return icons[recType] ?? 'ti-wallet';
   }
 
- 
+  private readonly RECTYPE_COLORS: Record<string, string> = {
+    Monthly: '#6C63FF',
+    Yearly:  '#059669',
+    Daily:   '#D97706'
+  };
+  private readonly DONUT_CIRCUMFERENCE = 2 * Math.PI * 40;
+
+  recTypeBreakdown = computed(() => {
+    const totals = new Map<string, number>();
+    for (const e of this.allExpenses()) {
+      const key = e.recType ?? 'Other';
+      totals.set(key, (totals.get(key) ?? 0) + (e.amount ?? 0));
+    }
+    const grandTotal = [...totals.values()].reduce((s, v) => s + v, 0) || 1;
+
+    const slices = [...totals.entries()]
+      .map(([recType, amount]) => ({
+        recType,
+        label: this.getRecLabel(recType),
+        amount,
+        percent: Math.round((amount / grandTotal) * 100),
+        color: this.RECTYPE_COLORS[recType] ?? '#6b7280'
+      }))
+      .sort((a, b) => b.amount - a.amount);
+
+    let cumulativePercent = 0;
+    return slices.map(s => {
+      const dashLength = (s.percent / 100) * this.DONUT_CIRCUMFERENCE;
+      const dasharray = `${dashLength} ${this.DONUT_CIRCUMFERENCE - dashLength}`;
+      const dashoffset = -((cumulativePercent / 100) * this.DONUT_CIRCUMFERENCE);
+      cumulativePercent += s.percent;
+      return { ...s, dasharray, dashoffset };
+    });
+  });
 
 }
