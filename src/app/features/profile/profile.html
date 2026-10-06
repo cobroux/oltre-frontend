@@ -101,6 +101,7 @@
     <div class="records-grid">
       @for (record of runningRecords(); track record.label) {
         <div class="record-tile tile-run">
+          <i class="ti ti-run record-tile-icon"></i>
           <span class="record-tile-label">{{ record.label }}</span>
           <span class="record-tile-value">{{ formatDuration(record.durationSeconds) }}</span>
           <span class="record-tile-meta">{{ record.distanceKm | number:'1.1-2' }} km</span>

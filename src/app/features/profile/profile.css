@@ -334,7 +334,17 @@
 }
 
 .tile-run    { background: #d1fae5; }
-.tile-run .record-tile-label    { color: #059669; }
+.tile-run .record-tile-label, .tile-run .record-tile-icon    { color: #059669; }
+
+/* Dégradé progressif selon la difficulté du record (5km → marathon) pour
+   donner une lecture visuelle de la progression, pas juste des cartes identiques. */
+.records-grid .tile-run:nth-child(1) { background: #ecfdf5; }
+.records-grid .tile-run:nth-child(2) { background: #ddfaec; }
+.records-grid .tile-run:nth-child(3) { background: #c9f6e2; }
+.records-grid .tile-run:nth-child(4) { background: #b3f0d4; }
+.records-grid .tile-run:nth-child(5) { background: #9ce9c5; }
+.records-grid .tile-run:nth-child(6) { background: #83e0b4; }
+.records-grid .tile-run:nth-child(7) { background: #68d6a2; }
 
 .tile-ride   { background: #ede9ff; }
 .tile-ride .record-tile-label, .tile-ride .record-tile-icon   { color: #534AB7; }
