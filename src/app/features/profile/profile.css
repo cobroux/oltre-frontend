@@ -333,18 +333,31 @@
   color: var(--color-text-muted);
 }
 
-.tile-run    { background: #d1fae5; }
-.tile-run .record-tile-label, .tile-run .record-tile-icon    { color: #059669; }
+.tile-run    { background: #E1EAFF; }
+.tile-run .record-tile-label, .tile-run .record-tile-icon    { color: #1E3A5F; }
+.tile-run .record-tile-value { color: #1E3A5F; }
 
 /* Dégradé progressif selon la difficulté du record (5km → marathon) pour
    donner une lecture visuelle de la progression, pas juste des cartes identiques. */
-.records-grid .tile-run:nth-child(1) { background: #ecfdf5; }
-.records-grid .tile-run:nth-child(2) { background: #ddfaec; }
-.records-grid .tile-run:nth-child(3) { background: #c9f6e2; }
-.records-grid .tile-run:nth-child(4) { background: #b3f0d4; }
-.records-grid .tile-run:nth-child(5) { background: #9ce9c5; }
-.records-grid .tile-run:nth-child(6) { background: #83e0b4; }
-.records-grid .tile-run:nth-child(7) { background: #68d6a2; }
+.records-grid .tile-run:nth-child(1) { background: #EFF4FF; }
+.records-grid .tile-run:nth-child(2) { background: #E1EAFF; }
+.records-grid .tile-run:nth-child(3) { background: #CFE0FF; }
+.records-grid .tile-run:nth-child(4) { background: #B6D1FF; }
+.records-grid .tile-run:nth-child(5) { background: #93BBFF; }
+.records-grid .tile-run:nth-child(6) {
+  background: #5C91FF;
+}
+.records-grid .tile-run:nth-child(6) .record-tile-label,
+.records-grid .tile-run:nth-child(6) .record-tile-icon,
+.records-grid .tile-run:nth-child(6) .record-tile-value,
+.records-grid .tile-run:nth-child(6) .record-tile-meta { color: #fff; }
+.records-grid .tile-run:nth-child(7) {
+  background: var(--color-accent);
+}
+.records-grid .tile-run:nth-child(7) .record-tile-label,
+.records-grid .tile-run:nth-child(7) .record-tile-icon,
+.records-grid .tile-run:nth-child(7) .record-tile-value,
+.records-grid .tile-run:nth-child(7) .record-tile-meta { color: #fff; }
 
 .tile-ride   { background: #ede9ff; }
 .tile-ride .record-tile-label, .tile-ride .record-tile-icon   { color: #534AB7; }

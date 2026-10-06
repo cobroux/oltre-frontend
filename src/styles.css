@@ -7,12 +7,12 @@
   --color-text-primary:   #1a1a2e;
   --color-text-secondary: #8890aa;
   --color-text-muted:     #b0b8d0;
-  --color-accent:         #6C63FF;
-  --color-accent-hover:   #5a52e0;
-  --color-accent-subtle:  #ede9ff;
-  --color-accent-border:  #c5bfff;
-  --color-tasks:          #6C63FF;
-  --color-tasks-bg:       #ede9ff;
+  --color-accent:         #2F6FED;
+  --color-accent-hover:   #2458C4;
+  --color-accent-subtle:  #E8EFFF;
+  --color-accent-border:  #B9D0FF;
+  --color-tasks:          #2F6FED;
+  --color-tasks-bg:       #E8EFFF;
   --color-food:           #D97706;
   --color-food-bg:        #fef3c7;
   --color-sport:          #059669;
@@ -20,16 +20,17 @@
   --color-budget:         #6b7280;
   --color-budget-bg:      #f3f4f6;
   --sidebar-width:        210px;
-  --font-sans:            'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans:            'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-display:         'Space Grotesk', var(--font-sans);
   --font-size-xs:         11px;
   --font-size-sm:         13px;
   --font-size-base:       15px;
   --font-size-lg:         17px;
   --font-size-xl:         20px;
   --font-size-2xl:        24px;
-  --radius-sm:   6px;
-  --radius-md:   8px;
-  --radius-lg:   12px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
   --radius-full: 9999px;
 }
 
@@ -55,10 +56,18 @@ html, body {
   background: var(--color-bg);
 }
 
-h1 { font-size: var(--font-size-xl); font-weight: 500; }
-h2 { font-size: var(--font-size-lg); font-weight: 500; }
-h3 { font-size: var(--font-size-base); font-weight: 500; }
+h1, h2, h3 { font-family: var(--font-display); }
+h1 { font-size: var(--font-size-xl); font-weight: 600; }
+h2 { font-size: var(--font-size-lg); font-weight: 600; }
+h3 { font-size: var(--font-size-base); font-weight: 600; }
 p  { font-size: var(--font-size-base); color: var(--color-text-secondary); line-height: 1.6; }
+
+/* Chiffres clés : même traitement typographique partout (dashboard, profil,
+   tâches, dépenses, calendrier) pour que l'app se lise comme un seul système. */
+.stat-value, .tile-value, .record-tile-value, .metric-value, .logo-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
 
 .card {
   background: var(--color-surface);
