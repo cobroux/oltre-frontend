@@ -332,9 +332,6 @@
 .tile-ride   { background: #ede9ff; }
 .tile-ride .record-tile-label, .tile-ride .record-tile-icon   { color: #534AB7; }
 
-.tile-weight { background: #fef3c7; }
-.tile-weight .record-tile-label, .tile-weight .record-tile-icon { color: #D97706; }
-
 .tile-swim   { background: #e0f2fe; }
 .tile-swim .record-tile-label, .tile-swim .record-tile-icon   { color: #0284c7; }
 

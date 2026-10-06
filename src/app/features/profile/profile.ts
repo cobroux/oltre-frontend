@@ -127,7 +127,6 @@ export class ProfileComponent implements OnInit {
 
   sportLabel(type: string): string {
     if (this.matchType(type, 'cycling', 'biking')) return 'Vélo';
-    if (this.matchType(type, 'strength')) return 'Musculation';
     if (this.matchType(type, 'swim')) return 'Natation';
     if (this.matchType(type, 'walking', 'hiking')) return 'Marche';
     return 'Autre';
@@ -135,7 +134,6 @@ export class ProfileComponent implements OnInit {
 
   sportIcon(type: string): string {
     if (this.matchType(type, 'cycling', 'biking')) return 'ti-bike';
-    if (this.matchType(type, 'strength')) return 'ti-barbell';
     if (this.matchType(type, 'swim')) return 'ti-swimming';
     if (this.matchType(type, 'walking', 'hiking')) return 'ti-walk';
     return 'ti-activity';
@@ -143,7 +141,6 @@ export class ProfileComponent implements OnInit {
 
   sportIconClass(type: string): string {
     if (this.matchType(type, 'cycling', 'biking')) return 'icon-ride';
-    if (this.matchType(type, 'strength')) return 'icon-weight';
     if (this.matchType(type, 'swim')) return 'icon-swim';
     if (this.matchType(type, 'walking', 'hiking')) return 'icon-walk';
     return 'icon-other';
@@ -151,7 +148,6 @@ export class ProfileComponent implements OnInit {
 
   sportTileClass(type: string): string {
     if (this.matchType(type, 'cycling', 'biking')) return 'tile-ride';
-    if (this.matchType(type, 'strength')) return 'tile-weight';
     if (this.matchType(type, 'swim')) return 'tile-swim';
     if (this.matchType(type, 'walking', 'hiking')) return 'tile-walk';
     return 'tile-other';
