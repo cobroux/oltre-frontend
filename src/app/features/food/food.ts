@@ -2,7 +2,7 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { MealService } from '../../core/services/meal.service';
 import { FoodSearchService } from '../../core/services/food-search.service';
 import { MealDTO, OpenFoodFactsProductDTO } from '../../core/models/meal.dto';
@@ -77,6 +77,17 @@ export class FoodComponent implements OnInit {
   selectedProduct = signal<OpenFoodFactsProductDTO | null>(null);
   searching       = signal(false);
 
+  // Alimenté directement par l'event (input) du template plutôt que par
+  // addForm.controls.mealName.valueChanges : sur mobile (Gboard, clavier
+  // iOS avec autocorrection), Angular bufferise les frappes en "composition"
+  // et ne pousse la valeur dans le FormControl qu'à la fin de celle-ci -
+  // souvent déclenchée par l'espace. L'event natif, lui, part à chaque frappe.
+  private searchInput$ = new Subject<string>();
+
+  onMealNameInput(value: string) {
+    this.searchInput$.next(value);
+  }
+
   // Aperçu nutrition calculé pour la quantité saisie
   nutritionPreview = computed(() => {
     const p = this.selectedProduct();
@@ -105,7 +116,7 @@ export class FoodComponent implements OnInit {
   ngOnInit() {
     this.loadWeek();
 
-    this.addForm.controls.mealName.valueChanges.pipe(
+    this.searchInput$.pipe(
       debounceTime(120),
       distinctUntilChanged(),
       switchMap(query => {

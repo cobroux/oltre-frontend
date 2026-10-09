@@ -78,7 +78,8 @@
       <!-- Formulaire d'ajout -->
       <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
         <div class="product-search">
-          <input type="text" placeholder="Nom du repas, ou recherche un produit..." formControlName="mealName" autocomplete="off" />
+          <input type="text" placeholder="Nom du repas, ou recherche un produit..." formControlName="mealName"
+                 (input)="onMealNameInput($any($event.target).value)" autocomplete="off" />
           @if (productResults().length > 0) {
             <ul class="product-results">
               @for (product of productResults(); track product.barcode) {
