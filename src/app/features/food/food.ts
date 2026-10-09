@@ -266,6 +266,14 @@ export class FoodComponent implements OnInit {
     return labels[type] ?? type;
   }
 
+  getMealShortLabel(type: string): string {
+    const labels: Record<string, string> = {
+      PETIT_DEJ: 'P-déj', DEJEUNER: 'Déjeuner',
+      DINER: 'Dîner', COLLATION: 'Collation'
+    };
+    return labels[type] ?? type;
+  }
+
   getMealIcon(type: string): string {
     const icons: Record<string, string> = {
       PETIT_DEJ: 'ti-coffee', DEJEUNER: 'ti-soup',
