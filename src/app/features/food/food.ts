@@ -1,7 +1,8 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { MealService } from '../../core/services/meal.service';
 import { FoodSearchService } from '../../core/services/food-search.service';
 import { MealDTO, OpenFoodFactsProductDTO } from '../../core/models/meal.dto';
@@ -114,7 +115,15 @@ export class FoodComponent implements OnInit {
         this.selectedProduct.set(null);
         if (!query || query.trim().length < 2) return [[]];
         this.searching.set(true);
-        return this.foodSearchService.search(query);
+        return this.foodSearchService.search(query).pipe(
+          // Une recherche en échec (réseau, API down) ne doit pas tuer
+          // l'abonnement - sinon plus aucune frappe ne redéclenche de
+          // recherche tant que la page n'est pas rechargée.
+          catchError(err => {
+            console.error('Erreur recherche produit :', err);
+            return of([]);
+          })
+        );
       })
     ).subscribe(results => {
       this.searching.set(false);
