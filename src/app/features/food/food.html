@@ -1,5 +1,5 @@
 <div class="content-card">
-  <h2 class="page-title">Planificateur de repas</h2>
+  <h2 class="page-title">Repas</h2>
 
   <!-- Navigation semaine -->
   <div class="week-nav">
@@ -9,33 +9,20 @@
     <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
   </div>
 
-  <!-- Vue semaine -->
-  <div class="week-grid">
+  <!-- Semaine : pastilles -->
+  <div class="week-strip">
     @for (day of weekDays(); track day.toISOString()) {
-      <div class="day-col"
+      <div class="day-pill"
            [class.today]="isToday(day)"
            [class.selected]="isSelected(day)"
            (click)="selectDay(day)">
-        <div class="day-head">
-          <div class="day-name">{{ getDayName(day) }}</div>
-          <div class="day-num">{{ day.getDate() }}</div>
-        </div>
-        <div class="day-body">
-          @let dayMeals = getMealsForDay(day);
-          @if (dayMeals.length === 0) {
-            <div class="empty-day"><i class="ti ti-plus"></i> Planifier</div>
-          } @else {
-            @for (meal of dayMeals.slice(0, 3); track meal.id) {
-              <div class="meal-dot">
-                <div class="dot" [class]="getDotClass(meal.mealType)"></div>
-                <span class="meal-preview">{{ meal.mealName }}</span>
-              </div>
-            }
-            @if (dayMeals.length > 3) {
-              <div class="more-meals">+{{ dayMeals.length - 3 }} autre{{ dayMeals.length - 3 > 1 ? 's' : '' }}</div>
-            }
-          }
-        </div>
+        <div class="day-pill-name">{{ getDayName(day) }}</div>
+        <div class="day-pill-num">{{ day.getDate() }}</div>
+        @if (getMealsForDay(day).length > 0) {
+          <div class="day-pill-dot"></div>
+        } @else if (isToday(day)) {
+          <div class="day-pill-today-label">Auj.</div>
+        }
       </div>
     }
   </div>
@@ -43,42 +30,30 @@
   <!-- Détail du jour sélectionné -->
   @if (selectedDay()) {
     <div class="detail-panel">
-      <div class="detail-header">
-        <span class="detail-title">{{ getDayLabel(selectedDay()!) }}</span>
-        @if (selectedDay() === toDateStr(today)) {
-          <span class="today-badge">Aujourd'hui</span>
-        }
-      </div>
 
-      <!-- Totaux nutrition du jour -->
+      <!-- Résumé du jour : une ligne -->
       @if (dayTotals().calories > 0) {
-        <div class="stats-row">
-          <div class="stat-card accent">
-            <span class="stat-label">Calories</span>
-            <span class="stat-value">{{ dayTotals().calories }} kcal</span>
-            <span class="stat-sub">sur les repas renseignés avec produit</span>
+        <div class="day-summary">
+          <div class="day-summary-kcal">
+            <i class="ti ti-flame"></i>
+            <span class="day-summary-kcal-value">{{ dayTotals().calories }}</span>
+            <span class="day-summary-kcal-label">kcal {{ selectedDay() === toDateStr(today) ? "aujourd'hui" : 'ce jour' }}</span>
           </div>
-          <div class="macros-grid">
-            <div class="macro-card prot">
-              <span class="macro-label">Protéines</span>
-              <span class="macro-value">{{ dayTotals().proteinG | number:'1.0-1' }} g</span>
-            </div>
-            <div class="macro-card gluc">
-              <span class="macro-label">Glucides</span>
-              <span class="macro-value">{{ dayTotals().carbsG | number:'1.0-1' }} g</span>
-            </div>
-            <div class="macro-card lip">
-              <span class="macro-label">Lipides</span>
-              <span class="macro-value">{{ dayTotals().fatG | number:'1.0-1' }} g</span>
-            </div>
+          <div class="day-summary-sep"></div>
+          <div class="day-summary-macros">
+            <span><strong>{{ dayTotals().proteinG | number:'1.0-0' }}g</strong> protéines</span>
+            <span><strong>{{ dayTotals().carbsG | number:'1.0-0' }}g</strong> glucides</span>
+            <span><strong>{{ dayTotals().fatG | number:'1.0-0' }}g</strong> lipides</span>
           </div>
         </div>
       }
 
       <!-- Formulaire d'ajout -->
-      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-box">
+
         <div class="product-search">
-          <input type="text" placeholder="Nom du repas, ou recherche un produit..." formControlName="mealName"
+          <i class="ti ti-search search-icon"></i>
+          <input type="text" placeholder="Chercher un aliment, ou juste noter un repas..." formControlName="mealName"
                  (input)="onMealNameInput($any($event.target).value)" autocomplete="off" />
           @if (productResults().length > 0) {
             <ul class="product-results">
@@ -86,6 +61,8 @@
                 <li (click)="pickProduct(product)">
                   @if (product.imageUrl) {
                     <img [src]="product.imageUrl" alt="" />
+                  } @else {
+                    <div class="product-result-placeholder"><i class="ti ti-apple"></i></div>
                   }
                   <div class="product-result-info">
                     <span class="product-result-name">{{ product.productName }}</span>
@@ -99,21 +76,30 @@
             </ul>
           }
         </div>
-        <select formControlName="mealType">
-          <option [ngValue]="null" disabled>Repas</option>
-          <option value="PETIT_DEJ">Petit-déj</option>
-          <option value="DEJEUNER">Déjeuner</option>
-          <option value="DINER">Dîner</option>
-          <option value="COLLATION">Collation</option>
-        </select>
-        @if (selectedProduct()) {
-          <input type="number" placeholder="Quantité (g)" formControlName="quantityG" min="1" />
-        } @else {
-          <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" />
-        }
-        <button class="add-btn" type="submit">
-          <i class="ti ti-plus"></i> Ajouter
-        </button>
+
+        <div class="add-box-controls">
+          <div class="meal-type-picker">
+            @for (type of MEAL_ORDER; track type) {
+              <button type="button" class="meal-type-btn" [class.active]="addForm.controls.mealType.value === type"
+                      (click)="pickMealType(type)" [title]="getMealLabel(type)">
+                <i class="ti" [class]="getMealIcon(type)"></i>
+              </button>
+            }
+          </div>
+
+          <div class="add-box-right">
+            @if (selectedProduct()) {
+              <span class="qty-label">pour</span>
+              <input type="number" formControlName="quantityG" min="1" class="qty-input" />
+              <span class="qty-label">g</span>
+            } @else {
+              <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" class="descript-input" />
+            }
+            <button class="add-btn" type="submit">
+              <i class="ti ti-plus"></i> Ajouter
+            </button>
+          </div>
+        </div>
 
         @if (selectedProduct(); as product) {
           <div class="selected-product">
@@ -147,6 +133,9 @@
           <ul class="items-list">
             @for (meal of group.meals; track meal.id) {
               <li class="item-row">
+                <div class="item-swatch" [class]="'icon-' + group.type.toLowerCase()">
+                  <i [class]="'ti ' + getMealIcon(group.type)"></i>
+                </div>
                 <div class="item-left">
                   <div class="item-info">
                     <span class="item-text">{{ meal.mealName }}</span>
