@@ -148,7 +148,15 @@ export class AppointmentComponent implements OnInit {
     return DAYS[(d.getDay() || 7) - 1] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
   }
 
-  toDateStr(date: Date): string { return date.toISOString().split('T')[0]; }
+  // N'utilise jamais toISOString() ici : elle convertit en UTC, donc pour
+  // tout fuseau en avance sur UTC (France...), minuit local tombe la veille
+  // en UTC et décale la date d'un jour. On reste en composants de date locaux.
+  toDateStr(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
   private getMonday(offset: number): Date {
     const n = new Date(), day = n.getDay() || 7;
