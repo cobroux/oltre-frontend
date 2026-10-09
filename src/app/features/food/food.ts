@@ -156,6 +156,10 @@ export class FoodComponent implements OnInit {
     this.selectedProduct.set(null);
   }
 
+  pickMealType(type: string) {
+    this.addForm.controls.mealType.setValue(type);
+  }
+
   // ── Navigation ───────────────────────────────────────
   prevWeek() {
     this.weekOffset.update(v => v - 1);
