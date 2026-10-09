@@ -176,6 +176,99 @@
 .add-item-box select               { flex: 1; min-width: 110px; }
 .add-item-box input[type="date"]   { flex: 1; min-width: 130px; }
 
+.product-search { position: relative; flex: 2; min-width: 150px; }
+.product-search input[type="text"] { width: 100%; flex: none; }
+
+.product-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(26, 26, 46, 0.1);
+}
+
+.product-results li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.product-results li:hover { background: var(--color-bg); }
+
+.product-results img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.product-result-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.product-result-name {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-result-brand {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.product-result-kcal {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.selected-product {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--color-accent-subtle);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-accent);
+}
+
+.selected-product-kcal {
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.clear-product-btn {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  cursor: pointer;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+}
+
 .add-item-box input:focus,
 .add-item-box select:focus {
   border-color: var(--color-accent);
