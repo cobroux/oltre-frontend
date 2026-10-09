@@ -1,8 +1,10 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MealService } from '../../core/services/meal.service';
-import { MealDTO } from '../../core/models/meal.dto';
+import { FoodSearchService } from '../../core/services/food-search.service';
+import { MealDTO, OpenFoodFactsProductDTO } from '../../core/models/meal.dto';
 
 const DAYS   = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
@@ -22,6 +24,7 @@ interface MealGroup {
 export class FoodComponent implements OnInit {
 
   private mealService = inject(MealService);
+  private foodSearchService = inject(FoodSearchService);
 
   readonly MEAL_ORDER = ['PETIT_DEJ', 'DEJEUNER', 'COLLATION', 'DINER'];
   readonly today = new Date();
@@ -64,10 +67,74 @@ export class FoodComponent implements OnInit {
   addForm = new FormGroup({
     mealName:     new FormControl('', [Validators.required, Validators.minLength(2)]),
     mealType:     new FormControl<string | null>(null, [Validators.required]),
-    mealDescript: new FormControl('')
+    mealDescript: new FormControl(''),
+    quantityG:    new FormControl(100, [Validators.min(1)])
   });
 
-  ngOnInit() { this.loadWeek(); }
+  // Recherche OpenFoodFacts
+  productResults  = signal<OpenFoodFactsProductDTO[]>([]);
+  selectedProduct = signal<OpenFoodFactsProductDTO | null>(null);
+  searching       = signal(false);
+
+  // Aperçu nutrition calculé pour la quantité saisie
+  nutritionPreview = computed(() => {
+    const p = this.selectedProduct();
+    const qty = Number(this.addForm.controls.quantityG.value) || 0;
+    if (!p || qty <= 0) return null;
+    const ratio = qty / 100;
+    return {
+      calories: Math.round(p.caloriesPer100g * ratio),
+      proteinG: p.proteinPer100g != null ? Math.round(p.proteinPer100g * ratio * 10) / 10 : undefined,
+      carbsG:   p.carbsPer100g   != null ? Math.round(p.carbsPer100g   * ratio * 10) / 10 : undefined,
+      fatG:     p.fatPer100g     != null ? Math.round(p.fatPer100g     * ratio * 10) / 10 : undefined
+    };
+  });
+
+  // Totaux macros du jour sélectionné (uniquement les repas rattachés à un produit)
+  dayTotals = computed(() => {
+    const meals = this.mealGroups().flatMap(g => g.meals);
+    return meals.reduce((acc, m) => ({
+      calories: acc.calories + (m.calories ?? 0),
+      proteinG: acc.proteinG + (m.proteinG ?? 0),
+      carbsG:   acc.carbsG   + (m.carbsG   ?? 0),
+      fatG:     acc.fatG     + (m.fatG     ?? 0)
+    }), { calories: 0, proteinG: 0, carbsG: 0, fatG: 0 });
+  });
+
+  ngOnInit() {
+    this.loadWeek();
+
+    this.addForm.controls.mealName.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => {
+        // Le texte tapé correspond déjà au produit sélectionné : pas de
+        // nouvelle recherche, sinon le choix se referme dès qu'on tape.
+        if (this.selectedProduct()?.productName === query) return [];
+        this.selectedProduct.set(null);
+        if (!query || query.trim().length < 2) return [[]];
+        this.searching.set(true);
+        return this.foodSearchService.search(query);
+      })
+    ).subscribe(results => {
+      this.searching.set(false);
+      this.productResults.set(results);
+    });
+  }
+
+  groupCalories(group: MealGroup): number {
+    return group.meals.reduce((sum, m) => sum + (m.calories ?? 0), 0);
+  }
+
+  pickProduct(product: OpenFoodFactsProductDTO) {
+    this.selectedProduct.set(product);
+    this.addForm.controls.mealName.setValue(product.productName, { emitEvent: false });
+    this.productResults.set([]);
+  }
+
+  clearProduct() {
+    this.selectedProduct.set(null);
+  }
 
   // ── Navigation ───────────────────────────────────────
   prevWeek() {
@@ -103,13 +170,28 @@ export class FoodComponent implements OnInit {
   onSubmit() {
     if (this.addForm.invalid || !this.selectedDay()) return;
     const v = this.addForm.getRawValue();
+    const nutrition = this.nutritionPreview();
+    const product = this.selectedProduct();
+
     this.mealService.save({
       mealName:     v.mealName!,
       mealDescript: v.mealDescript || undefined,
       mealType:     v.mealType as MealDTO['mealType'],
-      mealDate:     this.selectedDay()!
+      mealDate:     this.selectedDay()!,
+      ...(product && nutrition ? {
+        calories:   nutrition.calories,
+        proteinG:   nutrition.proteinG,
+        carbsG:     nutrition.carbsG,
+        fatG:       nutrition.fatG,
+        quantityG:  Number(v.quantityG) || undefined,
+        offBarcode: product.barcode
+      } : {})
     }).subscribe({
-      next: () => this.addForm.reset(),
+      next: () => {
+        this.addForm.reset({ quantityG: 100 });
+        this.selectedProduct.set(null);
+        this.productResults.set([]);
+      },
       error: err => console.error('Erreur ajout :', err)
     });
   }

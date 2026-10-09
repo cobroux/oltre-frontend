@@ -50,9 +50,54 @@
         }
       </div>
 
+      <!-- Totaux nutrition du jour -->
+      @if (dayTotals().calories > 0) {
+        <div class="stats-row">
+          <div class="stat-card accent">
+            <span class="stat-label">Calories</span>
+            <span class="stat-value">{{ dayTotals().calories }} kcal</span>
+            <span class="stat-sub">sur les repas renseignés avec produit</span>
+          </div>
+          <div class="macros-grid">
+            <div class="macro-card prot">
+              <span class="macro-label">Protéines</span>
+              <span class="macro-value">{{ dayTotals().proteinG | number:'1.0-1' }} g</span>
+            </div>
+            <div class="macro-card gluc">
+              <span class="macro-label">Glucides</span>
+              <span class="macro-value">{{ dayTotals().carbsG | number:'1.0-1' }} g</span>
+            </div>
+            <div class="macro-card lip">
+              <span class="macro-label">Lipides</span>
+              <span class="macro-value">{{ dayTotals().fatG | number:'1.0-1' }} g</span>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- Formulaire d'ajout -->
       <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
-        <input type="text" placeholder="Nom du repas..." formControlName="mealName" />
+        <div class="product-search">
+          <input type="text" placeholder="Nom du repas, ou recherche un produit..." formControlName="mealName" autocomplete="off" />
+          @if (productResults().length > 0) {
+            <ul class="product-results">
+              @for (product of productResults(); track product.barcode) {
+                <li (click)="pickProduct(product)">
+                  @if (product.imageUrl) {
+                    <img [src]="product.imageUrl" alt="" />
+                  }
+                  <div class="product-result-info">
+                    <span class="product-result-name">{{ product.productName }}</span>
+                    @if (product.brand) {
+                      <span class="product-result-brand">{{ product.brand }}</span>
+                    }
+                  </div>
+                  <span class="product-result-kcal">{{ product.caloriesPer100g | number:'1.0-0' }} kcal/100g</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
         <select formControlName="mealType">
           <option [ngValue]="null" disabled>Repas</option>
           <option value="PETIT_DEJ">Petit-déj</option>
@@ -60,10 +105,27 @@
           <option value="DINER">Dîner</option>
           <option value="COLLATION">Collation</option>
         </select>
-        <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" />
+        @if (selectedProduct()) {
+          <input type="number" placeholder="Quantité (g)" formControlName="quantityG" min="1" />
+        } @else {
+          <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" />
+        }
         <button class="add-btn" type="submit">
           <i class="ti ti-plus"></i> Ajouter
         </button>
+
+        @if (selectedProduct(); as product) {
+          <div class="selected-product">
+            <i class="ti ti-barcode"></i>
+            <span>{{ product.productName }}</span>
+            @if (nutritionPreview(); as nutrition) {
+              <span class="selected-product-kcal">{{ nutrition.calories }} kcal</span>
+            }
+            <button type="button" class="clear-product-btn" (click)="clearProduct()" title="Revenir à la saisie libre">
+              <i class="ti ti-x"></i>
+            </button>
+          </div>
+        }
       </form>
 
       <!-- Groupes par type de repas -->
@@ -76,6 +138,9 @@
               </div>
               <span class="group-title">{{ getMealLabel(group.type) }}</span>
             </div>
+            @if (groupCalories(group) > 0) {
+              <span class="group-calories">{{ groupCalories(group) }} kcal</span>
+            }
           </div>
 
           <ul class="items-list">
@@ -87,9 +152,25 @@
                     @if (meal.mealDescript) {
                       <span class="item-desc">{{ meal.mealDescript }}</span>
                     }
+                    @if (meal.proteinG != null || meal.carbsG != null || meal.fatG != null) {
+                      <div class="item-meta">
+                        @if (meal.proteinG != null) {
+                          <span class="macro-tag prot-tag">P {{ meal.proteinG | number:'1.0-1' }}g</span>
+                        }
+                        @if (meal.carbsG != null) {
+                          <span class="macro-tag gluc-tag">G {{ meal.carbsG | number:'1.0-1' }}g</span>
+                        }
+                        @if (meal.fatG != null) {
+                          <span class="macro-tag lip-tag">L {{ meal.fatG | number:'1.0-1' }}g</span>
+                        }
+                      </div>
+                    }
                   </div>
                 </div>
                 <div class="item-right">
+                  @if (meal.calories != null) {
+                    <span class="item-calories">{{ meal.calories }} kcal</span>
+                  }
                   @if (confirmDeleteId() === meal.id) {
                     <button class="delete-btn confirm" (click)="requestDelete(meal.id)" title="Confirmer la suppression">
                       <i class="ti ti-check"></i>
