@@ -376,3 +376,103 @@
   font-size: 14px; text-align: center;
 }
 .empty-state i { font-size: 28px; }
+
+/* ── Dépenses de l'année ───────────────────────────────── */
+.content-card + .content-card { margin-top: 1.5rem; }
+
+.expenses-year-total {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.expenses-year-total-value {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+}
+
+.expenses-year-total-label {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.expenses-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.expenses-breakdown-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.expenses-breakdown-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.expenses-breakdown-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.expenses-year-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--color-border);
+  overflow: hidden;
+}
+
+.expenses-year-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.expenses-year-item:last-child { border-bottom: none; }
+
+.expenses-year-item-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expenses-year-item-type {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 2px 8px;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.expenses-year-item-amount {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  min-width: 70px;
+  text-align: right;
+}
