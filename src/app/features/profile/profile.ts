@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
+import { ExpensesSevice } from '../../core/services/expenses.service';
 import { UserStatsDTO } from '../../core/models/user.dto';
 import { GarminActivity, GarminRecordsResponse } from '../../core/models/garmin.dto';
+import { ExpensesYearRecapDTO } from '../../core/models/expenses.dto';
 import { initialsOf } from '../../core/utils/user.utils';
 
 type RecordsPeriod = 'allTime' | 'thisYear';
@@ -25,6 +27,7 @@ export class ProfileComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private garminService = inject(GarminService);
+  private expensesService = inject(ExpensesSevice);
 
   user = this.userService.currentUser;
   stats = signal<UserStatsDTO | null>(null);
@@ -42,6 +45,8 @@ export class ProfileComponent implements OnInit {
 
   weeklyDistance = signal<WeeklyDistance[]>([]);
   maxWeeklyKm = computed(() => Math.max(1, ...this.weeklyDistance().map(w => w.km)));
+
+  expensesYearRecap = signal<ExpensesYearRecapDTO | null>(null);
 
   ngOnInit(): void {
     this.userService.loadUser().subscribe({
@@ -64,6 +69,11 @@ export class ProfileComponent implements OnInit {
     const eightWeeksAgo = this.toDateStr(this.mondayOf(new Date(Date.now() - 7 * 7 * 86400000)));
     this.garminService.getActivitiesSince(eightWeeksAgo, 300).subscribe(activities => {
       this.weeklyDistance.set(this.bucketWeeklyDistance(activities));
+    });
+
+    this.expensesService.getYearRecap().subscribe({
+      next: r => this.expensesYearRecap.set(r),
+      error: () => this.expensesYearRecap.set(null)
     });
   }
 
@@ -158,5 +168,10 @@ export class ProfileComponent implements OnInit {
     if (this.matchType(type, 'swim')) return 'tile-swim';
     if (this.matchType(type, 'walking', 'hiking')) return 'tile-walk';
     return 'tile-other';
+  }
+
+  getRecTypeLabel(type: string): string {
+    const labels: Record<string, string> = { Monthly: 'Mensuel', Daily: 'Quotidien', Yearly: 'Annuel' };
+    return labels[type] ?? type;
   }
 }

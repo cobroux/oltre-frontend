@@ -140,3 +140,48 @@
     </div>
   }
 </div>
+
+@if (expensesYearRecap(); as recap) {
+  <div class="content-card">
+    <div class="section-title">
+      <i class="ti ti-receipt-2"></i> Dépenses depuis le 1er janvier
+    </div>
+
+    <div class="expenses-year-total">
+      <span class="expenses-year-total-value">{{ recap.total | number:'1.0-0' }} €</span>
+      <span class="expenses-year-total-label">dépensés cette année</span>
+    </div>
+
+    <div class="expenses-breakdown">
+      <div class="expenses-breakdown-tile">
+        <span class="expenses-breakdown-label">Mensuel</span>
+        <span class="expenses-breakdown-value">{{ recap.monthlyTotal | number:'1.0-0' }} €</span>
+      </div>
+      <div class="expenses-breakdown-tile">
+        <span class="expenses-breakdown-label">Quotidien</span>
+        <span class="expenses-breakdown-value">{{ recap.dailyTotal | number:'1.0-0' }} €</span>
+      </div>
+      <div class="expenses-breakdown-tile">
+        <span class="expenses-breakdown-label">Annuel</span>
+        <span class="expenses-breakdown-value">{{ recap.yearlyTotal | number:'1.0-0' }} €</span>
+      </div>
+    </div>
+
+    @if (recap.items.length > 0) {
+      <ul class="expenses-year-list">
+        @for (item of recap.items; track item.expensesName) {
+          <li class="expenses-year-item">
+            <span class="expenses-year-item-name">{{ item.expensesName }}</span>
+            <span class="expenses-year-item-type">{{ getRecTypeLabel(item.recType) }}</span>
+            <span class="expenses-year-item-amount">{{ item.amountThisYear | number:'1.0-0' }} €</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="empty-state">
+        <i class="ti ti-receipt-2"></i>
+        <span>Aucune dépense active cette année.</span>
+      </div>
+    }
+  </div>
+}

@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { ExpensesDTO } from '../models/expenses.dto';
+import { ExpensesDTO, ExpensesYearRecapDTO } from '../models/expenses.dto';
 import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
@@ -42,4 +42,8 @@ export class ExpensesSevice {
     return this.http.get<number>(this.API+"/amountPerMonth").pipe(
       tap(amount => this.intSignal  .set(amount))
     );  }
+
+  getYearRecap() {
+    return this.http.get<ExpensesYearRecapDTO>(this.API + "/yearRecap");
+  }
 }
