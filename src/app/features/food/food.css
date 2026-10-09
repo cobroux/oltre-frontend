@@ -22,74 +22,23 @@
 .today-btn { padding:7px 16px; border-radius:var(--radius-full); background:var(--color-accent); border:none; color:#fff; font-size:13px; font-weight:500; cursor:pointer; font-family:var(--font-sans); transition:background .15s; }
 .today-btn:hover { background:var(--color-accent-hover); }
 
-/* ── Semaine : pastilles ─────────────────────────────── */
-.week-strip {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  margin-bottom: 1.5rem;
-}
-
-.day-pill {
-  flex: 0 0 auto;
-  width: 68px;
-  text-align: center;
-  padding: 11px 0;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.day-pill:hover { border-color: var(--color-accent-border); }
-
-.day-pill-name {
-  font-size: 10px;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
-
-.day-pill-num {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin-top: 3px;
-}
-
-.day-pill-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-text-muted);
-  margin: 6px auto 0;
-}
-
-.day-pill-today-label {
-  font-size: 9px;
-  color: var(--color-text-muted);
-  margin-top: 3px;
-}
-
-.day-pill.today {
-  border-color: var(--color-accent-border);
-}
-.day-pill.today .day-pill-name,
-.day-pill.today .day-pill-num {
-  color: var(--color-accent);
-}
-
-.day-pill.selected {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 14px rgba(47, 111, 237, 0.28);
-}
-.day-pill.selected .day-pill-name { color: rgba(255,255,255,0.85); }
-.day-pill.selected .day-pill-num { color: #fff; }
-.day-pill.selected .day-pill-dot { background: #fff; }
-.day-pill.selected .day-pill-today-label { color: rgba(255,255,255,0.75); }
+/* ── Grille semaine ─────────────────────────────────── */
+.week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:1.5rem; }
+.day-col { border-radius:var(--radius-md); border:0.5px solid var(--color-border); background:var(--color-surface); overflow:hidden; cursor:pointer; transition:all .15s; }
+.day-col:hover { border-color:var(--color-accent-border); }
+.day-col.selected { border-color:var(--color-accent); border-width:1.5px; }
+.day-head { padding:8px; text-align:center; border-bottom:0.5px solid var(--color-border); background:var(--color-bg); }
+.day-col.today .day-head { background:var(--color-accent-subtle); }
+.day-name { font-size:10px; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:.05em; }
+.day-num { font-size:15px; font-weight:500; color:var(--color-text-primary); margin-top:2px; }
+.day-col.today .day-num { color:var(--color-accent); }
+.day-body { padding:6px; min-height: 52px; }
+.empty-day { display:flex; align-items:center; gap:4px; padding:4px 5px; font-size:11px; color:var(--color-text-muted); }
+.meal-dot { display:flex; align-items:center; gap:5px; padding:3px 5px; border-radius:6px; margin-bottom:2px; }
+.dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.dot-pj { background:#92400e; } .dot-dj { background:#059669; } .dot-dn { background:#534AB7; } .dot-co { background:#be185d; }
+.meal-preview { font-size:11px; color:var(--color-text-secondary); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.more-meals { font-size:10px; color:var(--color-text-muted); padding:2px 5px; }
 
 /* ── Détail ─────────────────────────────────────────── */
 .detail-panel { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -278,19 +227,24 @@
 }
 
 .meal-type-btn {
-  width: 36px;
   height: 36px;
-  border-radius: 50%;
+  padding: 0 14px;
+  border-radius: var(--radius-full);
   border: none;
   background: none;
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 15px;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all 0.15s;
+  white-space: nowrap;
 }
+
+.meal-type-btn i { font-size: 15px; }
 
 .meal-type-btn:hover { color: var(--color-text-secondary); }
 
@@ -298,6 +252,7 @@
   background: var(--color-surface);
   box-shadow: 0 1px 2px rgba(26, 26, 46, 0.08), 0 0 0 1.5px var(--color-accent) inset;
   color: var(--color-accent);
+  font-weight: 600;
 }
 
 .add-box-right {
@@ -353,6 +308,12 @@
 }
 
 .add-btn:hover { background: var(--color-accent-hover); }
+
+.add-btn:disabled {
+  background: var(--color-text-muted);
+  cursor: not-allowed;
+}
+.add-btn:disabled:hover { background: var(--color-text-muted); }
 
 .selected-product {
   display: flex;

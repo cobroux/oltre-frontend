@@ -9,20 +9,33 @@
     <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
   </div>
 
-  <!-- Semaine : pastilles -->
-  <div class="week-strip">
+  <!-- Vue semaine -->
+  <div class="week-grid">
     @for (day of weekDays(); track day.toISOString()) {
-      <div class="day-pill"
+      <div class="day-col"
            [class.today]="isToday(day)"
            [class.selected]="isSelected(day)"
            (click)="selectDay(day)">
-        <div class="day-pill-name">{{ getDayName(day) }}</div>
-        <div class="day-pill-num">{{ day.getDate() }}</div>
-        @if (getMealsForDay(day).length > 0) {
-          <div class="day-pill-dot"></div>
-        } @else if (isToday(day)) {
-          <div class="day-pill-today-label">Auj.</div>
-        }
+        <div class="day-head">
+          <div class="day-name">{{ getDayName(day) }}</div>
+          <div class="day-num">{{ day.getDate() }}</div>
+        </div>
+        <div class="day-body">
+          @let dayMeals = getMealsForDay(day);
+          @if (dayMeals.length === 0) {
+            <div class="empty-day"><i class="ti ti-plus"></i> Planifier</div>
+          } @else {
+            @for (meal of dayMeals.slice(0, 3); track meal.id) {
+              <div class="meal-dot">
+                <div class="dot" [class]="getDotClass(meal.mealType)"></div>
+                <span class="meal-preview">{{ meal.mealName }}</span>
+              </div>
+            }
+            @if (dayMeals.length > 3) {
+              <div class="more-meals">+{{ dayMeals.length - 3 }} autre{{ dayMeals.length - 3 > 1 ? 's' : '' }}</div>
+            }
+          }
+        </div>
       </div>
     }
   </div>
@@ -81,8 +94,9 @@
           <div class="meal-type-picker">
             @for (type of MEAL_ORDER; track type) {
               <button type="button" class="meal-type-btn" [class.active]="addForm.controls.mealType.value === type"
-                      (click)="pickMealType(type)" [title]="getMealLabel(type)">
+                      (click)="pickMealType(type)">
                 <i class="ti" [class]="getMealIcon(type)"></i>
+                <span>{{ getMealShortLabel(type) }}</span>
               </button>
             }
           </div>
@@ -95,7 +109,8 @@
             } @else {
               <input type="text" placeholder="Description (optionnelle)" formControlName="mealDescript" class="descript-input" />
             }
-            <button class="add-btn" type="submit">
+            <button class="add-btn" type="submit" [disabled]="addForm.invalid"
+                    [title]="addForm.invalid ? 'Choisis un type de repas pour pouvoir ajouter' : ''">
               <i class="ti ti-plus"></i> Ajouter
             </button>
           </div>
