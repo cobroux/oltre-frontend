@@ -69,6 +69,29 @@ const mockService = {
     expect(component.filteredTasks()[0].tasksName).toBe('Réunion');
   });
 
+  it('une tâche décochée (tasksStatus explicitement "PENDING") ne doit pas rester comptée comme terminée', () => {
+    // Régression : tasksStatus est une chaîne, pas un booléen. 'PENDING' est
+    // "truthy" en JS - un filtre qui testait juste la présence du champ
+    // (plutôt que sa valeur) traitait toute tâche décochée comme toujours
+    // terminée, et comme absente de "à faire".
+    mockTasks.push({ id: 4, tasksName: 'Décochée', tasksType: 'PERSO', tasksPriority: 'LOW', tasksStatus: 'PENDING', tasksDate: '2026-07-29' });
+    mockService.tasksListSignal.set([...mockTasks]);
+
+    try {
+      expect(component.doneCount()).toBe(1);
+      expect(component.pendingCount()).toBe(3);
+
+      component.filter.set('DONE');
+      expect(component.filteredTasks().some(t => t.tasksName === 'Décochée')).toBe(false);
+
+      component.filter.set('PENDING');
+      expect(component.filteredTasks().some(t => t.tasksName === 'Décochée')).toBe(true);
+    } finally {
+      mockTasks.pop();
+      mockService.tasksListSignal.set([...mockTasks]);
+    }
+  });
+
   it('devrait filtrer par catégorie SPORT', () => {
     component.catFilter.set('SPORT');
     expect(component.filteredTasks().length).toBe(1);

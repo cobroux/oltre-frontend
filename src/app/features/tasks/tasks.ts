@@ -28,15 +28,19 @@ export class TasksComponent {
   confirmDeleteId = signal<number | null>(null);
 /* */
   // Computed
-  pendingCount = computed(() => this.allTasks().filter(t => !t.tasksStatus).length);
-  doneCount    = computed(() => this.allTasks().filter(t => t.tasksStatus).length);
+  // tasksStatus est une chaîne ('DONE'/'PENDING'), pas un booléen - 'PENDING'
+  // est "truthy" en JS, donc un simple !t.tasksStatus / t.tasksStatus
+  // traitait toute tâche décochée (statut explicitement remis à 'PENDING')
+  // comme si elle était encore "terminée". Toujours comparer à 'DONE'.
+  pendingCount = computed(() => this.allTasks().filter(t => t.tasksStatus !== 'DONE').length);
+  doneCount    = computed(() => this.allTasks().filter(t => t.tasksStatus === 'DONE').length);
 
   filteredTasks = computed(() => {
     let list = this.allTasks();
     const f  = this.filter();
     const cf = this.catFilter();
-    if (f  === 'PENDING') list = list.filter(t => !t.tasksStatus);
-    if (f  === 'DONE')    list = list.filter(t => t.tasksStatus);
+    if (f  === 'PENDING') list = list.filter(t => t.tasksStatus !== 'DONE');
+    if (f  === 'DONE')    list = list.filter(t => t.tasksStatus === 'DONE');
     if (cf !== 'ALL')     list = list.filter(t => t.tasksType === cf);
     return list;
   });
@@ -100,7 +104,7 @@ export class TasksComponent {
   }
 
   isUrgent(taskDto: TasksDTO): boolean {
-    if (!taskDto.tasksDate || taskDto.tasksStatus) return false;
+    if (!taskDto.tasksDate || taskDto.tasksStatus === 'DONE') return false;
     const diff = Math.ceil((new Date(taskDto.tasksDate).getTime() - Date.now()) / 86400000);
     return diff <= 1;
   }
