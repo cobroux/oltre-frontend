@@ -106,7 +106,7 @@ export class FoodComponent implements OnInit {
     this.loadWeek();
 
     this.addForm.controls.mealName.valueChanges.pipe(
-      debounceTime(300),
+      debounceTime(120),
       distinctUntilChanged(),
       switchMap(query => {
         // Le texte tapé correspond déjà au produit sélectionné : pas de
