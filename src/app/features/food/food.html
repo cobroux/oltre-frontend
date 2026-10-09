@@ -65,10 +65,16 @@
       <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-box">
 
         <div class="product-search">
-          <i class="ti ti-search search-icon"></i>
+          @if (searching()) {
+            <i class="ti ti-loader-2 search-icon spin"></i>
+          } @else {
+            <i class="ti ti-search search-icon"></i>
+          }
           <input type="text" placeholder="Chercher un aliment, ou juste noter un repas..." formControlName="mealName"
                  (input)="onMealNameInput($any($event.target).value)" autocomplete="off" />
-          @if (productResults().length > 0) {
+          @if (searching()) {
+            <div class="product-results searching-hint">Recherche en cours...</div>
+          } @else if (productResults().length > 0) {
             <ul class="product-results">
               @for (product of productResults(); track product.barcode) {
                 <li (click)="pickProduct(product)">

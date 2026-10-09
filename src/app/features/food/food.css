@@ -118,6 +118,15 @@
   pointer-events: none;
 }
 
+.search-icon.spin { color: var(--color-accent); animation: food-search-spin 0.8s linear infinite; }
+@keyframes food-search-spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+
+.searching-hint {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
 .product-search input[type="text"] {
   width: 100%;
   box-sizing: border-box;
