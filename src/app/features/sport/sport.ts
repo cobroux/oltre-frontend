@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,6 +21,18 @@ export class SportComponent implements OnInit {
   isLoading    = this.garminService.isLoading;
   isConnected  = this.garminService.isConnected;
   connectError = this.garminService.connectError;
+
+  // Onglet "Cette semaine" / "Semaine dernière" - la semaine dernière n'est
+  // chargée que la première fois qu'on y va, pas au chargement de la page.
+  selectedWeek = signal<'current' | 'last'>('current');
+  lastWeekLoaded = false;
+
+  activeActivities = computed(() =>
+    this.selectedWeek() === 'current' ? this.activities() : this.garminService.lastWeekActivitiesSignal());
+  activeStats = computed(() =>
+    this.selectedWeek() === 'current' ? this.weekStats() : this.garminService.lastWeekStatsSignal());
+  activeLoading = computed(() =>
+    this.selectedWeek() === 'current' ? this.isLoading() : this.garminService.isLoadingLastWeek());
 
   connectForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -48,6 +60,14 @@ export class SportComponent implements OnInit {
 
   onDisconnect() {
     this.garminService.disconnect().subscribe();
+  }
+
+  selectWeek(week: 'current' | 'last'): void {
+    this.selectedWeek.set(week);
+    if (week === 'last' && !this.lastWeekLoaded) {
+      this.lastWeekLoaded = true;
+      this.garminService.loadLastWeek().subscribe();
+    }
   }
 
   // ── Helpers affichage ────────────────────────────────

@@ -15,6 +15,10 @@ export class GarminService {
   isConnected      = signal(false);
   connectError     = signal<string | null>(null);
 
+  lastWeekActivitiesSignal = signal<GarminActivity[]>([]);
+  lastWeekStatsSignal      = signal<GarminWeekStats | null>(null);
+  isLoadingLastWeek        = signal(false);
+
   constructor(private http: HttpClient) {}
 
   checkStatus() {
@@ -72,6 +76,41 @@ export class GarminService {
     );
   }
 
+  // Semaine passée (lundi -> dimanche précédents), pour la consulter dans
+  // Sport sans attendre la fin de la semaine en cours. L'API n'a pas de
+  // borne haute pour /activities, donc on la filtre nous-mêmes au dimanche
+  // de cette semaine-là - même logique que computeWeekStats, généralisée.
+  loadLastWeek() {
+    this.isLoadingLastWeek.set(true);
+
+    const now = new Date();
+    const day = now.getUTCDay() || 7;
+    const thisMonday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day + 1));
+    const lastMonday = new Date(thisMonday);
+    lastMonday.setUTCDate(thisMonday.getUTCDate() - 7);
+    const lastMondayStr = lastMonday.toISOString().split('T')[0];
+    const lastSunday = new Date(lastMonday);
+    lastSunday.setUTCDate(lastMonday.getUTCDate() + 6);
+    const lastSundayStr = lastSunday.toISOString().split('T')[0];
+
+    return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${lastMondayStr}&limit=200`).pipe(
+      tap(activities => {
+        const weekActivities = activities.filter(a => {
+          const dateStr = a.startLocal.split('T')[0];
+          return dateStr >= lastMondayStr && dateStr <= lastSundayStr;
+        });
+        this.lastWeekActivitiesSignal.set(weekActivities);
+        this.lastWeekStatsSignal.set(this.computeStatsForActivities(weekActivities));
+        this.isLoadingLastWeek.set(false);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.isLoadingLastWeek.set(false);
+        if (err.status === 401) this.isConnected.set(false);
+        return of(null);
+      })
+    );
+  }
+
   getActivitiesSince(sinceDate: string, limit = 200) {
     return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${sinceDate}&limit=${limit}`).pipe(
       catchError(() => of([] as GarminActivity[]))
@@ -106,6 +145,14 @@ export class GarminService {
       return dateStr >= mondayStr && dateStr <= sundayStr;
     });
 
+    return this.computeStatsForActivities(weekActivities);
+  }
+
+  // Agrège des stats à partir d'un lot d'activités déjà filtré à la bonne
+  // semaine - séparé de computeWeekStats (qui filtre "cette semaine" depuis
+  // "maintenant") pour pouvoir le réutiliser sur n'importe quelle semaine
+  // (ex: loadLastWeek, qui filtre sur la semaine précédente).
+  private computeStatsForActivities(weekActivities: GarminActivity[]): GarminWeekStats {
     const isRun    = (t: string) => t?.includes('running');
     const isRide   = (t: string) => t?.includes('cycling') || t?.includes('biking');
     const isWeight = (t: string) => t?.includes('strength');
