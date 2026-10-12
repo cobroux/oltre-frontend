@@ -51,9 +51,32 @@
       <button type="button" class="disconnect-btn" (click)="onDisconnect()">Déconnecter</button>
     </div>
 
+    <!-- Onglets semaine -->
+    <div class="week-tabs">
+      <button type="button" [class.active]="selectedWeek() === 'current'" (click)="selectWeek('current')">
+        Cette semaine
+      </button>
+      <button type="button" [class.active]="selectedWeek() === 'last'" (click)="selectWeek('last')">
+        Semaine dernière
+      </button>
+    </div>
+
+    @if (activeLoading()) {
+      <div class="stats-row">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="skeleton skeleton-stat"></div>
+        }
+      </div>
+      <div class="activities-list">
+        @for (i of [1,2,3]; track i) {
+          <div class="skeleton skeleton-activity"></div>
+        }
+      </div>
+    } @else {
+
     <!-- Stats de la semaine -->
-    @if (weekStats(); as stats) {
-      <div class="week-label">Cette semaine — {{ stats.totalActivities }} activité{{ stats.totalActivities > 1 ? 's' : '' }}</div>
+    @if (activeStats(); as stats) {
+      <div class="week-label">{{ selectedWeek() === 'current' ? 'Cette semaine' : 'Semaine dernière' }} — {{ stats.totalActivities }} activité{{ stats.totalActivities > 1 ? 's' : '' }}</div>
       <div class="stats-row">
         <div class="stat-card run">
           <span class="stat-label">Course à pied</span>
@@ -83,13 +106,13 @@
 
     }
 
-    <!-- Dernières activités -->
+    <!-- Activités -->
     <div class="section-title">
-      <i class="ti ti-history"></i> Dernières activités
+      <i class="ti ti-history"></i> {{ selectedWeek() === 'current' ? 'Dernières activités' : 'Activités de la semaine dernière' }}
     </div>
 
     <div class="activities-list">
-      @for (activity of activities(); track activity.id) {
+      @for (activity of activeActivities(); track activity.id) {
         <div class="activity-item">
           <div class="act-icon" [class]="getIconClass(activity.sportType)">
             <i [class]="'ti ' + getIcon(activity.sportType)"></i>
@@ -128,9 +151,11 @@
       } @empty {
         <div class="empty-state">
           <i class="ti ti-run"></i>
-          <span>Aucune activité récente.</span>
+          <span>{{ selectedWeek() === 'current' ? 'Aucune activité récente.' : 'Aucune activité la semaine dernière.' }}</span>
         </div>
       }
     </div>
+
+    }
   }
 </div>
