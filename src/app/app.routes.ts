@@ -5,6 +5,7 @@ import { FoodComponent } from './features/food/food';
 import { AppointmentComponent } from './features/appointment/appointment';
 import { CalendarComponent } from './features/calendar/calendar';
 import { SportComponent } from './features/sport/sport';
+import { CoachComponent } from './features/coach/coach';
 import { LoginComponent } from './features/login/login';
 import { RegisterComponent } from './features/register/register';
 import { ProfileComponent } from './features/profile/profile';
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'food', component: FoodComponent, canActivate: [authGuard] },
   { path: 'calendar', component: CalendarComponent, canActivate: [authGuard] },
   { path: 'sport', component: SportComponent, canActivate: [authGuard] },
+  { path: 'sport/coach', component: CoachComponent, canActivate: [authGuard] },
   { path: 'habits', component: AppointmentComponent, canActivate: [authGuard] },
   { path: '', redirectTo: 'expenses', pathMatch: 'full' }
 ];
