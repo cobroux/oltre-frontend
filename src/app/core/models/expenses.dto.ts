@@ -22,3 +22,9 @@ export interface ExpensesYearRecapDTO {
   items: ExpensesYearItemDTO[];
 }
 
+export interface ExpensesMonthlyTrendDTO {
+  year: number;
+  currentMonth: number;
+  amounts: number[];
+}
+

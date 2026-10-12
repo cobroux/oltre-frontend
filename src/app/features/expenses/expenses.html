@@ -1,27 +1,21 @@
 <div class="page-header">
   <h2 class="page-title">Suivi des Dépenses</h2>
 
-  <!-- Total + stats -->
+  <!-- Stats compactes : le total de l'année vit désormais uniquement au centre
+       du donut ci-dessous, plus de doublon avec une 3e tuile ici -->
   <div class="stats-row">
     <div class="stat-card stat-total">
       <div class="stat-icon"><i class="ti ti-wallet"></i></div>
       <div class="stat-body">
-        <span class="stat-label">Total du mois</span>
+        <span class="stat-label">Ce mois-ci</span>
         <span class="stat-value">{{ amountPerMonth() }} €</span>
       </div>
     </div>
-    <div class="stat-card stat-year">
-      <div class="stat-icon"><i class="ti ti-calendar-stats"></i></div>
+    <div class="stat-card stat-avgday">
+      <div class="stat-icon"><i class="ti ti-sun"></i></div>
       <div class="stat-body">
-        <span class="stat-label">Total de l'année</span>
-        <span class="stat-value">{{ yearRecap()?.total ?? 0 }} €</span>
-      </div>
-    </div>
-    <div class="stat-card stat-count">
-      <div class="stat-icon"><i class="ti ti-list-numbers"></i></div>
-      <div class="stat-body">
-        <span class="stat-label">Nombre</span>
-        <span class="stat-value">{{ allExpenses().length }}</span>
+        <span class="stat-label">Coût moyen / jour</span>
+        <span class="stat-value">{{ avgPerDay() | number:'1.2-2' }} €</span>
       </div>
     </div>
   </div>
@@ -29,39 +23,78 @@
 
 <div class="content-card">
 
-  <!-- Répartition par récurrence (coût réel sur l'année, pas les montants bruts) -->
-  @if (recTypeBreakdown().length > 0) {
+  <!-- Analyse financière : tendance mensuelle (nouveau) + répartition par type,
+       côte à côte - deux angles différents sur le même budget, pas une
+       répétition l'un de l'autre -->
+  @if (trendChart().length > 0 || recTypeBreakdown().length > 0) {
     <div class="section-title">
-      <i class="ti ti-chart-donut-2"></i> Répartition du coût annuel
+      <i class="ti ti-chart-dots"></i> Analyse financière
     </div>
-    <div class="breakdown-row">
-      <div class="donut-wrap">
-        <svg viewBox="0 0 100 100" class="donut-chart">
-          @for (slice of recTypeBreakdown(); track slice.recType) {
-            <circle
-              cx="50" cy="50" r="40"
-              fill="none"
-              [attr.stroke]="slice.color"
-              stroke-width="16"
-              [attr.stroke-dasharray]="slice.dasharray"
-              [attr.stroke-dashoffset]="slice.dashoffset"
-            />
-          }
-        </svg>
-        <div class="donut-center">
-          <span class="donut-center-value">{{ yearRecap()?.total ?? 0 }} €</span>
-          <span class="donut-center-label">/ an</span>
-        </div>
-      </div>
-      <div class="breakdown-legend">
-        @for (slice of recTypeBreakdown(); track slice.recType) {
-          <div class="legend-row">
-            <span class="legend-dot" [style.background]="slice.color"></span>
-            <span class="legend-label">{{ slice.label }}</span>
-            <span class="legend-value">{{ slice.amount }} € <span class="legend-percent">({{ slice.percent }}%)</span></span>
+    <div class="finance-row">
+
+      @if (trendChart().length > 0) {
+        <div class="trend-panel">
+          <div class="panel-title">
+            Tendance mensuelle
+            <span class="panel-subtitle">Projection {{ monthlyTrend()?.year }}</span>
           </div>
-        }
-      </div>
+          <div class="trend-chart">
+            @for (bar of trendChart(); track bar.label) {
+              <div class="trend-col">
+                @if (bar.amount > 0) {
+                  <span class="trend-value" [class.trend-value-current]="bar.isCurrent">{{ bar.amount }}€</span>
+                }
+                <div class="trend-bar-track">
+                  <div class="trend-bar" [class.trend-bar-current]="bar.isCurrent" [style.height.%]="bar.heightPct"></div>
+                </div>
+                <span class="trend-label" [class.trend-label-current]="bar.isCurrent">{{ bar.label }}</span>
+              </div>
+            }
+          </div>
+          @if (peakMonthNote(); as note) {
+            <div class="trend-note">
+              <i class="ti ti-info-circle"></i>
+              <span>{{ note }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      @if (recTypeBreakdown().length > 0) {
+        <div class="breakdown-panel">
+          <div class="panel-title">Répartition annuelle</div>
+          <div class="breakdown-row">
+            <div class="donut-wrap">
+              <svg viewBox="0 0 100 100" class="donut-chart">
+                @for (slice of recTypeBreakdown(); track slice.recType) {
+                  <circle
+                    cx="50" cy="50" r="40"
+                    fill="none"
+                    [attr.stroke]="slice.color"
+                    stroke-width="16"
+                    [attr.stroke-dasharray]="slice.dasharray"
+                    [attr.stroke-dashoffset]="slice.dashoffset"
+                  />
+                }
+              </svg>
+              <div class="donut-center">
+                <span class="donut-center-value">{{ yearRecap()?.total ?? 0 }} €</span>
+                <span class="donut-center-label">/ an</span>
+              </div>
+            </div>
+            <div class="breakdown-legend">
+              @for (slice of recTypeBreakdown(); track slice.recType) {
+                <div class="legend-row">
+                  <span class="legend-dot" [style.background]="slice.color"></span>
+                  <span class="legend-label">{{ slice.label }}</span>
+                  <span class="legend-value">{{ slice.amount }} € <span class="legend-percent">({{ slice.percent }}%)</span></span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
     </div>
   }
 
