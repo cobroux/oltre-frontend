@@ -110,7 +110,8 @@ describe('AppointmentsComponent', () => {
   });
 
   it('devrait appeler delete avec le bon id', () => {
-    component.deleteAppt(1);
+    component.requestDelete(1);
+    component.requestDelete(1);
     expect(mockService.delete).toHaveBeenCalledWith(1);
   });
 
