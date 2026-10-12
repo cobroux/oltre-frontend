@@ -65,24 +65,6 @@
     </div>
   }
 
-  <!-- Détail annuel : ce que chaque dépense coûte vraiment sur l'année -->
-  @if (yearRecap(); as recap) {
-    @if (recap.items.length > 0) {
-      <div class="section-title">
-        <i class="ti ti-list-details"></i> Détail sur l'année
-      </div>
-      <ul class="year-detail-list">
-        @for (item of recap.items; track item.expensesName) {
-          <li class="year-detail-item">
-            <span class="year-detail-name">{{ item.expensesName }}</span>
-            <span class="badge-rec" [class]="'rec-' + item.recType.toLowerCase()">{{ getRecLabel(item.recType) }}</span>
-            <span class="year-detail-amount">{{ item.amountThisYear }} €</span>
-          </li>
-        }
-      </ul>
-    }
-  }
-
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
     <input type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />
@@ -131,7 +113,12 @@
           </div>
         </div>
         <div class="item-right">
-          <span class="item-amount">{{ expense.amount }} €</span>
+          <div class="item-amount-wrap">
+            <span class="item-amount">{{ expense.amount }} €</span>
+            @if (getYearlyAmount(expense); as yearlyAmount) {
+              <span class="item-amount-year">≈ {{ yearlyAmount }} €/an</span>
+            }
+          </div>
           @if (confirmDeleteId() === expense.id) {
             <button class="delete-btn confirm" (click)="requestDelete(expense.id)" title="Confirmer la suppression">
               <i class="ti ti-check"></i>

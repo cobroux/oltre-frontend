@@ -127,6 +127,15 @@ export class ExpensesComponent implements OnInit {
   return labels[recType] ?? recType;
 }
 
+  // Coût réel sur l'année pour cette dépense précise (annualisé pour
+  // Mensuel/Quotidien) - null si pas de données ou si ça n'apporte rien
+  // (Annuel : le montant brut EST déjà le montant annuel).
+  getYearlyAmount(expense: ExpensesDTO): number | null {
+    if (expense.recType === 'Yearly') return null;
+    const item = this.yearRecap()?.items.find(i => i.expensesName === expense.expensesName);
+    return item ? item.amountThisYear : null;
+  }
+
   getIconClass(recType: string): string {
   const classes: Record<string, string> = {
     Monthly: 'icon-monthly',

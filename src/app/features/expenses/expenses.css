@@ -258,47 +258,6 @@
 .item-row:last-child { border-bottom: none; }
 .item-row:hover { background: var(--color-bg); }
 
-/* ── Détail annuel ─────────────────────────────────────── */
-.year-detail-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  background: var(--color-bg);
-  border-radius: var(--radius-md);
-  border: 0.5px solid var(--color-border);
-  overflow: hidden;
-}
-
-.year-detail-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-bottom: 0.5px solid var(--color-border);
-}
-
-.year-detail-item:last-child { border-bottom: none; }
-
-.year-detail-name {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.year-detail-amount {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  flex-shrink: 0;
-  min-width: 70px;
-  text-align: right;
-}
-
 .item-left {
   display: flex;
   align-items: center;
@@ -369,12 +328,25 @@
   flex-shrink: 0;
 }
 
+.item-amount-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 70px;
+}
+
 .item-amount {
   font-size: 15px;
   font-weight: 500;
   color: var(--color-text-primary);
-  min-width: 70px;
   text-align: right;
+}
+
+.item-amount-year {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .delete-btn {
