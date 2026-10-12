@@ -275,13 +275,14 @@
   white-space: nowrap;
 }
 
-/* Montant et pourcentage sur deux lignes, alignés à droite dans leur
-   propre colonne - évite que "€" ou "(60%)" se retrouvent coupés sur
-   leur propre ligne quand la colonne de la légende est étroite. */
+/* Montant et pourcentage sur UNE seule ligne, même ligne de base que le
+   point/libellé à gauche (align-items:center sur .legend-row) - le
+   libellé tronque avec une ellipse s'il manque de place plutôt que de
+   forcer le montant à passer à la ligne ou de casser l'alignement. */
 .legend-amounts {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: baseline;
+  gap: 4px;
   flex-shrink: 0;
   white-space: nowrap;
 }
