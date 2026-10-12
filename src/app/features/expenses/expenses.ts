@@ -6,7 +6,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ExpensesDTO } from '../../core/models/expenses.dto';
+import { ExpensesDTO, ExpensesYearRecapDTO } from '../../core/models/expenses.dto';
 import { DatePipe, JsonPipe } from '@angular/common';
 
 @Component({
@@ -78,6 +78,7 @@ export class ExpensesComponent implements OnInit {
     this.expensesService.addExpense(expense).subscribe({
       next: () => {
         this.expensesService.loadAllExpenses().subscribe();
+        this.expensesService.getYearRecap().subscribe(r => this.yearRecap.set(r));
         this.addForm.reset();
       },
       error: err => console.error(err)
@@ -90,6 +91,7 @@ export class ExpensesComponent implements OnInit {
   requestDelete(id: number) {
     if (this.confirmDeleteId() === id) {
       this.expensesService.deleteExpenses(id).subscribe({
+        next: () => this.expensesService.getYearRecap().subscribe(r => this.yearRecap.set(r)),
         error: err => console.error(err)
       });
       this.confirmDeleteId.set(null);
@@ -104,10 +106,15 @@ export class ExpensesComponent implements OnInit {
 
   allExpenses = this.expensesService.expensesListSignal;
   amountPerMonth = this.expensesService.intSignal;
+  yearRecap = signal<ExpensesYearRecapDTO | null>(null);
+
    ngOnInit(): void {
       this.expensesService.loadAllExpenses().subscribe();
       this.expensesService.getAmountPerMonth().subscribe();
-
+      this.expensesService.getYearRecap().subscribe({
+        next: r => this.yearRecap.set(r),
+        error: () => this.yearRecap.set(null)
+      });
   }
 
 
@@ -145,15 +152,23 @@ export class ExpensesComponent implements OnInit {
   };
   private readonly DONUT_CIRCUMFERENCE = 2 * Math.PI * 40;
 
+  // Basé sur le vrai coût annuel de chaque type de récurrence (yearRecap),
+  // pas sur la simple somme des montants bruts : un abonnement à 500€/mois
+  // coûte 6000€/an, pas "500" comme une dépense annuelle à 1000€ - les
+  // comparer tels quels n'aurait aucun sens.
   recTypeBreakdown = computed(() => {
-    const totals = new Map<string, number>();
-    for (const e of this.allExpenses()) {
-      const key = e.recType ?? 'Other';
-      totals.set(key, (totals.get(key) ?? 0) + (e.amount ?? 0));
-    }
-    const grandTotal = [...totals.values()].reduce((s, v) => s + v, 0) || 1;
+    const recap = this.yearRecap();
+    if (!recap) return [];
 
-    const slices = [...totals.entries()]
+    const totals: Record<string, number> = {
+      Monthly: recap.monthlyTotal,
+      Daily: recap.dailyTotal,
+      Yearly: recap.yearlyTotal
+    };
+    const grandTotal = recap.total || 1;
+
+    const slices = Object.entries(totals)
+      .filter(([, amount]) => amount > 0)
       .map(([recType, amount]) => ({
         recType,
         label: this.getRecLabel(recType),
