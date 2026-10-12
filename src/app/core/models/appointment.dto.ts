@@ -7,4 +7,5 @@ export interface AppointmentDTO {
   apptTime?: string;
   apptEndTime?: string;
   apptType: 'MEDICAL' | 'SPORT' | 'PERSO' | 'TRAVAIL' | 'AUTRE';
+  source?: 'MANUAL' | 'GARMIN' | 'COACH_PLAN';
 }

@@ -22,6 +22,12 @@ export class AppointmentService {
     );
   }
 
+  update(id: number, appt: Partial<AppointmentDTO>) {
+    return this.http.put<AppointmentDTO>(`${this.API}/${id}`, appt).pipe(
+      tap(saved => this.appointmentsSignal.update(list => list.map(a => a.id === id ? saved : a)))
+    );
+  }
+
   delete(id: number) {
     return this.http.delete<void>(`${this.API}/${id}`).pipe(
       tap(() => this.appointmentsSignal.update(list => list.filter(a => a.id !== id)))
