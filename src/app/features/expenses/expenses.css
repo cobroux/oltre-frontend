@@ -497,4 +497,44 @@
   gap: 8px;
 }
 
-.empty-state i { font-size: 28px; }
+.empty-state i { font-size: 28px; }
+
+/* ── Mobile ─────────────────────────────────────────────
+   Le layout desktop (tuiles 2 colonnes, 2 panneaux côte à
+   côte, formulaire sur une ligne) est trop serré en dessous
+   de 700px : tuiles et panneaux empilés en pleine largeur,
+   formulaire vertical, et la tendance mensuelle (12 barres)
+   passe en défilement horizontal plutôt que de s'écraser au
+   point de devenir illisible. ── */
+@media (max-width: 700px) {
+  .content-card { padding: 1.1rem 1.1rem; }
+  .page-title { font-size: 22px; margin-bottom: 1rem; }
+
+  .stats-row { grid-template-columns: 1fr; }
+
+  .finance-row { flex-direction: column; }
+  .trend-panel,
+  .breakdown-panel { min-width: 0; width: 100%; box-sizing: border-box; }
+
+  .trend-chart {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .trend-col { flex: 0 0 32px; min-width: 32px; }
+
+  .breakdown-row { flex-wrap: wrap; }
+  .donut-wrap { margin: 0 auto; }
+  .breakdown-legend { min-width: 100%; }
+
+  .add-item-box { flex-direction: column; align-items: stretch; }
+  .add-item-box input[type="text"],
+  .add-item-box input[type="number"],
+  .add-item-box input[type="date"],
+  .add-item-box select { flex: 1 1 auto; width: 100%; box-sizing: border-box; }
+  .add-btn { width: 100%; justify-content: center; }
+
+  .item-row { flex-wrap: wrap; }
+  .item-right { width: 100%; justify-content: space-between; }
+}
