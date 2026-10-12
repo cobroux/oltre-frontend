@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GarminService } from '../../core/services/garmin.service';
 import { GarminActivity } from '../../core/models/garmin.dto';
@@ -7,7 +8,7 @@ import { GarminActivity } from '../../core/models/garmin.dto';
 @Component({
   selector: 'app-sport',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './sport.html',
   styleUrl: './sport.css'
 })

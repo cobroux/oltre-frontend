@@ -26,6 +26,21 @@
   font-weight: 600;
 }
 
+.coach-link {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+.coach-link:hover { background: var(--color-accent-subtle); border-color: var(--color-accent); }
+
 /* ── Connexion Garmin ─────────────────────────────────── */
 .connect-panel {
   display: flex;

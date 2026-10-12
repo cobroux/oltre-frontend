@@ -1,0 +1,158 @@
+<div class="page-header">
+  <div class="title-row">
+    <div class="title-icon"><i class="ti ti-brain"></i></div>
+    <h2 class="page-title">Coach IA</h2>
+    <span class="beta-badge">BETA</span>
+  </div>
+  <p class="page-subtitle">
+    Analyse ton activité Garmin et te propose un plan pour la semaine, en tenant compte de tes objectifs.
+    <a routerLink="/sport">Retour à Sport</a>
+  </p>
+</div>
+
+<!-- Objectifs -->
+<div class="content-card">
+  <div class="section-title">
+    <i class="ti ti-flag-3"></i> Objectifs
+  </div>
+
+  <div class="goals-row">
+    @for (goal of goals(); track goal.id) {
+      <div class="goal-card">
+        <div class="goal-info">
+          <span class="goal-type">{{ getGoalTypeLabel(goal.goalType) }}</span>
+          <span class="goal-name">{{ goal.name }}</span>
+          <span class="goal-meta">
+            {{ goal.eventDate | date:'dd/MM/yyyy' }}
+            @if (goal.targetTime) { · objectif {{ goal.targetTime }} }
+          </span>
+        </div>
+        <div class="goal-right">
+          <span class="goal-countdown">J-{{ daysUntil(goal.eventDate) }}</span>
+          <button type="button" class="goal-delete" (click)="onDeleteGoal(goal.id)" title="Supprimer">
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <p class="empty-hint">Aucun objectif pour l'instant — le plan sera un entretien général.</p>
+    }
+  </div>
+
+  @if (showGoalForm()) {
+    <form [formGroup]="goalForm" (ngSubmit)="onAddGoal()" class="goal-form">
+      <select formControlName="goalType">
+        <option [ngValue]="null" disabled>Type</option>
+        <option value="Marathon">Marathon</option>
+        <option value="SemiMarathon">Semi-marathon</option>
+        <option value="TenK">10 km</option>
+        <option value="Triathlon">Triathlon</option>
+        <option value="Other">Autre</option>
+      </select>
+      <input type="text" placeholder="Ex: Marathon de Paris" formControlName="name" />
+      <input type="date" formControlName="eventDate" />
+      <input type="text" placeholder="Chrono visé (optionnel)" formControlName="targetTime" />
+      <button type="submit" class="add-btn" [disabled]="goalForm.invalid">
+        <i class="ti ti-plus"></i> Ajouter
+      </button>
+      <button type="button" class="cancel-btn" (click)="toggleGoalForm()">Annuler</button>
+    </form>
+  } @else {
+    <button type="button" class="add-goal-btn" (click)="toggleGoalForm()">
+      <i class="ti ti-plus"></i> Ajouter un objectif (course, date, chrono visé)
+    </button>
+  }
+</div>
+
+<!-- Analyse + plan -->
+<div class="content-card coach-card">
+  <div class="coach-header">
+    <div class="section-title" style="margin-bottom:0">
+      <i class="ti ti-chart-line"></i> Analyse de la semaine
+    </div>
+    <div class="coach-header-actions">
+      @if (plan(); as p) {
+        <span class="generated-at">Généré le {{ p.generatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+      }
+      <button type="button" class="regenerate-btn" (click)="onGenerate()" [disabled]="generating()">
+        @if (generating()) {
+          <i class="ti ti-loader-2 spin"></i> Génération...
+        } @else {
+          <i class="ti ti-refresh"></i> {{ plan() ? 'Régénérer' : 'Générer mon plan' }}
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (generateError()) {
+    <div class="error-banner">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ generateError() }}</span>
+    </div>
+  }
+
+  @if (!loadingPlan() && isStale() && !generateError()) {
+    <div class="stale-banner">
+      <i class="ti ti-info-circle"></i>
+      <span>Ce plan date de plus d'une semaine — pense à le régénérer pour qu'il reste pertinent.</span>
+    </div>
+  }
+
+  @if (plan(); as p) {
+    <div class="analysis-box">
+      <i class="ti ti-sparkles"></i>
+      <p>{{ p.analysis }}</p>
+    </div>
+
+    <div class="section-title">
+      <i class="ti ti-calendar-week"></i> Plan proposé
+    </div>
+
+    <div class="days-list">
+      @for (day of p.days; track day.day; let i = $index) {
+        <div class="day-row" [class]="getDayClass(day.type)">
+          <button type="button" class="day-checkbox" [class.checked]="day.done" (click)="onToggleDay(i)" [attr.aria-label]="'Marquer ' + day.day + ' comme fait'">
+            @if (day.done) { <i class="ti ti-check"></i> }
+          </button>
+          <span class="day-name">{{ day.day }}</span>
+          <div class="day-body">
+            <span class="day-label" [class.done]="day.done">{{ day.label }}</span>
+          </div>
+          @if (day.distanceKm) {
+            <span class="day-distance">{{ day.distanceKm | number:'1.0-1' }} km</span>
+          }
+          <i class="ti day-icon" [class]="'ti ' + getDayIcon(day.type)"></i>
+        </div>
+      }
+    </div>
+    <p class="checkbox-hint">Coche une séance une fois faite — c'est pris en compte à la prochaine analyse.</p>
+  } @else if (!loadingPlan() && !generateError()) {
+    <div class="empty-state">
+      <i class="ti ti-brain"></i>
+      <span>Aucun plan généré pour l'instant.</span>
+    </div>
+  }
+</div>
+
+<!-- Renforcement : bonus statique -->
+<div class="content-card">
+  <div class="strength-header">
+    <div class="section-title" style="margin-bottom:0">
+      <i class="ti ti-barbell"></i> Renforcement musculaire
+    </div>
+    <span class="bonus-badge">EN BONUS</span>
+  </div>
+  <p class="strength-intro">
+    Pas obligatoire pour progresser sur tes courses, mais 2x/semaine réduit nettement le risque de blessure.
+    Pensé pour la course/triathlon — pas le classique pec-triceps-dos-biceps-épaules de salle.
+  </p>
+  <div class="circuit-label">Circuit "spécial coureur" — 3 tours, 40s effort / 20s repos</div>
+  <div class="exercises-grid">
+    @for (ex of strengthCircuit; track ex.name) {
+      <div class="exercise-card">
+        <span class="exercise-name">{{ ex.name }}</span>
+        <span class="exercise-purpose">{{ ex.purpose }}</span>
+      </div>
+    }
+  </div>
+</div>
