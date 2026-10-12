@@ -77,8 +77,17 @@
         </select>
         <input type="text"  placeholder="Description..."          formControlName="description" />
         <button class="add-btn" type="submit">
-          <i class="ti ti-plus"></i> Ajouter
+          @if (editingId() !== null) {
+            <i class="ti ti-check"></i> Enregistrer
+          } @else {
+            <i class="ti ti-plus"></i> Ajouter
+          }
         </button>
+        @if (editingId() !== null) {
+          <button class="cancel-edit-btn" type="button" (click)="cancelEdit()">
+            <i class="ti ti-x"></i> Annuler
+          </button>
+        }
       </form>
 
       @if (formError()) {
@@ -111,6 +120,11 @@
                   <span class="appt-badge" [class]="getTypeClass(appt.apptType)">
                     {{ getTypeLabel(appt.apptType) }}
                   </span>
+                  @if (getSourceLabel(appt.source); as sourceLabel) {
+                    <span class="source-badge" [class.source-garmin]="appt.source === 'GARMIN'" [class.source-coach]="appt.source === 'COACH_PLAN'">
+                      {{ sourceLabel }}
+                    </span>
+                  }
                 </div>
                 @if (appt.location) {
                   <div class="appt-meta">
@@ -129,6 +143,9 @@
                   <i class="ti ti-x"></i>
                 </button>
               } @else {
+                <button class="edit-btn" (click)="startEdit(appt)" title="Modifier">
+                  <i class="ti ti-pencil"></i>
+                </button>
                 <button class="delete-btn" (click)="requestDelete(appt.id)" title="Supprimer">
                   <i class="ti ti-trash"></i>
                 </button>

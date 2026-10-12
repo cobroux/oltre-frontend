@@ -60,12 +60,13 @@ export class AppointmentComponent implements OnInit {
 
   formError = signal<string | null>(null);
   confirmDeleteId = signal<number | null>(null);
+  editingId = signal<number | null>(null);
 
   ngOnInit() { this.loadWeek(); }
 
-  prevWeek() { this.weekOffset.update(v => v - 1); this.selectedDay.set(null); this.loadWeek(); }
-  nextWeek() { this.weekOffset.update(v => v + 1); this.selectedDay.set(null); this.loadWeek(); }
-  goToday()  { this.weekOffset.set(0); this.selectedDay.set(null); this.loadWeek(); }
+  prevWeek() { this.weekOffset.update(v => v - 1); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
+  nextWeek() { this.weekOffset.update(v => v + 1); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
+  goToday()  { this.weekOffset.set(0); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
 
   loadWeek() {
     this.apptService.loadWeek(this.toDateStr(this.monday())).subscribe({
@@ -76,13 +77,14 @@ export class AppointmentComponent implements OnInit {
   selectDay(date: Date) {
     const key = this.toDateStr(date);
     this.selectedDay.update(v => v === key ? null : key);
+    this.editingId.set(null);
   }
 
   onSubmit() {
     if (this.addForm.invalid || !this.selectedDay()) return;
     this.formError.set(null);
     const v = this.addForm.getRawValue();
-    this.apptService.save({
+    const payload = {
       title:       v.title!,
       apptTime:    v.apptTime || undefined,
       apptEndTime: v.apptEndTime || undefined,
@@ -90,19 +92,54 @@ export class AppointmentComponent implements OnInit {
       description: v.description || undefined,
       apptType:    v.apptType as AppointmentDTO['apptType'],
       apptDate:    this.selectedDay()!
-    }).subscribe({
-      next: () => this.addForm.reset(),
+    };
+    const id = this.editingId();
+    const request = id !== null
+      ? this.apptService.update(id, payload)
+      : this.apptService.save(payload);
+
+    request.subscribe({
+      next: () => {
+        this.addForm.reset();
+        this.editingId.set(null);
+      },
       error: (err: HttpErrorResponse) => {
         if (err.status === 409) {
           this.formError.set('Ce rendez-vous chevauche un autre rendez-vous existant.');
         } else if (err.status === 400) {
           this.formError.set("L'heure de fin doit être après l'heure de début.");
         } else {
-          this.formError.set("Erreur lors de l'ajout du rendez-vous.");
+          this.formError.set(id !== null ? "Erreur lors de la modification du rendez-vous." : "Erreur lors de l'ajout du rendez-vous.");
         }
-        console.error('Erreur ajout :', err);
+        console.error('Erreur enregistrement :', err);
       }
     });
+  }
+
+  startEdit(appt: AppointmentDTO) {
+    this.confirmDeleteId.set(null);
+    this.editingId.set(appt.id);
+    this.formError.set(null);
+    this.addForm.setValue({
+      title:       appt.title,
+      apptTime:    appt.apptTime ?? null,
+      apptEndTime: appt.apptEndTime ?? null,
+      location:    appt.location ?? '',
+      description: appt.description ?? '',
+      apptType:    appt.apptType
+    });
+  }
+
+  cancelEdit() {
+    this.editingId.set(null);
+    this.formError.set(null);
+    this.addForm.reset();
+  }
+
+  getSourceLabel(source?: string): string | null {
+    if (source === 'GARMIN') return 'Garmin';
+    if (source === 'COACH_PLAN') return 'Coach IA';
+    return null;
   }
 
   requestDelete(id: number) {
