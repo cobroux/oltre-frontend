@@ -60,7 +60,8 @@ describe('ExpensesComponent', () => {
   });
 
   it('devrait appeler deleteExpenses avec le bon id', () => {
-    component.deleteExpenses(1);
+    component.requestDelete(1);
+    component.requestDelete(1);
     expect(mockService.deleteExpenses).toHaveBeenCalledWith(1);
   });
 
