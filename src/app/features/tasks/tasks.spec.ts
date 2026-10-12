@@ -123,7 +123,8 @@ const mockService = {
   });
 
   it('devrait appeler deleteTasks avec le bon id', () => {
-    component.deleteTasks(1);
+    component.requestDelete(1);
+    component.requestDelete(1);
     expect(mockService.deleteTasks).toHaveBeenCalledWith(1);
   });
 
