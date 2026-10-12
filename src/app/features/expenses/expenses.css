@@ -41,15 +41,43 @@
   border-radius: var(--radius-md);
 }
 
-.donut-chart {
+.donut-wrap {
+  position: relative;
   width: 110px;
   height: 110px;
   flex-shrink: 0;
+}
+
+.donut-chart {
+  width: 110px;
+  height: 110px;
   transform: rotate(-90deg);
 }
 
 .donut-chart circle {
   transition: stroke-dasharray 0.3s ease;
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-center-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.donut-center-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
 }
 
 .breakdown-legend {
@@ -92,7 +120,7 @@
 /* ── Stats ───────────────────────────────────────────── */
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
@@ -125,6 +153,7 @@
 }
 
 .stat-total .stat-icon { background: var(--color-food-bg); color: var(--color-food); }
+.stat-year .stat-icon { background: var(--color-sport-bg); color: var(--color-sport); }
 .stat-count .stat-icon { background: var(--color-accent-subtle); color: var(--color-accent); }
 
 .stat-body {
@@ -228,6 +257,47 @@
 
 .item-row:last-child { border-bottom: none; }
 .item-row:hover { background: var(--color-bg); }
+
+/* ── Détail annuel ─────────────────────────────────────── */
+.year-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--color-border);
+  overflow: hidden;
+}
+
+.year-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.year-detail-item:last-child { border-bottom: none; }
+
+.year-detail-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.year-detail-amount {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  min-width: 70px;
+  text-align: right;
+}
 
 .item-left {
   display: flex;
