@@ -121,7 +121,10 @@ export class ExpensesComponent implements OnInit {
         error: () => this.yearRecap.set(null)
       });
       this.expensesService.getMonthlyTrend().subscribe({
-        next: t => this.monthlyTrend.set(t),
+        next: t => {
+          this.monthlyTrend.set(t);
+          this.trendPage.set(t.currentMonth <= 6 ? 0 : 1);
+        },
         error: () => this.monthlyTrend.set(null)
       });
   }
@@ -222,6 +225,26 @@ export class ExpensesComponent implements OnInit {
       heightPct: Math.round((amount / max) * 100)
     }));
   });
+
+  // Les 12 mois d'un coup laissent trop de colonnes vides et tassent les
+  // barres - on affiche un semestre à la fois (6 colonnes), avec le
+  // semestre contenant le mois en cours sélectionné par défaut.
+  trendPage = signal<0 | 1>(0);
+
+  trendChartPage = computed(() => {
+    const page = this.trendPage();
+    return this.trendChart().slice(page * 6, page * 6 + 6);
+  });
+
+  semesterLabel = computed(() => this.trendPage() === 0 ? 'Janvier – Juin' : 'Juillet – Décembre');
+
+  prevSemester(): void {
+    if (this.trendPage() === 1) this.trendPage.set(0);
+  }
+
+  nextSemester(): void {
+    if (this.trendPage() === 0) this.trendPage.set(1);
+  }
 
   avgPerDay = computed(() => {
     const recap = this.yearRecap();

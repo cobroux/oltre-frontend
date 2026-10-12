@@ -38,8 +38,17 @@
             Tendance mensuelle
             <span class="panel-subtitle">Projection {{ monthlyTrend()?.year }}</span>
           </div>
+          <div class="trend-nav">
+            <button type="button" class="trend-nav-btn" (click)="prevSemester()" [disabled]="trendPage() === 0" aria-label="Semestre précédent">
+              <i class="ti ti-chevron-left"></i>
+            </button>
+            <span class="trend-nav-label">{{ semesterLabel() }}</span>
+            <button type="button" class="trend-nav-btn" (click)="nextSemester()" [disabled]="trendPage() === 1" aria-label="Semestre suivant">
+              <i class="ti ti-chevron-right"></i>
+            </button>
+          </div>
           <div class="trend-chart">
-            @for (bar of trendChart(); track bar.label) {
+            @for (bar of trendChartPage(); track bar.label) {
               <div class="trend-col">
                 @if (bar.amount > 0) {
                   <span class="trend-value" [class.trend-value-current]="bar.isCurrent">{{ bar.amount }}€</span>
@@ -87,7 +96,10 @@
                 <div class="legend-row">
                   <span class="legend-dot" [style.background]="slice.color"></span>
                   <span class="legend-label">{{ slice.label }}</span>
-                  <span class="legend-value">{{ slice.amount }} € <span class="legend-percent">({{ slice.percent }}%)</span></span>
+                  <span class="legend-amounts">
+                    <span class="legend-value">{{ slice.amount }} €</span>
+                    <span class="legend-percent">{{ slice.percent }}%</span>
+                  </span>
                 </div>
               }
             </div>
