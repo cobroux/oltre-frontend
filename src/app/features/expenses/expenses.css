@@ -551,7 +551,7 @@
   transition: all 0.15s;
 }
 
-.delete-btn:hover { color: #dc2626; background: #fff0f0; }
+.delete-btn:hover { color: var(--color-danger); background: var(--color-danger-subtle); }
 .delete-btn.confirm { color: #059669; }
 .delete-btn.confirm:hover { background: #d1fae5; }
 .delete-btn.cancel { color: var(--color-text-muted); }

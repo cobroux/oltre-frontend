@@ -133,7 +133,7 @@
   border-radius: var(--radius-sm);
   display: flex;
 }
-.goal-delete:hover { color: #dc2626; background: #fff0f0; }
+.goal-delete:hover { color: var(--color-danger); background: var(--color-danger-subtle); }
 
 .add-goal-btn {
   height: 36px;
@@ -256,7 +256,7 @@
   margin-bottom: 14px;
 }
 
-.error-banner { background: #fff0f0; color: #b91c1c; }
+.error-banner { background: var(--color-danger-subtle); color: var(--color-danger); }
 .error-banner i { margin-top: 1px; flex-shrink: 0; }
 
 .stale-banner { background: var(--color-accent-subtle); color: var(--color-accent-hover); }

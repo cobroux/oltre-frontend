@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
+import { ThemeService, ThemeMode } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-settings',
@@ -19,9 +20,11 @@ export class SettingsComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private garminService = inject(GarminService);
+  private themeService = inject(ThemeService);
 
   user = this.userService.currentUser;
   isGarminConnected = this.garminService.isConnected;
+  themeMode = this.themeService.mode;
 
   profileSaving = signal(false);
   profileSaved = signal(false);
@@ -122,6 +125,10 @@ export class SettingsComponent implements OnInit {
         this.passwordError.set(err.error?.message ?? 'Impossible de changer le mot de passe.');
       }
     });
+  }
+
+  setTheme(mode: ThemeMode): void {
+    this.themeService.setMode(mode);
   }
 
   disconnectGarmin(): void {
