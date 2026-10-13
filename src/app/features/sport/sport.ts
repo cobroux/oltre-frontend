@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect, viewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import * as L from 'leaflet';
 import { GarminService } from '../../core/services/garmin.service';
 import { GarminActivity, GarminActivityDetail } from '../../core/models/garmin.dto';
 
@@ -13,15 +14,16 @@ import { GarminActivity, GarminActivityDetail } from '../../core/models/garmin.d
   templateUrl: './sport.html',
   styleUrl: './sport.css'
 })
-export class SportComponent implements OnInit {
+export class SportComponent implements OnInit, OnDestroy {
 
   private garminService = inject(GarminService);
 
   activities   = this.garminService.activitiesSignal;
   weekStats    = this.garminService.weekStatsSignal;
-  isLoading    = this.garminService.isLoading;
-  isConnected  = this.garminService.isConnected;
-  connectError = this.garminService.connectError;
+  isLoading      = this.garminService.isLoading;
+  isConnected    = this.garminService.isConnected;
+  connectError   = this.garminService.connectError;
+  connectLoading = this.garminService.connectLoading;
 
   // Onglet "Cette semaine" / "Semaine dernière" - la semaine dernière n'est
   // chargée que la première fois qu'on y va, pas au chargement de la page.
@@ -45,6 +47,25 @@ export class SportComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required)
   });
+
+  // Carte OpenStreetMap du tracé GPS - gratuit, sans clé API. Le conteneur
+  // n'existe que pendant que le panneau détail est ouvert sur une activité
+  // avec tracé, d'où le viewChild signal (se met à jour avec la vue) plutôt
+  // qu'un ViewChild classique.
+  private leafletMapEl = viewChild<ElementRef<HTMLDivElement>>('leafletMap');
+  private mapInstance: L.Map | null = null;
+
+  constructor() {
+    effect(() => {
+      const el = this.leafletMapEl()?.nativeElement;
+      const detail = this.activityDetail();
+      if (el && detail?.polyline && detail.polyline.length > 1) {
+        this.renderMap(el, detail.polyline);
+      } else {
+        this.destroyMap();
+      }
+    });
+  }
 
   ngOnInit() {
     this.garminService.checkStatus().subscribe(status => {
@@ -109,33 +130,31 @@ export class SportComponent implements OnInit {
     this.detailError.set(null);
   }
 
-  isStrength(activity: GarminActivity | null): boolean {
-    return !!activity && this.matchType(activity.sportType, 'strength');
+  ngOnDestroy(): void {
+    this.destroyMap();
   }
 
-  // Projette le tracé GPS (lat/lon) dans un repère SVG 300x180, nord en haut,
-  // sans déformer le ratio - pas besoin d'une vraie lib de carte pour juste
-  // montrer la forme du parcours.
-  buildMapPath(polyline: { lat: number; lon: number }[] | null): string {
-    if (!polyline || polyline.length < 2) return '';
+  private renderMap(el: HTMLDivElement, polyline: { lat: number; lon: number }[]): void {
+    this.destroyMap();
+    const latLngs = polyline.map(p => [p.lat, p.lon] as L.LatLngTuple);
+    this.mapInstance = L.map(el, { zoomControl: false, attributionControl: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(this.mapInstance);
+    const line = L.polyline(latLngs, { color: '#4f46e5', weight: 4 }).addTo(this.mapInstance);
+    this.mapInstance.fitBounds(line.getBounds(), { padding: [16, 16] });
+  }
 
-    const lats = polyline.map(p => p.lat);
-    const lons = polyline.map(p => p.lon);
-    const minLat = Math.min(...lats), maxLat = Math.max(...lats);
-    const minLon = Math.min(...lons), maxLon = Math.max(...lons);
+  private destroyMap(): void {
+    if (this.mapInstance) {
+      this.mapInstance.remove();
+      this.mapInstance = null;
+    }
+  }
 
-    const w = 300, h = 180, pad = 12;
-    const spanLat = (maxLat - minLat) || 1;
-    const spanLon = (maxLon - minLon) || 1;
-    const scale = Math.min((w - 2 * pad) / spanLon, (h - 2 * pad) / spanLat);
-    const offsetX = (w - spanLon * scale) / 2;
-    const offsetY = (h - spanLat * scale) / 2;
-
-    return polyline.map((p, i) => {
-      const x = offsetX + (p.lon - minLon) * scale;
-      const y = h - (offsetY + (p.lat - minLat) * scale);
-      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
+  isStrength(activity: GarminActivity | null): boolean {
+    return !!activity && this.matchType(activity.sportType, 'strength');
   }
 
   formatPace(averageSpeedMs: number | undefined | null): string {
