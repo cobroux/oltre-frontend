@@ -174,7 +174,7 @@
 }
 
 .goal-form input[type="text"] { flex: 2; min-width: 140px; }
-.goal-form input[type="date"] { flex: 1; min-width: 130px; }
+.goal-form app-date-picker { flex: 1; min-width: 130px; }
 .goal-form select { flex: 1; min-width: 110px; }
 
 .add-btn {

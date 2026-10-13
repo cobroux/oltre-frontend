@@ -397,7 +397,7 @@
 .add-item-box input[type="text"]   { flex: 2; }
 .add-item-box input[type="number"] { flex: 1; }
 .add-item-box select               { flex: 1; }
-.add-item-box input[type="date"]   { flex: 1; }
+.add-item-box app-date-picker      { flex: 1; }
 
 .add-item-box input:focus,
 .add-item-box select:focus {

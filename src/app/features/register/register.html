@@ -106,14 +106,7 @@
 
         <div class="field-group">
           <label class="field-label">Date de naissance <span class="field-optional">(optionnel)</span></label>
-          <div class="field-wrap">
-            <i class="ti ti-calendar field-icon"></i>
-            <input
-              type="date"
-              class="field-input"
-              formControlName="birthDate"
-            />
-          </div>
+          <app-date-picker formControlName="birthDate" placeholder="Date de naissance"></app-date-picker>
         </div>
       </div>
 

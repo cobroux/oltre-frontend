@@ -50,7 +50,7 @@
         <option value="Other">Autre</option>
       </select>
       <input type="text" placeholder="Ex: Marathon de Paris" formControlName="name" />
-      <input type="date" formControlName="eventDate" />
+      <app-date-picker formControlName="eventDate" placeholder="Date de l'objectif"></app-date-picker>
       <input type="text" placeholder="Chrono visé (optionnel)" formControlName="targetTime" />
       <button type="submit" class="add-btn" [disabled]="goalForm.invalid">
         <i class="ti ti-plus"></i> Ajouter

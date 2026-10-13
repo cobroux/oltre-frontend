@@ -4,11 +4,12 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TasksDTO } from '../../core/models/tasks.dto';
 import { TasksService } from '../../core/services/tasks.service';
+import { DatePickerComponent } from '../../shared/date-picker/date-picker';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive,CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive,CommonModule, ReactiveFormsModule, DatePipe, DatePickerComponent],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css'
 })
