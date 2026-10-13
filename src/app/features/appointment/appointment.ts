@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppointmentDTO } from '../../core/models/appointment.dto';
 import { AppointmentService } from '../../core/services/appointment.service';
+import { TimePickerComponent } from '../../shared/time-picker/time-picker';
 
 const DAYS   = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
@@ -11,7 +12,7 @@ const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','aoû
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TimePickerComponent],
   templateUrl: './appointment.html',
   styleUrl: './appointment.css'
 })

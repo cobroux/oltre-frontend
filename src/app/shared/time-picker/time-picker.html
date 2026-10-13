@@ -1,0 +1,42 @@
+<div class="time-field">
+  <button
+    type="button"
+    class="time-trigger"
+    [class.open]="open()"
+    [disabled]="disabled()"
+    (click)="toggle()"
+  >
+    <svg class="clock-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+    </svg>
+    <span class="trigger-value" [class.placeholder]="!displayValue()">
+      {{ displayValue() || placeholder }}
+    </span>
+    @if (displayValue()) {
+      <button type="button" class="clear-btn" (click)="clear($event)" aria-label="Effacer l'heure">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="time-popover">
+      <div class="time-col">
+        <div class="time-col-label">Heure</div>
+        <div class="time-col-list">
+          @for (h of hours; track h) {
+            <button type="button" class="time-opt" [class.selected]="h === hour()" (click)="pickHour(h, $event)">{{ h }}</button>
+          }
+        </div>
+      </div>
+      <div class="time-col">
+        <div class="time-col-label">Min</div>
+        <div class="time-col-list">
+          @for (m of minutes; track m) {
+            <button type="button" class="time-opt" [class.selected]="m === minute()" (click)="pickMinute(m, $event)">{{ m }}</button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

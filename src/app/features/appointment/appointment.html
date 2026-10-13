@@ -58,14 +58,14 @@
       <!-- Formulaire -->
       <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
         <input type="text"  placeholder="Titre du rendez-vous..." formControlName="title" />
-        <label class="time-field">
+        <div class="time-field-wrap">
           <span class="time-field-label">Début</span>
-          <input type="time" formControlName="apptTime" />
-        </label>
-        <label class="time-field">
+          <app-time-picker formControlName="apptTime"></app-time-picker>
+        </div>
+        <div class="time-field-wrap">
           <span class="time-field-label">Fin</span>
-          <input type="time" formControlName="apptEndTime" />
-        </label>
+          <app-time-picker formControlName="apptEndTime"></app-time-picker>
+        </div>
         <input type="text"  placeholder="Lieu..."                 formControlName="location" />
         <select formControlName="apptType">
           <option [ngValue]="null" disabled>Catégorie</option>
