@@ -118,18 +118,7 @@
   box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
 }
 
-.time-field-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 0 0 110px;
-}
-
-.time-field-label {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  padding-left: 2px;
-}
+.add-item-box app-time-picker { flex: 0 0 110px; }
 
 .form-error {
   color: #dc2626;
