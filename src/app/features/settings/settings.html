@@ -5,6 +5,23 @@
   </h2>
 </div>
 
+<!-- Thème -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-palette"></i> Thème</div>
+
+  <div class="theme-options">
+    <button type="button" class="theme-option" [class.active]="themeMode() === 'light'" (click)="setTheme('light')">
+      <i class="ti ti-sun"></i> Clair
+    </button>
+    <button type="button" class="theme-option" [class.active]="themeMode() === 'dark'" (click)="setTheme('dark')">
+      <i class="ti ti-moon"></i> Sombre
+    </button>
+    <button type="button" class="theme-option" [class.active]="themeMode() === 'system'" (click)="setTheme('system')">
+      <i class="ti ti-device-desktop"></i> Auto
+    </button>
+  </div>
+</div>
+
 <!-- Profil -->
 <div class="content-card">
   <div class="section-title"><i class="ti ti-user"></i> Profil</div>

@@ -19,6 +19,8 @@
   --color-sport-bg:       #d1fae5;
   --color-budget:         #6b7280;
   --color-budget-bg:      #f3f4f6;
+  --color-danger:         #dc2626;
+  --color-danger-subtle:  #fff0f0;
   --sidebar-width:        210px;
   --font-sans:            'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-display:         'Space Grotesk', var(--font-sans);
@@ -32,6 +34,62 @@
   --radius-md:   14px;
   --radius-lg:   20px;
   --radius-full: 9999px;
+}
+
+/* Thème sombre : valeurs par défaut du système (prefers-color-scheme),
+   annulées dans un sens ou l'autre par un choix explicite via
+   ThemeService (attribut data-theme posé sur <html>). Les couleurs des
+   badges/catégories (tasks/food/sport/budget) sont réajustées pour
+   rester lisibles sur fond sombre plutôt que de garder leurs teintes
+   pastel claires telles quelles. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg:             #14151f;
+    --color-surface:        #1c1d2b;
+    --color-border:         #2a2c3e;
+    --color-text-primary:   #f0f1f8;
+    --color-text-secondary: #9aa0bd;
+    --color-text-muted:     #6d7290;
+    --color-accent:         #5B8DF2;
+    --color-accent-hover:   #6f9bf5;
+    --color-accent-subtle:  #1f2b4d;
+    --color-accent-border:  #35437a;
+    --color-tasks:          #7ba3f5;
+    --color-tasks-bg:       #1f2b4d;
+    --color-food:           #f2a94e;
+    --color-food-bg:        #3a2a12;
+    --color-sport:          #34d399;
+    --color-sport-bg:       #113326;
+    --color-budget:         #9aa0bd;
+    --color-budget-bg:      #262838;
+    --color-danger:         #f87171;
+    --color-danger-subtle:  #3a1a1a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg:             #14151f;
+  --color-surface:        #1c1d2b;
+  --color-border:         #2a2c3e;
+  --color-text-primary:   #f0f1f8;
+  --color-text-secondary: #9aa0bd;
+  --color-text-muted:     #6d7290;
+  --color-accent:         #5B8DF2;
+  --color-accent-hover:   #6f9bf5;
+  --color-accent-subtle:  #1f2b4d;
+  --color-accent-border:  #35437a;
+  --color-tasks:          #7ba3f5;
+  --color-tasks-bg:       #1f2b4d;
+  --color-food:           #f2a94e;
+  --color-food-bg:        #3a2a12;
+  --color-sport:          #34d399;
+  --color-sport-bg:       #113326;
+  --color-budget:         #9aa0bd;
+  --color-budget-bg:      #262838;
+  --color-danger:         #f87171;
+  --color-danger-subtle:  #3a1a1a;
+  color-scheme: dark;
 }
 
 html, body {
@@ -191,7 +249,7 @@ input:focus, select:focus, textarea:focus {
 .text-accent     { color: var(--color-accent); }
 .text-success    { color: var(--color-sport); }
 .text-warning    { color: var(--color-food); }
-.text-danger     { color: #dc2626; }
+.text-danger     { color: var(--color-danger); }
 .flex            { display: flex; }
 .flex-1          { flex: 1; }
 .items-center    { align-items: center; }

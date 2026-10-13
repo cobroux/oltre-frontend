@@ -5,6 +5,7 @@ import { SidebarComponent } from './shared/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class App {
   protected readonly title = signal('oltre-frontend');
   private router = inject(Router);
+  // Injecté uniquement pour forcer son instanciation au démarrage - sinon
+  // le thème sauvegardé ne s'applique qu'à la première visite de /settings.
+  private themeService = inject(ThemeService);
 
   private static readonly AUTH_ROUTES = ['/login', '/register'];
 
