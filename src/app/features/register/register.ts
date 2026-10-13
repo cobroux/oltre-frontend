@@ -24,13 +24,15 @@ export class RegisterComponent {
     username: new FormControl('', [Validators.required]),
     email:    new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.required])
+    confirmPassword: new FormControl('', [Validators.required]),
+    age: new FormControl<number | null>(null),
+    birthDate: new FormControl('')
   });
 
   onSubmit() {
     if (this.registerForm.invalid) return;
 
-    const { username, email, password, confirmPassword } = this.registerForm.getRawValue();
+    const { username, email, password, confirmPassword, age, birthDate } = this.registerForm.getRawValue();
     if (password !== confirmPassword) {
       this.errorMsg.set('Les mots de passe ne correspondent pas');
       return;
@@ -39,7 +41,7 @@ export class RegisterComponent {
     this.isLoading.set(true);
     this.errorMsg.set(null);
 
-    this.authService.register(username!, email!, password!).subscribe({
+    this.authService.register(username!, email!, password!, age ?? null, birthDate || null).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/calendar']);

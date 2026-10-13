@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { UserDTO, UserStatsDTO } from '../models/user.dto';
+import { UserDTO, UserStatsDTO, UpdateProfileRequest, ChangePasswordRequest } from '../models/user.dto';
 import { getApiUrl } from '../config/runtime-config';
 
 @Injectable({ providedIn: 'root' })
@@ -20,5 +20,19 @@ export class UserService {
 
   getStats() {
     return this.http.get<UserStatsDTO>(`${this.API}/stats`);
+  }
+
+  updateProfile(request: UpdateProfileRequest) {
+    return this.http.put<UserDTO>(this.API, request).pipe(
+      tap(user => this.currentUser.set(user))
+    );
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.put<void>(`${this.API}/password`, request);
+  }
+
+  deleteAccount() {
+    return this.http.delete<void>(this.API);
   }
 }
