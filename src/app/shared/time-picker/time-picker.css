@@ -1,0 +1,94 @@
+:host {
+  display: block;
+}
+
+.time-field {
+  position: relative;
+}
+
+/* ── Déclencheur ──────────────────────────────────────── */
+.time-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  width: 100%;
+  height: 38px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.time-trigger:hover:not(:disabled) { border-color: var(--color-accent-border); }
+.time-trigger.open { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-subtle); }
+.time-trigger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.clock-icon { color: var(--color-text-secondary); flex-shrink: 0; }
+
+.trigger-value { flex: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.trigger-value.placeholder { color: var(--color-text-muted); }
+
+.clear-btn {
+  border: none; background: none; cursor: pointer; color: var(--color-text-muted);
+  padding: 2px; border-radius: 6px; line-height: 0; flex-shrink: 0;
+  display: flex;
+}
+.clear-btn:hover { background: var(--color-border); color: var(--color-text-primary); }
+
+/* ── Panneau ──────────────────────────────────────────── */
+.time-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  display: flex;
+  gap: 4px;
+  width: 160px;
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.time-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.time-col-label {
+  text-align: center;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.time-col-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.time-opt {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px 0;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+.time-opt:hover { background: var(--color-accent-subtle); }
+.time-opt.selected { background: var(--color-accent); color: #fff; font-weight: 600; }
