@@ -13,11 +13,11 @@
       <i class="ti ti-plug-connected connect-icon"></i>
       <p>Connecte ton compte Garmin Connect pour voir tes activités.</p>
 
-      <form [formGroup]="connectForm" (ngSubmit)="onConnect()" class="connect-form">
-        <input type="email" formControlName="email" placeholder="Email Garmin" autocomplete="username">
-        <input type="password" formControlName="password" placeholder="Mot de passe Garmin" autocomplete="current-password">
-        <button type="submit" [disabled]="connectForm.invalid || isLoading()">
-          @if (isLoading()) {
+      <form [formGroup]="connectForm" (ngSubmit)="onConnect()" class="connect-form" autocomplete="off">
+        <input type="email" formControlName="email" placeholder="Email Garmin" autocomplete="off" name="garmin-email">
+        <input type="password" formControlName="password" placeholder="Mot de passe Garmin" autocomplete="off" name="garmin-password">
+        <button type="submit" [disabled]="connectForm.invalid || connectLoading()">
+          @if (connectLoading()) {
             <i class="ti ti-loader-2 spin"></i> Connexion...
           } @else {
             Connecter Garmin
@@ -222,11 +222,7 @@
         </div>
 
         @if (detail.polyline && detail.polyline.length > 1) {
-          <div class="detail-map">
-            <svg viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
-              <path [attr.d]="buildMapPath(detail.polyline)" fill="none" stroke-width="3" />
-            </svg>
-          </div>
+          <div class="detail-map" #leafletMap></div>
         }
 
         @if (isStrength(activity) && detail.exerciseSets.length > 0) {

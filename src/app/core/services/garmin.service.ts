@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { GarminActivity, GarminWeekStats, GarminRecords, GarminRecordsResponse, GarminActivityDetail } from '../models/garmin.dto';
 import { getApiUrl } from '../config/runtime-config';
@@ -14,6 +14,7 @@ export class GarminService {
   isLoading        = signal(false);
   isConnected      = signal(false);
   connectError     = signal<string | null>(null);
+  connectLoading   = signal(false);
 
   lastWeekActivitiesSignal = signal<GarminActivity[]>([]);
   lastWeekStatsSignal      = signal<GarminWeekStats | null>(null);
@@ -33,13 +34,15 @@ export class GarminService {
 
   connect(email: string, password: string) {
     this.connectError.set(null);
+    this.connectLoading.set(true);
     return this.http.post<void>(`${this.API}/connect`, { email, password }).pipe(
       tap(() => this.isConnected.set(true)),
       catchError((err: HttpErrorResponse) => {
         this.connectError.set(err.error?.error ?? 'Connexion Garmin impossible. Vérifie tes identifiants.');
         this.isConnected.set(false);
         return of(null);
-      })
+      }),
+      finalize(() => this.connectLoading.set(false))
     );
   }
 
