@@ -1,21 +1,15 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ExpensesSevice } from '../../core/services/expenses.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExpensesDTO, ExpensesMonthlyTrendDTO, ExpensesYearRecapDTO } from '../../core/models/expenses.dto';
 import { DatePipe, DecimalPipe, JsonPipe } from '@angular/common';
+import { DatePickerComponent } from '../../shared/date-picker/date-picker';
 
 @Component({
   selector: 'app-expenses',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule, JsonPipe, DatePipe, DecimalPipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive,
+    ReactiveFormsModule, JsonPipe, DatePipe, DecimalPipe, DatePickerComponent],
   templateUrl: './expenses.html',
   styleUrl: './expenses.css',
 })

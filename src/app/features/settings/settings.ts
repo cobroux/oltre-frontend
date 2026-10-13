@@ -7,11 +7,12 @@ import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
 import { ThemeService, ThemeMode } from '../../core/services/theme.service';
+import { DatePickerComponent } from '../../shared/date-picker/date-picker';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, DatePickerComponent],
   templateUrl: './settings.html',
   styleUrl: './settings.css'
 })

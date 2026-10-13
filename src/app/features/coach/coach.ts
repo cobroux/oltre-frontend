@@ -4,6 +4,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CoachService } from '../../core/services/coach.service';
 import { SportGoalDTO, SportGoalType } from '../../core/models/coach.dto';
+import { DatePickerComponent } from '../../shared/date-picker/date-picker';
 
 interface StrengthExercise {
   name: string;
@@ -13,7 +14,7 @@ interface StrengthExercise {
 @Component({
   selector: 'app-coach',
   standalone: true,
-  imports: [RouterLink, DatePipe, DecimalPipe, ReactiveFormsModule],
+  imports: [RouterLink, DatePipe, DecimalPipe, ReactiveFormsModule, DatePickerComponent],
   templateUrl: './coach.html',
   styleUrl: './coach.css'
 })
