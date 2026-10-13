@@ -1,0 +1,144 @@
+<div class="page-header">
+  <h2 class="page-title">
+    <i class="ti ti-settings"></i>
+    Paramètres
+  </h2>
+</div>
+
+<!-- Profil -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-user"></i> Profil</div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="settings-form">
+    <div class="field-group">
+      <label class="field-label">Pseudo</label>
+      <input type="text" class="field-input" formControlName="username">
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Âge</label>
+        <input type="number" class="field-input" formControlName="age" min="0" max="130">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Date de naissance</label>
+        <input type="date" class="field-input" formControlName="birthDate">
+      </div>
+    </div>
+
+    @if (profileError()) {
+      <div class="form-error">{{ profileError() }}</div>
+    }
+    @if (profileSaved()) {
+      <div class="form-success">Profil mis à jour.</div>
+    }
+
+    <button type="submit" class="save-btn" [disabled]="profileForm.invalid || profileSaving()">
+      @if (profileSaving()) {
+        <i class="ti ti-loader-2 spin"></i> Sauvegarde...
+      } @else {
+        Enregistrer
+      }
+    </button>
+  </form>
+</div>
+
+<!-- Mot de passe -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-lock"></i> Mot de passe</div>
+
+  <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="settings-form">
+    <div class="field-group">
+      <label class="field-label">Mot de passe actuel</label>
+      <input type="password" class="field-input" formControlName="currentPassword" autocomplete="current-password">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Nouveau mot de passe</label>
+      <input type="password" class="field-input" formControlName="newPassword" autocomplete="new-password">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Confirmer le nouveau mot de passe</label>
+      <input type="password" class="field-input" formControlName="confirmNewPassword" autocomplete="new-password">
+    </div>
+
+    @if (passwordError()) {
+      <div class="form-error">{{ passwordError() }}</div>
+    }
+    @if (passwordSaved()) {
+      <div class="form-success">Mot de passe changé.</div>
+    }
+
+    <button type="submit" class="save-btn" [disabled]="passwordForm.invalid || passwordSaving()">
+      @if (passwordSaving()) {
+        <i class="ti ti-loader-2 spin"></i> Changement...
+      } @else {
+        Changer le mot de passe
+      }
+    </button>
+  </form>
+</div>
+
+<!-- Compte Garmin -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-run"></i> Compte Garmin</div>
+
+  @if (isGarminConnected()) {
+    <div class="garmin-row">
+      <span class="garmin-status"><i class="ti ti-circle-check"></i> Compte Garmin connecté</span>
+      <button type="button" class="danger-btn-outline" [disabled]="garminDisconnecting()" (click)="disconnectGarmin()">
+        @if (garminDisconnecting()) {
+          <i class="ti ti-loader-2 spin"></i> Déconnexion...
+        } @else {
+          Déconnecter
+        }
+      </button>
+    </div>
+  } @else {
+    <div class="garmin-row">
+      <span class="garmin-status muted"><i class="ti ti-circle-x"></i> Aucun compte Garmin connecté</span>
+      <a routerLink="/sport" class="link-btn">Connecter depuis la page Sport</a>
+    </div>
+  }
+</div>
+
+<!-- Suppression du compte -->
+<div class="content-card danger-zone">
+  <div class="section-title"><i class="ti ti-alert-triangle"></i> Zone dangereuse</div>
+  <p class="danger-text">
+    Supprimer ton compte efface définitivement toutes tes données (tâches, dépenses, repas, rendez-vous,
+    objectifs sportifs, plan coach) et déconnecte ton compte Garmin. Cette action est irréversible.
+  </p>
+
+  @if (!deleteConfirming()) {
+    <button type="button" class="danger-btn" (click)="startDeleteConfirm()">
+      Supprimer mon compte
+    </button>
+  } @else {
+    <div class="delete-confirm">
+      <label class="field-label">
+        Pour confirmer, tape ton pseudo (<strong>{{ user()?.username }}</strong>) ci-dessous :
+      </label>
+      <input
+        type="text"
+        class="field-input"
+        [value]="deleteConfirmText()"
+        (input)="deleteConfirmText.set($any($event.target).value)"
+      >
+
+      @if (deleteError()) {
+        <div class="form-error">{{ deleteError() }}</div>
+      }
+
+      <div class="delete-confirm-actions">
+        <button type="button" class="cancel-btn" (click)="cancelDeleteConfirm()">Annuler</button>
+        <button type="button" class="danger-btn" [disabled]="!canConfirmDelete() || deleting()" (click)="confirmDelete()">
+          @if (deleting()) {
+            <i class="ti ti-loader-2 spin"></i> Suppression...
+          } @else {
+            Supprimer définitivement
+          }
+        </button>
+      </div>
+    </div>
+  }
+</div>

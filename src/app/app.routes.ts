@@ -9,12 +9,14 @@ import { CoachComponent } from './features/coach/coach';
 import { LoginComponent } from './features/login/login';
 import { RegisterComponent } from './features/register/register';
 import { ProfileComponent } from './features/profile/profile';
+import { SettingsComponent } from './features/settings/settings';
 import { authGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
   { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
   { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
   { path: 'food', component: FoodComponent, canActivate: [authGuard] },
