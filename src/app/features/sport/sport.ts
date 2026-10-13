@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GarminService } from '../../core/services/garmin.service';
@@ -86,8 +87,17 @@ export class SportComponent implements OnInit {
         this.activityDetail.set(detail);
         this.detailLoading.set(false);
       },
-      error: () => {
-        this.detailError.set("Impossible de charger le détail de cette activité.");
+      error: (err: HttpErrorResponse) => {
+        // Le backend renvoie une 401 avec le vrai motif (session Garmin
+        // expirée, compte non connecté...) plutôt qu'un message générique -
+        // on l'affiche tel quel pour que l'utilisateur sache qu'il doit
+        // reconnecter son compte, au lieu d'un échec silencieux sans cause.
+        if (err.status === 401) {
+          this.detailError.set(err.error?.error ?? 'Ta session Garmin a expiré, reconnecte ton compte.');
+          this.garminService.isConnected.set(false);
+        } else {
+          this.detailError.set("Impossible de charger le détail de cette activité.");
+        }
         this.detailLoading.set(false);
       }
     });
