@@ -40,6 +40,45 @@ export interface GarminRecordsResponse {
   thisYear: GarminRecords;
 }
 
+export interface GarminLatLon {
+  lat: number;
+  lon: number;
+}
+
+export interface GarminSplit {
+  distance: number;
+  duration: number;
+  elevationGain?: number;
+  averageSpeed?: number;
+  averageHR?: number;
+}
+
+export interface GarminExerciseSet {
+  name: string | null;
+  reps: number | null;
+  weightKg: number | null;
+  duration: number | null;
+}
+
+export interface GarminActivityDetail {
+  activityId: string;
+  name: string | null;
+  sportType: string | null;
+  startLocal: string | null;
+  distance: number | null;
+  duration: number | null;
+  elevationGain: number | null;
+  elevationLoss: number | null;
+  calories: number | null;
+  averageHR: number | null;
+  maxHR: number | null;
+  averageSpeed: number | null;
+  maxSpeed: number | null;
+  polyline: GarminLatLon[] | null;
+  splits: GarminSplit[];
+  exerciseSets: GarminExerciseSet[];
+}
+
 export interface GarminWeekStats {
   totalCalories: number;
   runCount: number;

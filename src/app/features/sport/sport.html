@@ -113,7 +113,7 @@
 
     <div class="activities-list">
       @for (activity of activeActivities(); track activity.id) {
-        <div class="activity-item">
+        <div class="activity-item" (click)="openActivity(activity)" role="button" tabindex="0">
           <div class="act-icon" [class]="getIconClass(activity.sportType)">
             <i [class]="'ti ' + getIcon(activity.sportType)"></i>
           </div>
@@ -159,3 +159,116 @@
     }
   }
 </div>
+
+@if (selectedActivity(); as activity) {
+  <div class="activity-detail-overlay" (click)="closeActivity()">
+    <div class="activity-detail-panel" (click)="$event.stopPropagation()">
+      <div class="detail-top">
+        <div class="detail-top-title">
+          <div class="act-icon" [class]="getIconClass(activity.sportType)">
+            <i [class]="'ti ' + getIcon(activity.sportType)"></i>
+          </div>
+          <div>
+            <div class="detail-name">{{ activity.name }}</div>
+            <div class="detail-date">{{ formatDate(activity.startLocal) }}</div>
+          </div>
+        </div>
+        <button type="button" class="close-btn" (click)="closeActivity()">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+
+      @if (detailLoading()) {
+        <div class="loading"><i class="ti ti-loader-2 spin"></i> Chargement du détail...</div>
+      } @else if (detailError()) {
+        <div class="connect-error">{{ detailError() }}</div>
+      } @else if (activityDetail(); as detail) {
+
+        <div class="detail-stats-row">
+          @if (hasDistance(activity)) {
+            <div class="detail-stat">
+              <span class="detail-stat-label">Distance</span>
+              <span class="detail-stat-value">{{ formatDistance(activity.distance) }}</span>
+            </div>
+          }
+          <div class="detail-stat">
+            <span class="detail-stat-label">Durée</span>
+            <span class="detail-stat-value">{{ formatDuration(activity.movingTime) }}</span>
+          </div>
+          @if (detail.averageSpeed && !isStrength(activity)) {
+            <div class="detail-stat">
+              <span class="detail-stat-label">Allure moy.</span>
+              <span class="detail-stat-value">{{ formatPace(detail.averageSpeed) }}</span>
+            </div>
+          }
+          @if (hasElevation(activity)) {
+            <div class="detail-stat">
+              <span class="detail-stat-label">D+</span>
+              <span class="detail-stat-value">{{ activity.elevationGain }}m</span>
+            </div>
+          }
+          @if (detail.averageHR) {
+            <div class="detail-stat">
+              <span class="detail-stat-label">FC moy.</span>
+              <span class="detail-stat-value">{{ detail.averageHR | number:'1.0-0' }} bpm</span>
+            </div>
+          }
+          @if (activity.calories) {
+            <div class="detail-stat">
+              <span class="detail-stat-label">Calories</span>
+              <span class="detail-stat-value">{{ activity.calories }}</span>
+            </div>
+          }
+        </div>
+
+        @if (detail.polyline && detail.polyline.length > 1) {
+          <div class="detail-map">
+            <svg viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
+              <path [attr.d]="buildMapPath(detail.polyline)" fill="none" stroke-width="3" />
+            </svg>
+          </div>
+        }
+
+        @if (isStrength(activity) && detail.exerciseSets.length > 0) {
+          <div class="section-title"><i class="ti ti-barbell"></i> Séries</div>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Exercice</th><th>Répétitions</th><th>Charge</th></tr>
+            </thead>
+            <tbody>
+              @for (set of detail.exerciseSets; track $index) {
+                <tr>
+                  <td>{{ set.name ?? '—' }}</td>
+                  <td>{{ set.reps ?? '—' }}</td>
+                  <td>{{ set.weightKg ? (set.weightKg + ' kg') : '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else if (detail.splits.length > 0) {
+          <div class="section-title"><i class="ti ti-flag"></i> Splits</div>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Distance</th><th>Temps</th><th>Allure</th><th>D+</th></tr>
+            </thead>
+            <tbody>
+              @for (split of detail.splits; track $index) {
+                <tr>
+                  <td>{{ formatDistance(split.distance) }}</td>
+                  <td>{{ formatDuration(split.duration) }}</td>
+                  <td>{{ formatPace(split.averageSpeed) }}</td>
+                  <td>{{ split.elevationGain ? (split.elevationGain + 'm') : '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else if (!detail.polyline) {
+          <div class="empty-state">
+            <i class="ti ti-info-circle"></i>
+            <span>Pas de détail supplémentaire pour cette activité.</span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

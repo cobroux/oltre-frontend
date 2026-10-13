@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GarminService } from '../../core/services/garmin.service';
-import { GarminActivity } from '../../core/models/garmin.dto';
+import { GarminActivity, GarminActivityDetail } from '../../core/models/garmin.dto';
 
 @Component({
   selector: 'app-sport',
@@ -33,6 +33,12 @@ export class SportComponent implements OnInit {
     this.selectedWeek() === 'current' ? this.weekStats() : this.garminService.lastWeekStatsSignal());
   activeLoading = computed(() =>
     this.selectedWeek() === 'current' ? this.isLoading() : this.garminService.isLoadingLastWeek());
+
+  // Détail d'une activité (carte GPS / splits / séries de muscu selon le type)
+  selectedActivity = signal<GarminActivity | null>(null);
+  activityDetail    = signal<GarminActivityDetail | null>(null);
+  detailLoading     = signal(false);
+  detailError       = signal<string | null>(null);
 
   connectForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -68,6 +74,66 @@ export class SportComponent implements OnInit {
       this.lastWeekLoaded = true;
       this.garminService.loadLastWeek().subscribe();
     }
+  }
+
+  openActivity(activity: GarminActivity): void {
+    this.selectedActivity.set(activity);
+    this.activityDetail.set(null);
+    this.detailError.set(null);
+    this.detailLoading.set(true);
+    this.garminService.getActivityDetails(activity.id).subscribe({
+      next: detail => {
+        this.activityDetail.set(detail);
+        this.detailLoading.set(false);
+      },
+      error: () => {
+        this.detailError.set("Impossible de charger le détail de cette activité.");
+        this.detailLoading.set(false);
+      }
+    });
+  }
+
+  closeActivity(): void {
+    this.selectedActivity.set(null);
+    this.activityDetail.set(null);
+    this.detailError.set(null);
+  }
+
+  isStrength(activity: GarminActivity | null): boolean {
+    return !!activity && this.matchType(activity.sportType, 'strength');
+  }
+
+  // Projette le tracé GPS (lat/lon) dans un repère SVG 300x180, nord en haut,
+  // sans déformer le ratio - pas besoin d'une vraie lib de carte pour juste
+  // montrer la forme du parcours.
+  buildMapPath(polyline: { lat: number; lon: number }[] | null): string {
+    if (!polyline || polyline.length < 2) return '';
+
+    const lats = polyline.map(p => p.lat);
+    const lons = polyline.map(p => p.lon);
+    const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+    const minLon = Math.min(...lons), maxLon = Math.max(...lons);
+
+    const w = 300, h = 180, pad = 12;
+    const spanLat = (maxLat - minLat) || 1;
+    const spanLon = (maxLon - minLon) || 1;
+    const scale = Math.min((w - 2 * pad) / spanLon, (h - 2 * pad) / spanLat);
+    const offsetX = (w - spanLon * scale) / 2;
+    const offsetY = (h - spanLat * scale) / 2;
+
+    return polyline.map((p, i) => {
+      const x = offsetX + (p.lon - minLon) * scale;
+      const y = h - (offsetY + (p.lat - minLat) * scale);
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+  }
+
+  formatPace(averageSpeedMs: number | undefined | null): string {
+    if (!averageSpeedMs) return '—';
+    const secPerKm = 1000 / averageSpeedMs;
+    const min = Math.floor(secPerKm / 60);
+    const sec = Math.round(secPerKm % 60);
+    return `${min}:${String(sec).padStart(2, '0')}/km`;
   }
 
   // ── Helpers affichage ────────────────────────────────
