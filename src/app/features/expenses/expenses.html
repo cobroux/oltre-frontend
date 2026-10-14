@@ -126,6 +126,13 @@
     </button>
   </form>
 
+  @if (errorMessage()) {
+    <div class="error-banner" role="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
   <!-- Liste -->
   <ul class="items-list">
     @for(expense of allExpenses(); track expense.id) {

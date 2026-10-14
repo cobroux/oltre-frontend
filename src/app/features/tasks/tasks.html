@@ -50,6 +50,13 @@
     </button>
   </form>
 
+  @if (errorMessage()) {
+    <div class="error-banner" role="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
   <!-- Filtres -->
   <div class="filters-row">
     <div class="filter-group">

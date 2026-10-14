@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ExpensesComponent } from './expenses';
 import { ExpensesSevice } from '../../core/services/expenses.service';
 import { ExpensesDTO } from '../../core/models/expenses.dto';
@@ -65,6 +65,48 @@ describe('ExpensesComponent', () => {
     component.requestDelete(1);
     component.requestDelete(1);
     expect(mockService.deleteExpenses).toHaveBeenCalledWith(1);
+  });
+
+  it('devrait afficher un message si la suppression échoue', () => {
+    mockService.deleteExpenses.mockReturnValueOnce(throwError(() => new Error('x')));
+
+    component.requestDelete(1);
+    component.requestDelete(1);
+    fixture.detectChanges();
+
+    expect(component.errorMessage()).toBe('Impossible de supprimer la dépense. Réessaie plus tard.');
+    const banner: HTMLElement | null = fixture.nativeElement.querySelector('.error-banner');
+    expect(banner?.textContent).toContain('Impossible de supprimer la dépense');
+    expect(component.confirmDeleteId()).toBeNull();
+  });
+
+  it("devrait afficher un message si l'ajout échoue et garder le formulaire rempli", () => {
+    mockService.addExpense.mockReturnValueOnce(throwError(() => new Error('x')));
+    component.addForm.setValue({
+      expensesName: 'Netflix',
+      amount: 13,
+      startDate: '2026-07-01',
+      recType: 'Monthly'
+    });
+
+    component.onSubmit();
+    fixture.detectChanges();
+
+    expect(mockService.addExpense).toHaveBeenCalled();
+    expect(component.errorMessage()).toBe("Impossible d'ajouter la dépense. Réessaie plus tard.");
+    expect(fixture.nativeElement.querySelector('.error-banner')).not.toBeNull();
+    expect(component.addForm.value.expensesName).toBe('Netflix');
+  });
+
+  it("devrait effacer le message d'erreur après une action réussie", () => {
+    component.errorMessage.set('Ancienne erreur');
+
+    component.requestDelete(2);
+    component.requestDelete(2);
+    fixture.detectChanges();
+
+    expect(component.errorMessage()).toBeNull();
+    expect(fixture.nativeElement.querySelector('.error-banner')).toBeNull();
   });
 
   it('devrait retourner le bon label de récurrence', () => {

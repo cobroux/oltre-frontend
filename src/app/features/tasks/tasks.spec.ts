@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { TasksComponent } from './tasks';
 import { TasksService } from '../../core/services/tasks.service';
 import { TasksDTO } from '../../core/models/tasks.dto';
@@ -24,7 +24,8 @@ const mockService = {
   loadAllTasks: vi.fn(() => of(mockTasks)),
   addTasks: vi.fn((_tasks: TasksDTO) => of({})),
   deleteTasks: vi.fn((_id: number) => of(undefined)),
-  updateTasksStatus: vi.fn((_id: number, _status: string) => of({})) // ← typage explicite
+  updateTasksStatus: vi.fn((_id: number, _status: string) => of({})), // ← typage explicite
+  refresh: vi.fn()
 };
 
   beforeEach(async () => {
@@ -136,6 +137,40 @@ const mockService = {
   it('devrait appeler updateTasksStatus avec PENDING si tâche DONE', () => {
     component.toggleTask(2);
     expect(mockService.updateTasksStatus).toHaveBeenCalledWith(2, 'PENDING');
+  });
+
+  it('devrait afficher un message si la suppression échoue', () => {
+    mockService.deleteTasks.mockReturnValueOnce(throwError(() => new Error('x')));
+
+    component.requestDelete(1);
+    component.requestDelete(1);
+    fixture.detectChanges();
+
+    expect(component.errorMessage()).toBe('Impossible de supprimer la tâche. Réessaie plus tard.');
+    expect(fixture.nativeElement.querySelector('.error-banner')?.textContent).toContain('Impossible de supprimer la tâche');
+  });
+
+  it('devrait afficher un message si le changement de statut échoue', () => {
+    mockService.updateTasksStatus.mockReturnValueOnce(throwError(() => new Error('x')));
+
+    component.toggleTask(1);
+
+    expect(component.errorMessage()).toBe('Impossible de modifier la tâche. Réessaie plus tard.');
+  });
+
+  it("devrait afficher un message si l'ajout échoue", () => {
+    mockService.addTasks.mockReturnValueOnce(throwError(() => new Error('x')));
+    component.addForm.setValue({
+      tasksName: 'Nouvelle tâche',
+      tasksPriority: 'HIGH',
+      tasksType: 'PERSO',
+      tasksDate: '2026-08-01'
+    });
+
+    component.onSubmit();
+
+    expect(component.errorMessage()).toBe("Impossible d'ajouter la tâche. Réessaie plus tard.");
+    expect(mockService.refresh).not.toHaveBeenCalled();
   });
 
   it('devrait détecter une tâche urgente', () => {

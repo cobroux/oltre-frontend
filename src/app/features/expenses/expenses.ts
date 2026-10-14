@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ExpensesDTO, ExpensesMonthlyTrendDTO, ExpensesYearRecapDTO } from '../../core/models/expenses.dto';
 import { DatePipe, DecimalPipe, JsonPipe } from '@angular/common';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
+import { EMPTY, catchError } from 'rxjs';
 
 @Component({
   selector: 'app-expenses',
@@ -69,28 +70,27 @@ export class ExpensesComponent implements OnInit {
       recType: (formValue.recType || 'Monthly') as 'Daily' | 'Monthly' | 'Yearly'
     };
 
+    this.errorMessage.set(null);
+    // La liste et le total du mois sont rechargés par le service.
     this.expensesService.addExpense(expense).subscribe({
       next: () => {
-        this.expensesService.loadAllExpenses().subscribe();
-        this.expensesService.getYearRecap().subscribe(r => this.yearRecap.set(r));
-        this.expensesService.getMonthlyTrend().subscribe(t => this.monthlyTrend.set(t));
+        this.refreshAnalysis();
         this.addForm.reset();
       },
-      error: err => console.error(err)
+      error: () => this.errorMessage.set("Impossible d'ajouter la dépense. Réessaie plus tard.")
     });
 
   }
 
   confirmDeleteId = signal<number | null>(null);
+  errorMessage = signal<string | null>(null);
 
   requestDelete(id: number) {
     if (this.confirmDeleteId() === id) {
+      this.errorMessage.set(null);
       this.expensesService.deleteExpenses(id).subscribe({
-        next: () => {
-          this.expensesService.getYearRecap().subscribe(r => this.yearRecap.set(r));
-          this.expensesService.getMonthlyTrend().subscribe(t => this.monthlyTrend.set(t));
-        },
-        error: err => console.error(err)
+        next: () => this.refreshAnalysis(),
+        error: () => this.errorMessage.set("Impossible de supprimer la dépense. Réessaie plus tard.")
       });
       this.confirmDeleteId.set(null);
     } else {
@@ -108,8 +108,9 @@ export class ExpensesComponent implements OnInit {
   monthlyTrend = signal<ExpensesMonthlyTrendDTO | null>(null);
 
    ngOnInit(): void {
-      this.expensesService.loadAllExpenses().subscribe();
-      this.expensesService.getAmountPerMonth().subscribe();
+      // En cas d'échec de lecture, la page reste sur ses valeurs vides.
+      this.expensesService.loadAllExpenses().pipe(catchError(() => EMPTY)).subscribe();
+      this.expensesService.getAmountPerMonth().pipe(catchError(() => EMPTY)).subscribe();
       this.expensesService.getYearRecap().subscribe({
         next: r => this.yearRecap.set(r),
         error: () => this.yearRecap.set(null)
@@ -123,6 +124,19 @@ export class ExpensesComponent implements OnInit {
       });
   }
 
+
+  // Graphiques recalculés après un ajout/une suppression ; un échec de
+  // relecture garde simplement l'analyse précédente.
+  private refreshAnalysis() {
+    this.expensesService.getYearRecap().subscribe({
+      next: r => this.yearRecap.set(r),
+      error: () => {}
+    });
+    this.expensesService.getMonthlyTrend().subscribe({
+      next: t => this.monthlyTrend.set(t),
+      error: () => {}
+    });
+  }
 
   getRecLabel(recType: string): string {
   const labels: Record<string, string> = {

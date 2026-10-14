@@ -34,6 +34,7 @@ export class FoodComponent implements OnInit {
   weekOffset  = signal(0);
   selectedDay = signal<string | null>(null);
   confirmDeleteId = signal<number | null>(null);
+  errorMessage = signal<string | null>(null);
 
   monday = computed(() => this.getMonday(this.weekOffset()));
 
@@ -197,6 +198,7 @@ export class FoodComponent implements OnInit {
     const nutrition = this.nutritionPreview();
     const product = this.selectedProduct();
 
+    this.errorMessage.set(null);
     this.mealService.save({
       mealName:     v.mealName!,
       mealDescript: v.mealDescript || undefined,
@@ -216,14 +218,15 @@ export class FoodComponent implements OnInit {
         this.selectedProduct.set(null);
         this.productResults.set([]);
       },
-      error: err => console.error('Erreur ajout :', err)
+      error: () => this.errorMessage.set("Impossible d'ajouter le repas. Réessaie plus tard.")
     });
   }
 
   requestDelete(id: number) {
     if (this.confirmDeleteId() === id) {
+      this.errorMessage.set(null);
       this.mealService.delete(id).subscribe({
-        error: err => console.error('Erreur suppression :', err)
+        error: () => this.errorMessage.set("Impossible de supprimer le repas. Réessaie plus tard.")
       });
       this.confirmDeleteId.set(null);
     } else {

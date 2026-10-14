@@ -58,6 +58,18 @@ describe('TasksService', () => {
     httpMock.expectOne('http://localhost:8080/api/tasks/all').flush([mockTasks[1]]);
   });
 
+  it("ne devrait pas propager l'échec du rechargement après une suppression réussie", () => {
+    const error = vi.fn();
+    service.deleteTasks(1).subscribe({ error });
+
+    httpMock.expectOne('http://localhost:8080/api/tasks/1').flush(null);
+    httpMock.expectOne('http://localhost:8080/api/tasks/all')
+      .flush('KO', { status: 500, statusText: 'Server Error' });
+
+    expect(error).not.toHaveBeenCalled();
+    expect(service.tasksListSignal()).toEqual([]);
+  });
+
   it('devrait mettre à jour le statut et recharger', () => {
     service.updateTasksStatus(1, 'DONE').subscribe();
 

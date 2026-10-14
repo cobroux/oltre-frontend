@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { ExpensesDTO, ExpensesMonthlyTrendDTO, ExpensesYearRecapDTO } from '../models/expenses.dto';
 import { getApiUrl } from '../config/runtime-config';
 
@@ -20,22 +21,24 @@ export class ExpensesSevice {
   }
 
   addExpense(expense: ExpensesDTO) {
-  return this.http.post<ExpensesDTO>(this.API + "/save", expense).pipe(
-    tap(() => {
-      this.loadAllExpenses().subscribe();
-      this.getAmountPerMonth().subscribe();
-      })
-    );  
-}
+    return this.http.post<ExpensesDTO>(this.API + "/save", expense).pipe(
+      tap(() => this.refresh())
+    );
+  }
 
   deleteExpenses(id: number) {
-  return this.http.delete<void>(this.API + "/" + id).pipe(
-    tap(() => {
-      this.loadAllExpenses().subscribe();
-      this.getAmountPerMonth().subscribe();
-      })
-    );  
-}
+    return this.http.delete<void>(this.API + "/" + id).pipe(
+      tap(() => this.refresh())
+    );
+  }
+
+  // Rechargement après une écriture réussie : si la relecture échoue, on
+  // garde simplement les données déjà affichées plutôt que de lever une
+  // erreur non gérée.
+  private refresh() {
+    this.loadAllExpenses().pipe(catchError(() => EMPTY)).subscribe();
+    this.getAmountPerMonth().pipe(catchError(() => EMPTY)).subscribe();
+  }
 
 
   getAmountPerMonth(){
