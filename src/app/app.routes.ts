@@ -1,28 +1,17 @@
 import { Routes } from '@angular/router';
-import { ExpensesComponent } from './features/expenses/expenses';
-import { TasksComponent } from './features/tasks/tasks';
-import { FoodComponent } from './features/food/food';
-import { AppointmentComponent } from './features/appointment/appointment';
-import { CalendarComponent } from './features/calendar/calendar';
-import { SportComponent } from './features/sport/sport';
-import { CoachComponent } from './features/coach/coach';
-import { LoginComponent } from './features/login/login';
-import { RegisterComponent } from './features/register/register';
-import { ProfileComponent } from './features/profile/profile';
-import { SettingsComponent } from './features/settings/settings';
 import { authGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
-  { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
-  { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
-  { path: 'food', component: FoodComponent, canActivate: [authGuard] },
-  { path: 'calendar', component: CalendarComponent, canActivate: [authGuard] },
-  { path: 'sport', component: SportComponent, canActivate: [authGuard] },
-  { path: 'sport/coach', component: CoachComponent, canActivate: [authGuard] },
-  { path: 'habits', component: AppointmentComponent, canActivate: [authGuard] },
+  { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginComponent) },
+  { path: 'register', loadComponent: () => import('./features/register/register').then(m => m.RegisterComponent) },
+  { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent), canActivate: [authGuard] },
+  { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsComponent), canActivate: [authGuard] },
+  { path: 'expenses', loadComponent: () => import('./features/expenses/expenses').then(m => m.ExpensesComponent), canActivate: [authGuard] },
+  { path: 'tasks', loadComponent: () => import('./features/tasks/tasks').then(m => m.TasksComponent), canActivate: [authGuard] },
+  { path: 'food', loadComponent: () => import('./features/food/food').then(m => m.FoodComponent), canActivate: [authGuard] },
+  { path: 'calendar', loadComponent: () => import('./features/calendar/calendar').then(m => m.CalendarComponent), canActivate: [authGuard] },
+  { path: 'sport', loadComponent: () => import('./features/sport/sport').then(m => m.SportComponent), canActivate: [authGuard] },
+  { path: 'sport/coach', loadComponent: () => import('./features/coach/coach').then(m => m.CoachComponent), canActivate: [authGuard] },
+  { path: 'habits', loadComponent: () => import('./features/appointment/appointment').then(m => m.AppointmentComponent), canActivate: [authGuard] },
   { path: '', redirectTo: 'expenses', pathMatch: 'full' }
 ];
