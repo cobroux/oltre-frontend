@@ -25,6 +25,7 @@ export class SettingsComponent implements OnInit {
 
   user = this.userService.currentUser;
   isGarminConnected = this.garminService.isConnected;
+  garminDisconnectError = this.garminService.disconnectError;
   themeMode = this.themeService.mode;
 
   profileSaving = signal(false);
@@ -71,7 +72,9 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.loadUser().subscribe();
+    this.userService.loadUser().subscribe({
+      error: () => this.profileError.set('Impossible de charger ton profil. Réessaie plus tard.')
+    });
     this.garminService.checkStatus().subscribe();
   }
 

@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { AppointmentComponent } from './appointment';
 import { AppointmentService } from '../../core/services/appointment.service';
 import { AppointmentDTO } from '../../core/models/appointment.dto';
@@ -161,5 +161,15 @@ describe('AppointmentsComponent', () => {
   it('devrait convertir une date en string correctement', () => {
     const d = new Date('2026-08-04T00:00:00');
     expect(component.toDateStr(d)).toBe('2026-08-04');
+  });
+
+  it('affiche un message si la semaine ne se charge pas', () => {
+    mockService.loadWeek.mockReturnValueOnce(throwError(() => new Error('réseau')));
+
+    component.loadWeek();
+    fixture.detectChanges();
+
+    expect(component.loadError()).toBe('Impossible de charger les rendez-vous de la semaine.');
+    expect(fixture.nativeElement.textContent).toContain('Impossible de charger les rendez-vous');
   });
 });

@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -18,7 +18,7 @@ interface MealGroup {
 @Component({
   selector: 'app-food',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './food.html',
   styleUrl: './food.css'
 })
@@ -35,6 +35,7 @@ export class FoodComponent implements OnInit {
   selectedDay = signal<string | null>(null);
   confirmDeleteId = signal<number | null>(null);
   errorMessage = signal<string | null>(null);
+  loadError = signal<string | null>(null);
 
   monday = computed(() => this.getMonday(this.weekOffset()));
 
@@ -131,8 +132,8 @@ export class FoodComponent implements OnInit {
           // Une recherche en échec (réseau, API down) ne doit pas tuer
           // l'abonnement - sinon plus aucune frappe ne redéclenche de
           // recherche tant que la page n'est pas rechargée.
-          catchError(err => {
-            console.error('Erreur recherche produit :', err);
+          catchError(() => {
+            this.errorMessage.set('Recherche de produits indisponible pour le moment.');
             return of([]);
           })
         );
@@ -181,8 +182,9 @@ export class FoodComponent implements OnInit {
   }
 
   loadWeek() {
+    this.loadError.set(null);
     this.mealService.loadWeek(this.toDateStr(this.monday())).subscribe({
-      error: err => console.error('Erreur chargement semaine :', err)
+      error: () => this.loadError.set('Impossible de charger les repas de la semaine.')
     });
   }
 

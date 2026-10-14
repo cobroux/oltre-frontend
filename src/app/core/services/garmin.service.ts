@@ -14,6 +14,7 @@ export class GarminService {
   isLoading        = signal(false);
   isConnected      = signal(false);
   connectError     = signal<string | null>(null);
+  disconnectError  = signal<string | null>(null);
   connectLoading   = signal(false);
 
   lastWeekActivitiesSignal = signal<GarminActivity[]>([]);
@@ -47,13 +48,17 @@ export class GarminService {
   }
 
   disconnect() {
+    this.disconnectError.set(null);
     return this.http.delete<void>(`${this.API}/connect`).pipe(
       tap(() => {
         this.isConnected.set(false);
         this.activitiesSignal.set([]);
         this.weekStatsSignal.set(null);
       }),
-      catchError(() => of(null))
+      catchError(() => {
+        this.disconnectError.set('Impossible de déconnecter Garmin. Réessaie plus tard.');
+        return of(null);
+      })
     );
   }
 

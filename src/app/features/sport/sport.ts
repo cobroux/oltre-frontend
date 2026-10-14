@@ -23,6 +23,7 @@ export class SportComponent implements OnInit, OnDestroy {
   isLoading      = this.garminService.isLoading;
   isConnected    = this.garminService.isConnected;
   connectError   = this.garminService.connectError;
+  disconnectError = this.garminService.disconnectError;
   connectLoading = this.garminService.connectLoading;
 
   // Onglet "Cette semaine" / "Semaine dernière" - la semaine dernière n'est
