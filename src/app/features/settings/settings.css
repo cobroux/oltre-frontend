@@ -1,6 +1,4 @@
-.page-header {
-  margin-bottom: 1.5rem;
-}
+
 
 .page-title {
   font-size: var(--font-size-2xl);
@@ -37,24 +35,7 @@
   gap: 14px;
   max-width: 420px;
 }
-
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field-row {
-  display: flex;
-  gap: 12px;
-}
 .field-row .field-group { flex: 1; min-width: 0; }
-
-.field-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
 
 .field-input {
   padding: 10px 12px;

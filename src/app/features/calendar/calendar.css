@@ -1,15 +1,4 @@
-.content-card {
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-}
 
-/* ── En-tête de page (titre + stats, hors de la carte) ── */
-.page-header {
-  margin-bottom: 1.5rem;
-}
 
 .page-title {
   font-size: var(--font-size-2xl);
@@ -45,28 +34,10 @@
   }
 }
 
-.stat-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  flex-shrink: 0;
-}
-
 .stat-expense .stat-icon { background: var(--tint-amber-bg); color: var(--tint-amber); }
 .stat-appt .stat-icon    { background: var(--tint-red-bg); color: var(--color-danger); }
 .stat-task .stat-icon    { background: var(--tint-violet-bg); color: var(--tint-violet); }
 .stat-meal .stat-icon    { background: var(--tint-green-bg); color: var(--tint-green); }
-
-.stat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
 
 .stat-label {
   font-size: 11px;
@@ -74,17 +45,6 @@
   text-transform: uppercase;
   letter-spacing: .05em;
   white-space: nowrap;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.stat-sub {
-  font-size: 11px;
-  color: var(--color-text-muted);
 }
 
 /* ── Navigation ─────────────────────────────────────── */
@@ -98,14 +58,6 @@
 }
 
 .cal-title { flex: 1; font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
-
-.nav-arrow {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: var(--color-accent-subtle); border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: var(--transition-ui);
-}
 .nav-arrow:hover { background: var(--color-accent); color: #fff; }
 
 .today-btn {
@@ -124,13 +76,6 @@
 .dot-meal    { background: var(--tint-green); }
 .dot-task    { background: var(--tint-violet); }
 .dot-expense { background: var(--tint-amber); }
-
-/* ── Loading ─────────────────────────────────────────── */
-.loading {
-  display: flex; align-items: center; gap: 8px;
-  justify-content: center; padding: 3rem 0;
-  color: var(--color-text-muted); font-size: 14px;
-}
 
 /* ── Skeleton loader ───────────────────────────────────── */
 @keyframes skeleton-shimmer {
@@ -224,10 +169,6 @@
 
 .detail-header { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
 .detail-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
-.today-badge {
-  font-size: 11px; padding: 2px 8px; border-radius: var(--radius-full);
-  background: var(--color-accent-subtle); color: var(--color-accent); font-weight: 500;
-}
 
 .ev-list { display: flex; flex-direction: column; gap: 8px; }
 

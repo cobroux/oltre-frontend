@@ -1,10 +1,4 @@
-.content-card {
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-}
+
 
 .page-title {
   font-size: var(--font-size-2xl);
@@ -22,13 +16,6 @@
 }
 
 .week-title { flex: 1; font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
-
-.nav-arrow {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--color-accent-subtle); border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: var(--transition-ui);
-}
 .nav-arrow:hover { background: var(--color-accent); color: #fff; }
 
 .today-btn {
@@ -90,17 +77,6 @@
 
 .detail-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
 .detail-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); text-transform: capitalize; }
-.today-badge {
-  font-size: 11px; padding: 2px 8px; border-radius: var(--radius-full);
-  background: var(--color-accent-subtle); color: var(--color-accent); font-weight: 500;
-}
-
-/* ── Formulaire ─────────────────────────────────────── */
-.add-item-box {
-  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-  margin-bottom: 1.5rem; padding: 16px;
-  background: var(--color-bg); border-radius: var(--radius-md);
-}
 
 .add-item-box input[type="text"],
 .add-item-box select {
@@ -213,7 +189,6 @@
 @starting-style {
   .appt-item { opacity: 0; transform: translateY(4px); }
 }
-
 
 /* ── Empty states ───────────────────────────────────── */
 .empty-state, .empty-detail {
