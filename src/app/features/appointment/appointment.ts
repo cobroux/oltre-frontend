@@ -145,8 +145,9 @@ export class AppointmentComponent implements OnInit {
 
   requestDelete(id: number) {
     if (this.confirmDeleteId() === id) {
+      this.formError.set(null);
       this.apptService.delete(id).subscribe({
-        error: err => console.error('Erreur suppression :', err)
+        error: () => this.formError.set("Impossible de supprimer le rendez-vous. Réessaie plus tard.")
       });
       this.confirmDeleteId.set(null);
     } else {

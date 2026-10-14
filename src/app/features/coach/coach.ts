@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CoachService } from '../../core/services/coach.service';
 import { SportGoalDTO, SportGoalType } from '../../core/models/coach.dto';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
+import { EMPTY, catchError } from 'rxjs';
 
 interface StrengthExercise {
   name: string;
@@ -28,6 +29,7 @@ export class CoachComponent implements OnInit {
   loadingPlan = signal(true);
   generating = signal(false);
   generateError = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
   showGoalForm = signal(false);
 
   goalForm = new FormGroup({
@@ -52,7 +54,8 @@ export class CoachComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.coachService.loadGoals().subscribe();
+    // En cas d'échec de lecture, la liste d'objectifs reste vide.
+    this.coachService.loadGoals().pipe(catchError(() => EMPTY)).subscribe();
     this.coachService.loadPlan().subscribe({
       next: () => this.loadingPlan.set(false),
       error: () => this.loadingPlan.set(false)
@@ -83,7 +86,10 @@ export class CoachComponent implements OnInit {
   }
 
   onToggleDay(index: number): void {
-    this.coachService.toggleDay(index).subscribe();
+    this.errorMessage.set(null);
+    this.coachService.toggleDay(index).subscribe({
+      error: () => this.errorMessage.set("Impossible de mettre à jour ce jour. Réessaie plus tard.")
+    });
   }
 
   toggleGoalForm(): void {
@@ -99,15 +105,22 @@ export class CoachComponent implements OnInit {
       eventDate: v.eventDate!,
       targetTime: v.targetTime || null
     };
-    this.coachService.addGoal(goal).subscribe(() => {
-      this.goalForm.reset();
-      this.showGoalForm.set(false);
+    this.errorMessage.set(null);
+    this.coachService.addGoal(goal).subscribe({
+      next: () => {
+        this.goalForm.reset();
+        this.showGoalForm.set(false);
+      },
+      error: () => this.errorMessage.set("Impossible d'ajouter l'objectif. Réessaie plus tard.")
     });
   }
 
   onDeleteGoal(id: number | undefined): void {
     if (id == null) return;
-    this.coachService.deleteGoal(id).subscribe();
+    this.errorMessage.set(null);
+    this.coachService.deleteGoal(id).subscribe({
+      error: () => this.errorMessage.set("Impossible de supprimer l'objectif. Réessaie plus tard.")
+    });
   }
 
   // Jours restants calculés à partir des composants locaux de la date

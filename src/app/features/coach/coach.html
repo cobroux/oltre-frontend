@@ -16,6 +16,13 @@
     <i class="ti ti-flag-3"></i> Objectifs
   </div>
 
+  @if (errorMessage()) {
+    <div class="error-banner" role="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
   <div class="goals-row">
     @for (goal of goals(); track goal.id) {
       <div class="goal-card">

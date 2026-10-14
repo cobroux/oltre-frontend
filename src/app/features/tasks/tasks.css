@@ -342,3 +342,17 @@
   /* Actions de ligne toujours visibles et assez grandes pour le doigt. */
   .delete-btn { min-width: 36px; min-height: 36px; justify-content: center; }
 }
+
+/* Message d'erreur (même rendu que la page Coach) */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  margin-bottom: 14px;
+  background: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+.error-banner i { margin-top: 1px; flex-shrink: 0; }

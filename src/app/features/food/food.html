@@ -137,6 +137,13 @@
         }
       </form>
 
+      @if (errorMessage()) {
+        <div class="error-banner" role="alert">
+          <i class="ti ti-alert-triangle"></i>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
       <!-- Groupes par type de repas -->
       @for (group of mealGroups(); track group.type) {
         <div class="meal-group">

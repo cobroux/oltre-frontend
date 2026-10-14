@@ -532,3 +532,17 @@
   }
   .day-col { scroll-snap-align: start; }
 }
+
+/* Message d'erreur (même rendu que la page Coach) */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  margin-bottom: 14px;
+  background: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+.error-banner i { margin-top: 1px; flex-shrink: 0; }

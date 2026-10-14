@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TasksDTO } from '../../core/models/tasks.dto';
 import { TasksService } from '../../core/services/tasks.service';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
+import { EMPTY, catchError } from 'rxjs';
 
 @Component({
   selector: 'app-tasks',
@@ -20,13 +21,15 @@ export class TasksComponent {
   
   allTasks = this.tasksService.tasksListSignal;
    ngOnInit(): void {
-      this.tasksService.loadAllTasks().subscribe();
+      // En cas d'échec de lecture, la liste reste simplement vide.
+      this.tasksService.loadAllTasks().pipe(catchError(() => EMPTY)).subscribe();
   }
 
   // Signals
   filter    = signal<'ALL' | 'PENDING' | 'DONE'>('ALL');
   catFilter = signal<'ALL' | 'PERSO' | 'TRAVAIL' | 'SPORT' | 'AUTRE'>('ALL');
   confirmDeleteId = signal<number | null>(null);
+  errorMessage = signal<string | null>(null);
 /* */
   // Computed
   // tasksStatus est une chaîne ('DONE'/'PENDING'), pas un booléen - 'PENDING'
@@ -68,12 +71,13 @@ export class TasksComponent {
             : '', 
         };
 
+    this.errorMessage.set(null);
     this.tasksService.addTasks(tasks).subscribe({
           next: () => {
-            this.tasksService.loadAllTasks().subscribe();
+            this.tasksService.refresh();
             this.addForm.reset();
           },
-          error: err => console.error(err)
+          error: () => this.errorMessage.set("Impossible d'ajouter la tâche. Réessaie plus tard.")
         });
   }
 
@@ -82,15 +86,17 @@ export class TasksComponent {
 
     const task = this.allTasks().find(t => t.id === id);
     let status = task?.tasksStatus === 'DONE' ? 'PENDING' : 'DONE';
+    this.errorMessage.set(null);
     this.tasksService.updateTasksStatus(id, status).subscribe({
-      error: err => console.error(err)
+      error: () => this.errorMessage.set("Impossible de modifier la tâche. Réessaie plus tard.")
     });
   }
 
   requestDelete(id: number) {
     if (this.confirmDeleteId() === id) {
+      this.errorMessage.set(null);
       this.tasksService.deleteTasks(id).subscribe({
-        error: err => console.error(err)
+        error: () => this.errorMessage.set("Impossible de supprimer la tâche. Réessaie plus tard.")
       });
       this.confirmDeleteId.set(null);
     } else {

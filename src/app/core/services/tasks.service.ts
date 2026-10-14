@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { TasksDTO } from '../models/tasks.dto';
 import { getApiUrl } from '../config/runtime-config';
 
@@ -24,10 +25,8 @@ export class TasksService {
 
   deleteTasks(id: number) {
     return this.http.delete<void>(this.API + "/" + id).pipe(
-      tap(() => {
-        this.loadAllTasks().subscribe();
-        })
-      );  
+      tap(() => this.refresh())
+    );
   }
 
   updateTasksStatus(id: number, status: string) {
@@ -35,9 +34,13 @@ export class TasksService {
       id,
       status
     }).pipe(
-        tap(() => {
-          this.loadAllTasks().subscribe();
-          })
-        );
-}
+      tap(() => this.refresh())
+    );
+  }
+
+  // Rechargement après une écriture réussie : si la relecture échoue, on
+  // garde la liste déjà affichée plutôt que de lever une erreur non gérée.
+  refresh() {
+    this.loadAllTasks().pipe(catchError(() => EMPTY)).subscribe();
+  }
 }

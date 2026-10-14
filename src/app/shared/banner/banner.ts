@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
+import { EMPTY, catchError } from 'rxjs';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class BannerComponent implements OnInit {
   todayLabel = this.formatToday();
 
     ngOnInit(): void {
-      this.userService.loadUser().subscribe();
+      // Si le profil ne se charge pas, la bannière affiche « Bonjour » sans nom.
+      this.userService.loadUser().pipe(catchError(() => EMPTY)).subscribe();
 
   }
 
