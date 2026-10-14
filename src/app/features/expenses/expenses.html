@@ -113,7 +113,7 @@
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
     <input type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />
-    <input type="number" placeholder="Prix (€)" formControlName="amount" />
+    <input type="number" step="0.01" min="0" inputmode="decimal" placeholder="Prix (€)" formControlName="amount" />
     <select formControlName="recType">
       <option [ngValue]="null" disabled>Récurrence</option>
       <option value="Daily">Quotidien</option>
