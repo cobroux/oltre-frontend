@@ -114,7 +114,7 @@
 .add-item-box input:focus,
 .add-item-box select:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
 .add-btn {
@@ -324,8 +324,21 @@
 /* ── Mobile ───────────────────────────────────────────── */
 @media (max-width: 700px) {
   .content-card { padding: 1.1rem; }
-  .stats-row { grid-template-columns: 1fr; }
-  .add-item-box > * { flex: 1 1 100%; }
+  /* Trois petits compteurs côte à côte plutôt que trois cartes empilées. */
+  .stats-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .stat-card { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 12px; }
+  .stat-icon { width: 30px; height: 30px; font-size: 15px; }
+
+  /* Grille 2 colonnes : titre, date et bouton sur toute la largeur,
+     priorité et catégorie côte à côte. */
+  .add-item-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
+  .add-item-box > * { min-width: 0; width: 100%; }
+  .add-item-box input[type="text"],
+  .add-item-box app-date-picker,
+  .add-item-box .add-btn { grid-column: 1 / -1; }
+  .add-item-box .add-btn { justify-content: center; }
+
+  .filters-row { flex-direction: column; gap: 8px; }
   /* Actions de ligne toujours visibles et assez grandes pour le doigt. */
   .delete-btn { min-width: 36px; min-height: 36px; justify-content: center; }
 }

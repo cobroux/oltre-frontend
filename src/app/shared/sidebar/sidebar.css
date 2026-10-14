@@ -96,13 +96,17 @@
   flex-shrink: 0;
 }
 
-.icon-calendar { background: #ede9ff; color: #6C63FF; }
-.icon-tasks    { background: #e0e7ff; color: #4F46E5; }
-.icon-habits   { background: #ccfbf1; color: #0D9488; }
-.icon-expenses { background: #fef3c7; color: #D97706; }
-.icon-food     { background: #fce7f3; color: #DB2777; }
-.icon-sport    { background: #d1fae5; color: #059669; }
-.icon-settings { background: var(--color-bg); color: var(--color-text-secondary); }
+/* La sidebar reste sombre dans les deux thèmes : pastilles translucides
+   teintées plutôt que des pastels clairs qui « allument » la colonne. */
+.nav-icon { --c: #a8abcf; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+.icon-calendar { --c: #a39cf5; }
+.icon-tasks    { --c: #8b9cf7; }
+.icon-habits   { --c: #2dd4bf; }
+.icon-expenses { --c: #f2a94e; }
+.icon-food     { --c: #f472b6; }
+.icon-sport    { --c: #34d399; }
+.icon-settings { --c: #a8abcf; }
+.nav-item.active .nav-icon { background: color-mix(in srgb, var(--c) 28%, transparent); }
 
 .nav-badge {
   margin-left: auto;

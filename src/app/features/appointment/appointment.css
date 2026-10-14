@@ -116,7 +116,7 @@
 
 .add-item-box input:focus, .add-item-box select:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
 .add-item-box app-time-picker { flex: 0 0 110px; }

@@ -222,9 +222,11 @@
 
 /* ── En-tête records + toggle période ─────────────────── */
 .records-header {
-  justify-content: space-between;
+  flex-wrap: wrap;
   margin-bottom: 16px;
 }
+/* Le titre reste collé à son icône, la bascule part à droite. */
+.records-header .period-toggle { margin-left: auto; }
 
 .period-toggle {
   display: flex;
@@ -293,6 +295,7 @@
   gap: 10px;
   margin-bottom: 1.5rem;
 }
+.records-grid > .empty-state { flex: 1 1 100%; }
 
 .record-tile {
   display: flex;

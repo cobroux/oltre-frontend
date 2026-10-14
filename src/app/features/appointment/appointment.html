@@ -1,5 +1,6 @@
+<h2 class="page-title">Rendez-vous</h2>
+
 <div class="content-card">
-  <h2 class="page-title">Rendez-vous</h2>
 
   <!-- Navigation semaine -->
   <div class="week-nav">
@@ -30,7 +31,7 @@
                 <div class="dot" [class]="getDotClass(appt.apptType)"></div>
                 <span class="appt-preview">
                   @if (appt.apptTime) {
-                    <span class="appt-time-mini">{{ appt.apptTime }}</span>
+                    <span class="appt-time-mini">{{ appt.apptTime.slice(0, 5) }}</span>
                   }
                   {{ appt.title }}
                 </span>
@@ -101,7 +102,7 @@
               <div class="appt-time-col">
                 @if (appt.apptTime) {
                   <span class="appt-time">
-                    {{ appt.apptTime }}@if (appt.apptEndTime) { – {{ appt.apptEndTime }} }
+                    {{ appt.apptTime.slice(0, 5) }}@if (appt.apptEndTime) { – {{ appt.apptEndTime.slice(0, 5) }} }
                   </span>
                 } @else {
                   <span class="appt-time muted">—</span>
