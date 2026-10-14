@@ -24,7 +24,9 @@ describe('ExpensesComponent', () => {
   loadAllExpenses: vi.fn(() => of(mockExpenses)),
   addExpense: vi.fn((_expense: ExpensesDTO) => of({})),
   deleteExpenses: vi.fn((_id: number) => of(undefined)),
-  getAmountPerMonth: vi.fn(() => of(813))
+  getAmountPerMonth: vi.fn(() => of(813)),
+  getYearRecap: vi.fn(() => of({ total: 0, monthlyTotal: 0, dailyTotal: 0, yearlyTotal: 0, items: [] })),
+  getMonthlyTrend: vi.fn(() => of({ year: 2026, currentMonth: 7, amounts: Array(12).fill(0) }))
 };
 
   beforeEach(async () => {
