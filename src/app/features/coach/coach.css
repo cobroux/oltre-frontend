@@ -242,8 +242,6 @@
 .regenerate-btn:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-accent); }
 .regenerate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spin { animation: spin 0.8s linear infinite; }
 
 .error-banner,
 .stale-banner {
@@ -292,9 +290,9 @@
   border-radius: var(--radius-md);
 }
 
-.day-row.day-run  { background: var(--color-food-bg, #d1fae5); border-color: #059669; }
-.day-row.day-ride { background: #ede9ff; border-color: #534AB7; }
-.day-row.day-swim { background: #e0f2fe; border-color: #0284c7; }
+.day-row.day-run  { background: var(--tint-green-bg); border-color: var(--tint-green); }
+.day-row.day-ride { background: var(--tint-violet-bg); border-color: var(--tint-violet); }
+.day-row.day-swim { background: var(--tint-sky-bg); border-color: var(--color-swim); }
 .day-row.day-rest { background: var(--color-bg); }
 .day-row.day-other { background: var(--color-bg); }
 
@@ -362,8 +360,8 @@
   font-size: 10px;
   padding: 3px 9px;
   border-radius: var(--radius-full);
-  background: #fef3c7;
-  color: #D97706;
+  background: var(--tint-amber-bg);
+  color: var(--tint-amber);
   font-weight: 600;
 }
 

@@ -54,6 +54,8 @@
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transform-origin: top left;
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
   padding: 10px;
 }
 
@@ -92,3 +94,8 @@
 }
 .time-opt:hover { background: var(--color-accent-subtle); }
 .time-opt.selected { background: var(--color-accent); color: #fff; font-weight: 600; }
+
+/* Entrée : le panneau grandit depuis son déclencheur, il ne surgit pas. */
+@starting-style {
+  .time-popover { opacity: 0; transform: translateY(-4px) scale(0.97); }
+}

@@ -68,12 +68,12 @@
 }
 
 .form-error {
-  color: #dc2626;
+  color: var(--color-danger);
   font-size: 13px;
 }
 
 .form-success {
-  color: #059669;
+  color: var(--tint-green);
   font-size: 13px;
 }
 
@@ -132,7 +132,7 @@
   align-items: center;
   gap: 6px;
 }
-.garmin-status i { color: #059669; }
+.garmin-status i { color: var(--tint-green); }
 .garmin-status.muted { color: var(--color-text-muted); }
 .garmin-status.muted i { color: var(--color-text-muted); }
 
@@ -145,10 +145,10 @@
 
 .danger-btn-outline {
   padding: 7px 14px;
-  border: 0.5px solid #dc2626;
+  border: 0.5px solid var(--color-danger);
   border-radius: var(--radius-md);
   background: none;
-  color: #dc2626;
+  color: var(--color-danger);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -171,12 +171,15 @@
   padding: 10px 18px;
   border: none;
   border-radius: var(--radius-md);
+  /* Rouge foncé fixe : le --color-danger clair du mode sombre ne tient pas
+     le contraste sous du texte blanc. */
   background: #dc2626;
   color: #fff;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
 }
+.danger-btn:hover:not(:disabled) { background: #b91c1c; }
 .danger-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .delete-confirm {
@@ -202,5 +205,3 @@
   cursor: pointer;
 }
 
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spin { animation: spin 0.8s linear infinite; }

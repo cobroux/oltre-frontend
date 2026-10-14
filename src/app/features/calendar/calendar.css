@@ -35,12 +35,14 @@
   align-items: center;
   gap: 12px;
   box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+@media (hover: hover) and (pointer: fine) {
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+  }
 }
 
 .stat-icon {
@@ -54,10 +56,10 @@
   flex-shrink: 0;
 }
 
-.stat-expense .stat-icon { background: #fef3c7; color: #D97706; }
-.stat-appt .stat-icon    { background: #fee2e2; color: #dc2626; }
-.stat-task .stat-icon    { background: #ede9ff; color: #534AB7; }
-.stat-meal .stat-icon    { background: #d1fae5; color: #059669; }
+.stat-expense .stat-icon { background: var(--tint-amber-bg); color: var(--tint-amber); }
+.stat-appt .stat-icon    { background: var(--tint-red-bg); color: var(--color-danger); }
+.stat-task .stat-icon    { background: var(--tint-violet-bg); color: var(--tint-violet); }
+.stat-meal .stat-icon    { background: var(--tint-green-bg); color: var(--tint-green); }
 
 .stat-body {
   display: flex;
@@ -102,15 +104,15 @@
   border-radius: 50%;
   background: var(--color-accent-subtle); border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: all 0.15s;
+  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: var(--transition-ui);
 }
-.nav-arrow:hover { background: var(--color-accent); color: #fff; transform: scale(1.05); }
+.nav-arrow:hover { background: var(--color-accent); color: #fff; }
 
 .today-btn {
   padding: 7px 16px; border-radius: var(--radius-full);
   background: var(--color-accent); border: none;
   color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
-  font-family: var(--font-sans); transition: background 0.15s;
+  font-family: var(--font-sans); transition: var(--transition-ui);
 }
 .today-btn:hover { background: var(--color-accent-hover); }
 
@@ -118,10 +120,10 @@
 .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1.25rem; }
 .leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
 .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot-appt    { background: #dc2626; }
-.dot-meal    { background: #059669; }
-.dot-task    { background: #534AB7; }
-.dot-expense { background: #D97706; }
+.dot-appt    { background: var(--color-danger); }
+.dot-meal    { background: var(--tint-green); }
+.dot-task    { background: var(--tint-violet); }
+.dot-expense { background: var(--tint-amber); }
 
 /* ── Loading ─────────────────────────────────────────── */
 .loading {
@@ -129,8 +131,6 @@
   justify-content: center; padding: 3rem 0;
   color: var(--color-text-muted); font-size: 14px;
 }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spin { animation: spin 0.8s linear infinite; }
 
 /* ── Skeleton loader ───────────────────────────────────── */
 @keyframes skeleton-shimmer {
@@ -178,7 +178,7 @@
   min-height: 90px;
   padding: 6px;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background-color 100ms ease;
 }
 .day-cell:hover { background: var(--color-bg); }
 .day-cell.other-month { background: var(--color-bg); opacity: 0.5; cursor: default; }
@@ -206,10 +206,10 @@
 
 .more-events { font-size: 10px; color: var(--color-text-muted); padding: 1px 4px; }
 
-.c-appt    { background: #fee2e2; color: #991b1b; }
-.c-meal    { background: #d1fae5; color: #065f46; }
-.c-task    { background: #ede9ff; color: #3C3489; }
-.c-expense { background: #fef3c7; color: #92400e; }
+.c-appt    { background: var(--tint-red-bg); color: var(--tint-red-strong); }
+.c-meal    { background: var(--tint-green-bg); color: var(--tint-green-strong); }
+.c-task    { background: var(--tint-violet-bg); color: var(--tint-violet-strong); }
+.c-expense { background: var(--tint-amber-bg); color: var(--tint-amber-strong); }
 
 /* ── Détail ──────────────────────────────────────────── */
 .detail-panel {
@@ -254,3 +254,8 @@
   gap: 8px; padding: 2rem 0; color: var(--color-text-muted); font-size: 14px;
 }
 .empty-state i, .empty-detail i { font-size: 28px; }
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .content-card { padding: 1.1rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}

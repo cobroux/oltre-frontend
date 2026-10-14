@@ -1,4 +1,11 @@
-<aside class="sidebar">
+<button class="menu-toggle" type="button" (click)="toggle()"
+        [attr.aria-expanded]="open()" aria-controls="app-sidebar" aria-label="Ouvrir le menu">
+  <i class="ti" [class.ti-menu-2]="!open()" [class.ti-x]="open()"></i>
+</button>
+
+<div class="sidebar-backdrop" [class.open]="open()" (click)="close()"></div>
+
+<aside class="sidebar" id="app-sidebar" [class.open]="open()">
 
   <div class="logo-block">
     <div class="logo-icon">
@@ -9,32 +16,32 @@
 
   <nav class="nav-group">
     <p class="nav-label">Menu</p>
-    <a routerLink="/calendar" routerLinkActive="active" class="nav-item">
+    <a routerLink="/calendar" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-calendar"><i class="ti ti-calendar-week"></i></span> Calendrier
     </a>
-    <a routerLink="/tasks" routerLinkActive="active" class="nav-item">
+    <a routerLink="/tasks" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-tasks"><i class="ti ti-checkbox"></i></span> Tâches
     </a>
-    <a routerLink="/habits" routerLinkActive="active" class="nav-item">
+    <a routerLink="/habits" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-habits"><i class="ti ti-calendar-event"></i></span> Rendez-vous
     </a>
-    <a routerLink="/expenses" routerLinkActive="active" class="nav-item">
+    <a routerLink="/expenses" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-expenses"><i class="ti ti-wallet"></i></span> Dépenses
     </a>
-    <a routerLink="/food" routerLinkActive="active" class="nav-item">
+    <a routerLink="/food" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-food"><i class="ti ti-salad"></i></span> Alimentation
     </a>
-    <a routerLink="/sport" routerLinkActive="active" class="nav-item">
+    <a routerLink="/sport" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-sport"><i class="ti ti-sport"></i></span> Sport
     </a>
-    <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+    <a routerLink="/settings" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-settings"><i class="ti ti-settings"></i></span> Paramètres
     </a>
   </nav>
 
 
   <div class="sidebar-footer">
-    <a routerLink="/profile" class="user-row">
+    <a routerLink="/profile" class="user-row" (click)="close()">
       <div class="avatar-initials">{{ initials() }}</div>
       <div>
         <div class="user-name">{{ user()?.username ?? 'Chargement...' }}</div>

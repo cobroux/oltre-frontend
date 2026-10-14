@@ -61,8 +61,8 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--tint-red-bg);
+  color: var(--color-danger);
   border-radius: var(--radius-md);
   font-size: 13px;
 }
@@ -103,7 +103,7 @@
   background: var(--color-bg);
   color: var(--color-text-primary);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .field-input:focus {
@@ -123,14 +123,14 @@
   align-items: center;
   padding: 4px;
   border-radius: 4px;
-  transition: color 0.15s;
+  transition: var(--transition-ui);
 }
 
 .toggle-pwd:hover { color: var(--color-text-primary); }
 
 .field-error {
   font-size: 12px;
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 .login-btn {
@@ -148,15 +148,13 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.15s;
+  transition: var(--transition-ui);
   margin-top: 4px;
 }
 
 .login-btn:hover:not(:disabled) { background: var(--color-accent-hover); }
 .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spin { animation: spin 0.8s linear infinite; }
 
 /* ── Footer ──────────────────────────────────────────── */
 .login-footer {

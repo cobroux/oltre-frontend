@@ -27,15 +27,15 @@
   width: 34px; height: 34px; border-radius: 50%;
   background: var(--color-accent-subtle); border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: all 0.15s;
+  cursor: pointer; color: var(--color-accent); font-size: 16px; transition: var(--transition-ui);
 }
-.nav-arrow:hover { background: var(--color-accent); color: #fff; transform: scale(1.05); }
+.nav-arrow:hover { background: var(--color-accent); color: #fff; }
 
 .today-btn {
   padding: 7px 16px; border-radius: var(--radius-full);
   background: var(--color-accent); border: none;
   color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
-  font-family: var(--font-sans); transition: background 0.15s;
+  font-family: var(--font-sans); transition: var(--transition-ui);
 }
 .today-btn:hover { background: var(--color-accent-hover); }
 
@@ -47,9 +47,10 @@
 
 .day-col {
   border-radius: var(--radius-md); border: 0.5px solid var(--color-border);
-  background: var(--color-surface); overflow: hidden; cursor: pointer; transition: all 0.15s;
+  background: var(--color-surface); overflow: hidden; cursor: pointer; transition: var(--transition-ui);
 }
 .day-col:hover { border-color: var(--color-accent-border); }
+.day-col:active { transform: scale(0.98); }
 .day-col.selected { border-color: var(--color-accent); border-width: 1.5px; }
 .day-head { padding: 8px; text-align: center; border-bottom: 0.5px solid var(--color-border); background: var(--color-bg); }
 .day-col.today .day-head { background: var(--color-accent-subtle); }
@@ -67,11 +68,11 @@
 .appt-dot { display: flex; align-items: center; gap: 5px; padding: 3px 5px; border-radius: 6px; margin-bottom: 2px; }
 
 .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.dot-medical { background: #dc2626; }
-.dot-sport   { background: #059669; }
-.dot-perso   { background: #D97706; }
-.dot-travail { background: #534AB7; }
-.dot-autre   { background: #6b7280; }
+.dot-medical { background: var(--color-danger); }
+.dot-sport   { background: var(--tint-green); }
+.dot-perso   { background: var(--tint-amber); }
+.dot-travail { background: var(--tint-violet); }
+.dot-autre   { background: var(--color-budget); }
 
 .appt-preview {
   font-size: 11px; color: var(--color-text-secondary);
@@ -106,7 +107,7 @@
   padding: 9px 12px; border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans);
   background: var(--color-surface); color: var(--color-text-primary);
-  outline: none; height: 38px; transition: border-color 0.15s;
+  outline: none; height: 38px; transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .add-item-box input[type="text"]:first-child { flex: 2; min-width: 150px; }
@@ -121,7 +122,7 @@
 .add-item-box app-time-picker { flex: 0 0 110px; }
 
 .form-error {
-  color: #dc2626;
+  color: var(--color-danger);
   font-size: 12px;
   margin-top: -8px;
   margin-bottom: 1rem;
@@ -131,7 +132,7 @@
   height: 38px; padding: 0 18px; background: var(--color-accent); color: #fff;
   border: none; border-radius: var(--radius-md); cursor: pointer;
   display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500;
-  font-family: var(--font-sans); white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
+  font-family: var(--font-sans); white-space: nowrap; transition: var(--transition-ui); flex-shrink: 0;
 }
 .add-btn:hover { background: var(--color-accent-hover); }
 
@@ -139,7 +140,7 @@
   height: 38px; padding: 0 14px; background: none; color: var(--color-text-muted);
   border: 0.5px solid var(--color-border); border-radius: var(--radius-md); cursor: pointer;
   display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500;
-  font-family: var(--font-sans); white-space: nowrap; transition: all 0.15s; flex-shrink: 0;
+  font-family: var(--font-sans); white-space: nowrap; transition: var(--transition-ui); flex-shrink: 0;
 }
 .cancel-edit-btn:hover { background: var(--color-bg); color: var(--color-text-primary); }
 
@@ -164,7 +165,7 @@
 .appt-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
 
 .appt-badge { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-full); font-weight: 500; }
-.type-medical { background: #fee2e2; color: #dc2626; }
+.type-medical { background: var(--tint-red-bg); color: var(--color-danger); }
 .type-sport   { background: var(--color-sport-bg); color: var(--color-sport); }
 .type-perso   { background: var(--color-food-bg); color: var(--color-food); }
 .type-travail { background: var(--color-tasks-bg); color: var(--color-tasks); }
@@ -183,15 +184,36 @@
 .delete-btn, .edit-btn {
   background: none; border: none; cursor: pointer; color: var(--color-text-muted);
   font-size: 16px; padding: 4px; border-radius: 6px;
-  display: flex; align-items: center; opacity: 0; transition: all 0.15s;
+  display: flex; align-items: center; opacity: 0; transition: var(--transition-ui);
 }
-.appt-item:hover .delete-btn, .appt-item:hover .edit-btn { opacity: 1; }
+.appt-item:hover .delete-btn, .appt-item:hover .edit-btn,
+.appt-item:focus-within .delete-btn, .appt-item:focus-within .edit-btn { opacity: 1; }
+/* Écrans tactiles : pas de survol, les actions restent visibles. */
+@media (hover: none) {
+  .delete-btn, .edit-btn { opacity: 1; }
+}
 .delete-btn:hover { color: var(--color-danger); background: var(--color-danger-subtle); }
 .edit-btn:hover { color: var(--color-accent); background: var(--color-accent-subtle); }
-.delete-btn.confirm { color: #059669; }
-.delete-btn.confirm:hover { background: #d1fae5; }
+.delete-btn.confirm { color: var(--tint-green); }
+.delete-btn.confirm:hover { background: var(--color-success-subtle); }
 .delete-btn.cancel { color: var(--color-text-muted); }
 .delete-btn.cancel:hover { background: var(--color-bg); color: var(--color-text-primary); }
+
+/* Bascule supprimer → confirmer/annuler : fondu légèrement flouté pour que
+   l'œil lise une seule transformation plutôt que deux boutons qui s'échangent. */
+.delete-btn.confirm, .delete-btn.cancel {
+  transition: var(--transition-ui), filter 150ms ease;
+}
+@starting-style {
+  .delete-btn.confirm, .delete-btn.cancel { opacity: 0; filter: blur(2px); transform: scale(0.9); }
+}
+
+/* Élément ajouté : fondu court, pas d'apparition brutale. */
+.appt-item { transition: background-color 100ms ease, opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+@starting-style {
+  .appt-item { opacity: 0; transform: translateY(4px); }
+}
+
 
 /* ── Empty states ───────────────────────────────────── */
 .empty-state, .empty-detail {
@@ -199,3 +221,18 @@
   gap: 8px; padding: 2rem 0; color: var(--color-text-muted); font-size: 14px;
 }
 .empty-state i, .empty-detail i { font-size: 28px; }
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .content-card { padding: 1.1rem; }
+  .page-title { font-size: 22px; margin-bottom: 1rem; }
+  /* Semaine : 7 colonnes illisibles sur téléphone → défilement horizontal aimanté. */
+  .week-grid {
+    grid-template-columns: repeat(7, minmax(112px, 1fr));
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    padding-bottom: 4px;
+  }
+  .day-col { scroll-snap-align: start; }
+  .add-item-box > * { flex: 1 1 100%; }
+}

@@ -34,6 +34,26 @@
   --radius-md:   14px;
   --radius-lg:   20px;
   --radius-full: 9999px;
+
+  /* Mouvement : courbes plus marquées que les easings natifs */
+  --ease-out:     cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out:  cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer:  cubic-bezier(0.32, 0.72, 0, 1);
+  --transition-ui: background-color 150ms ease, color 150ms ease,
+                   border-color 150ms ease, box-shadow 150ms ease,
+                   opacity 150ms ease, transform 160ms var(--ease-out);
+
+  --color-success-subtle: #d1fae5;
+  --color-swim:           #0284c7;
+  --overlay-bg:           rgba(26, 26, 46, 0.45);
+
+  /* Teintes de catégorie (badges, pastilles, icônes) */
+  --tint-green-bg:     #d1fae5;  --tint-green:  #059669;  --tint-green-strong:  #065f46;
+  --tint-amber-bg:     #fef3c7;  --tint-amber:  #D97706;  --tint-amber-strong:  #92400e;
+  --tint-violet-bg:    #ede9ff;  --tint-violet: #534AB7;  --tint-violet-strong: #3C3489;
+  --tint-red-bg:       #fee2e2;  --tint-red-border: #fecaca; --tint-red-strong: #991b1b;
+  --tint-sky-bg:       #e0f2fe;
+  --tint-pink-bg:      #fdf2f8;  --tint-pink:   #be185d;
 }
 
 /* Thème sombre : valeurs par défaut du système (prefers-color-scheme),
@@ -64,6 +84,15 @@
     --color-budget-bg:      #262838;
     --color-danger:         #f87171;
     --color-danger-subtle:  #3a1a1a;
+    --color-success-subtle: #113326;
+    --color-swim:           #38bdf8;
+    --overlay-bg:           rgba(0, 0, 0, 0.6);
+    --tint-green-bg:     #113326;  --tint-green:  #34d399;  --tint-green-strong:  #6ee7b7;
+    --tint-amber-bg:     #3a2a12;  --tint-amber:  #f2a94e;  --tint-amber-strong:  #fcd34d;
+    --tint-violet-bg:    #26214d;  --tint-violet: #a39cf5;  --tint-violet-strong: #c4bfff;
+    --tint-red-bg:       #3a1a1a;  --tint-red-border: #5c2626; --tint-red-strong: #fca5a5;
+    --tint-sky-bg:       #0c2a3d;
+    --tint-pink-bg:      #3a1528;  --tint-pink:   #f472b6;
     color-scheme: dark;
   }
 }
@@ -89,6 +118,15 @@
   --color-budget-bg:      #262838;
   --color-danger:         #f87171;
   --color-danger-subtle:  #3a1a1a;
+  --color-success-subtle: #113326;
+  --color-swim:           #38bdf8;
+  --overlay-bg:           rgba(0, 0, 0, 0.6);
+  --tint-green-bg:     #113326;  --tint-green:  #34d399;  --tint-green-strong:  #6ee7b7;
+  --tint-amber-bg:     #3a2a12;  --tint-amber:  #f2a94e;  --tint-amber-strong:  #fcd34d;
+  --tint-violet-bg:    #26214d;  --tint-violet: #a39cf5;  --tint-violet-strong: #c4bfff;
+  --tint-red-bg:       #3a1a1a;  --tint-red-border: #5c2626; --tint-red-strong: #fca5a5;
+  --tint-sky-bg:       #0c2a3d;
+  --tint-pink-bg:      #3a1528;  --tint-pink:   #f472b6;
   color-scheme: dark;
 }
 
@@ -112,6 +150,12 @@ html, body {
   flex: 1;
   padding: 1.5rem 1.75rem;
   background: var(--color-bg);
+}
+
+/* Sous 900px la sidebar devient un tiroir : le contenu reprend toute la largeur. */
+@media (max-width: 900px) {
+  .main-layout { margin-left: 0; }
+  .page-content { padding: 1rem; }
 }
 
 h1, h2, h3 { font-family: var(--font-display); }
@@ -188,8 +232,11 @@ button, .btn {
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   border-radius: var(--radius-md);
-  transition: all 0.15s;
+  transition: var(--transition-ui);
+  -webkit-tap-highlight-color: transparent;
 }
+
+button:active:not(:disabled), .btn:active { transform: scale(0.97); }
 
 .btn-primary {
   background: var(--color-accent);
@@ -221,13 +268,21 @@ input, select, textarea {
   border-radius: var(--radius-md);
   padding: 8px 12px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
   width: 100%;
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
+
+/* Navigation clavier : anneau visible sur tout ce qui est focusable,
+   sauf les champs qui ont déjà leur propre anneau. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
 
 .progress-wrap { display: flex; align-items: center; gap: 10px; }
 .progress-bar {
@@ -240,7 +295,7 @@ input:focus, select:focus, textarea:focus {
   height: 100%;
   border-radius: var(--radius-full);
   background: var(--color-accent);
-  transition: width 0.3s ease;
+  transition: width 250ms var(--ease-out);
 }
 .progress-label { font-size: var(--font-size-xs); color: var(--color-text-muted); min-width: 36px; }
 
@@ -257,3 +312,18 @@ input:focus, select:focus, textarea:focus {
 .gap-2           { gap: 0.5rem; }
 .mt-4            { margin-top: 1rem; }
 .mb-4            { margin-bottom: 1rem; }
+
+/* ── Mouvement partagé ───────────────────────────────── */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spin { animation: spin 0.6s linear infinite; }
+
+/* Mouvement réduit : on garde les fondus de couleur/opacité qui aident à
+   comprendre, on retire tout déplacement. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
+    scroll-behavior: auto !important;
+  }
+  button:active, .btn:active { transform: none !important; }
+  .skeleton { animation: none !important; }
+}
