@@ -67,8 +67,6 @@ export class TasksComponent {
             ? new Date(formValue.tasksDate).toISOString().split('T')[0]
             : '', 
         };
-    
-    console.log('Payload envoyé :', tasks);
 
     this.tasksService.addTasks(tasks).subscribe({
           next: () => {
