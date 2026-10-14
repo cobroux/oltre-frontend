@@ -1,10 +1,4 @@
-.content-card {
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-}
+
 
 .page-title {
   font-size: var(--font-size-2xl);
@@ -425,12 +419,6 @@
 
 .item-left { flex: 1; min-width: 0; }
 
-.item-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .item-text {
   font-size: 13.5px;
   font-weight: 500;
@@ -456,13 +444,6 @@
 .prot-tag { background: var(--tint-pink-bg); color: var(--tint-pink); }
 .gluc-tag { background: var(--tint-amber-bg); color: var(--tint-amber-strong); }
 .lip-tag  { background: var(--tint-green-bg); color: var(--tint-green-strong); }
-
-.item-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
 
 .item-calories {
   font-size: 13px;
@@ -505,7 +486,6 @@
 @starting-style {
   .item-row { opacity: 0; transform: translateY(4px); }
 }
-
 
 .empty-state {
   display: flex;

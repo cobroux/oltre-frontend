@@ -10,6 +10,13 @@
     <button class="today-btn" (click)="goToday()">Aujourd'hui</button>
   </div>
 
+  @if (loadError()) {
+    <div class="error-banner" role="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ loadError() }}</span>
+    </div>
+  }
+
   <!-- Vue semaine -->
   <div class="week-grid">
     @for (day of weekDays(); track day.toISOString()) {

@@ -60,6 +60,7 @@ export class AppointmentComponent implements OnInit {
   });
 
   formError = signal<string | null>(null);
+  loadError = signal<string | null>(null);
   confirmDeleteId = signal<number | null>(null);
   editingId = signal<number | null>(null);
 
@@ -70,8 +71,9 @@ export class AppointmentComponent implements OnInit {
   goToday()  { this.weekOffset.set(0); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
 
   loadWeek() {
+    this.loadError.set(null);
     this.apptService.loadWeek(this.toDateStr(this.monday())).subscribe({
-      error: err => console.error('Erreur chargement rdv :', err)
+      error: () => this.loadError.set('Impossible de charger les rendez-vous de la semaine.')
     });
   }
 
@@ -112,7 +114,6 @@ export class AppointmentComponent implements OnInit {
         } else {
           this.formError.set(id !== null ? "Erreur lors de la modification du rendez-vous." : "Erreur lors de l'ajout du rendez-vous.");
         }
-        console.error('Erreur enregistrement :', err);
       }
     });
   }

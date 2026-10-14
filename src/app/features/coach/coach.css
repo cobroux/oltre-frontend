@@ -7,8 +7,6 @@
   margin-bottom: 1.25rem;
 }
 
-.page-header { margin-bottom: 1.5rem; }
-
 .title-row {
   display: flex;
   align-items: center;
@@ -58,17 +56,6 @@
   text-decoration: none;
 }
 .page-subtitle a:hover { text-decoration: underline; }
-
-/* ── Titres de section ─────────────────────────────────── */
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 .section-title i { color: var(--color-accent); }
 
 /* ── Objectifs ──────────────────────────────────────────── */
@@ -241,7 +228,6 @@
 }
 .regenerate-btn:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-accent); }
 .regenerate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
 
 .error-banner,
 .stale-banner {

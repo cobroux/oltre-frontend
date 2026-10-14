@@ -7,23 +7,6 @@
   padding: 1rem;
 }
 
-.login-card {
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-  margin: auto; /* ← ajoute ça */
-}
-
-/* ── Header ──────────────────────────────────────────── */
-.login-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
 .logo-icon {
   width: 52px;
   height: 52px;
@@ -44,18 +27,6 @@
   margin-bottom: 4px;
 }
 
-.login-subtitle {
-  font-size: 13px;
-  color: var(--color-text-muted);
-}
-
-/* ── Formulaire ──────────────────────────────────────── */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .error-banner {
   display: flex;
   align-items: center;
@@ -65,32 +36,6 @@
   color: var(--color-danger);
   border-radius: var(--radius-md);
   font-size: 13px;
-}
-
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-.field-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.field-icon {
-  position: absolute;
-  left: 12px;
-  color: var(--color-text-muted);
-  font-size: 16px;
-  pointer-events: none;
 }
 
 .field-input {
@@ -111,64 +56,10 @@
   box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
-.toggle-pwd {
-  position: absolute;
-  right: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-muted);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  padding: 4px;
-  border-radius: 4px;
-  transition: var(--transition-ui);
-}
-
 .toggle-pwd:hover { color: var(--color-text-primary); }
-
-.field-error {
-  font-size: 12px;
-  color: var(--color-danger);
-}
-
-.login-btn {
-  width: 100%;
-  padding: 11px;
-  background: var(--color-accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: var(--transition-ui);
-  margin-top: 4px;
-}
 
 .login-btn:hover:not(:disabled) { background: var(--color-accent-hover); }
 .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-
-/* ── Footer ──────────────────────────────────────────── */
-.login-footer {
-  text-align: center;
-  margin-top: 1.5rem;
-  font-size: 12px;
-  color: var(--color-text-muted);
-}
-
-.login-link {
-  color: var(--color-accent);
-  font-weight: 500;
-  text-decoration: none;
-}
 .login-link:hover { text-decoration: underline; }
 
 :host {

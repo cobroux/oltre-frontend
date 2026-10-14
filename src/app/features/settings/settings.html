@@ -110,6 +110,9 @@
         }
       </button>
     </div>
+    @if (garminDisconnectError()) {
+      <div class="form-error" role="alert">{{ garminDisconnectError() }}</div>
+    }
   } @else {
     <div class="garmin-row">
       <span class="garmin-status muted"><i class="ti ti-circle-x"></i> Aucun compte Garmin connecté</span>

@@ -1,14 +1,4 @@
-.content-card {
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-}
 
-.page-header {
-  margin-bottom: 1.5rem;
-}
 
 .page-title {
   font-size: var(--font-size-2xl);
@@ -16,17 +6,6 @@
   letter-spacing: -0.3px;
   color: var(--color-text-primary);
   margin-bottom: 1.25rem;
-}
-
-/* ── Titres de section ─────────────────────────────────── */
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .section-title i { color: var(--color-accent); }
 
@@ -334,26 +313,8 @@
   }
 }
 
-.stat-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  flex-shrink: 0;
-}
-
 .stat-total .stat-icon { background: var(--color-food-bg); color: var(--color-food); }
 .stat-avgday .stat-icon { background: var(--color-sport-bg); color: var(--color-sport); }
-
-.stat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
 
 .stat-label {
   font-size: 11px;
@@ -361,24 +322,6 @@
   text-transform: uppercase;
   letter-spacing: .05em;
   white-space: nowrap;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* ── Formulaire ─────────────────────────────────────── */
-.add-item-box {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  padding: 16px;
-  background: var(--color-bg);
-  border-radius: var(--radius-md);
 }
 
 .add-item-box input[type="text"],
@@ -429,13 +372,6 @@
 
 .add-btn:hover { background: var(--color-accent-hover); }
 
-/* ── Liste ──────────────────────────────────────────── */
-.items-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .item-row {
   display: flex;
   justify-content: space-between;
@@ -472,18 +408,6 @@
 .item-icon.icon-yearly   { background: var(--tint-green-bg); color: var(--tint-green); }
 .item-icon.icon-daily    { background: var(--tint-amber-bg); color: var(--tint-amber); }
 .item-icon.icon-default  { background: var(--color-budget-bg); color: var(--color-budget); }
-
-.item-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.item-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
 
 .item-meta {
   display: flex;
@@ -574,7 +498,6 @@
 @starting-style {
   .item-row { opacity: 0; transform: translateY(4px); }
 }
-
 
 .empty-state {
   font-size: 14px;

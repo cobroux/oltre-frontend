@@ -32,12 +32,6 @@
 
 .trigger-value { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trigger-value.placeholder { color: var(--color-text-muted); }
-
-.clear-btn {
-  border: none; background: none; cursor: pointer; color: var(--color-text-muted);
-  padding: 2px; border-radius: 6px; line-height: 0; flex-shrink: 0;
-  display: flex;
-}
 .clear-btn:hover { background: var(--color-border); color: var(--color-text-primary); }
 
 /* ── Panneau calendrier ───────────────────────────────── */

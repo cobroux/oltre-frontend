@@ -50,6 +50,9 @@
       <span><i class="ti ti-circle-check"></i> Compte Garmin connecté</span>
       <button type="button" class="disconnect-btn" (click)="onDisconnect()">Déconnecter</button>
     </div>
+    @if (disconnectError()) {
+      <div class="connect-error" role="alert">{{ disconnectError() }}</div>
+    }
 
     <!-- Onglets semaine -->
     <div class="week-tabs">

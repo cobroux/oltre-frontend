@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { BannerComponent } from './shared/banner/banner';
 import { SidebarComponent } from './shared/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [BannerComponent, RouterOutlet, SidebarComponent, RouterLink, RouterLinkActive, CommonModule],
+  imports: [BannerComponent, RouterOutlet, SidebarComponent, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

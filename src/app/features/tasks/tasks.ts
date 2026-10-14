@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TasksDTO } from '../../core/models/tasks.dto';
 import { TasksService } from '../../core/services/tasks.service';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
@@ -10,7 +9,7 @@ import { EMPTY, catchError } from 'rxjs';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive,CommonModule, ReactiveFormsModule, DatePipe, DatePickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, DatePickerComponent],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css'
 })
