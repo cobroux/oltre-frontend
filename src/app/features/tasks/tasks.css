@@ -34,12 +34,14 @@
   align-items: center;
   gap: 12px;
   box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 16px rgba(26, 26, 46, 0.04);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+@media (hover: hover) and (pointer: fine) {
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+  }
 }
 
 .stat-icon {
@@ -101,7 +103,7 @@
   background: var(--color-surface);
   color: var(--color-text-primary);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
   height: 38px;
 }
 
@@ -112,7 +114,7 @@
 .add-item-box input:focus,
 .add-item-box select:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
 .add-btn {
@@ -130,7 +132,7 @@
   font-weight: 500;
   font-family: var(--font-sans);
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: var(--transition-ui);
   flex-shrink: 0;
 }
 
@@ -158,7 +160,7 @@
   font-size: 12px;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: var(--transition-ui);
   font-family: var(--font-sans);
 }
 
@@ -183,7 +185,7 @@
   padding: 12px 4px;
   border-bottom: 0.5px solid var(--color-border);
   border-radius: var(--radius-sm);
-  transition: background 0.1s;
+  transition: background-color 100ms ease;
   gap: 12px;
 }
 
@@ -207,7 +209,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  transition: color 0.15s;
+  transition: var(--transition-ui);
 }
 
 .check-btn:hover { color: var(--color-accent); }
@@ -253,7 +255,7 @@
   gap: 3px;
 }
 
-.item-date.urgent { color: #dc2626; font-weight: 500; }
+.item-date.urgent { color: var(--color-danger); font-weight: 500; }
 
 .item-right {
   display: flex;
@@ -269,7 +271,7 @@
   font-weight: 500;
 }
 
-.priority-high   { background: #fee2e2; color: #dc2626; }
+.priority-high   { background: var(--tint-red-bg); color: var(--color-danger); }
 .priority-medium { background: var(--color-food-bg); color: var(--color-food); }
 .priority-low    { background: var(--color-sport-bg); color: var(--color-sport); }
 
@@ -283,14 +285,30 @@
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
-  transition: all 0.15s;
+  transition: var(--transition-ui);
 }
 
 .delete-btn:hover { color: var(--color-danger); background: var(--color-danger-subtle); }
-.delete-btn.confirm { color: #059669; }
-.delete-btn.confirm:hover { background: #d1fae5; }
+.delete-btn.confirm { color: var(--tint-green); }
+.delete-btn.confirm:hover { background: var(--color-success-subtle); }
 .delete-btn.cancel { color: var(--color-text-muted); }
 .delete-btn.cancel:hover { background: var(--color-bg); color: var(--color-text-primary); }
+
+/* Bascule supprimer → confirmer/annuler : fondu légèrement flouté pour que
+   l'œil lise une seule transformation plutôt que deux boutons qui s'échangent. */
+.delete-btn.confirm, .delete-btn.cancel {
+  transition: var(--transition-ui), filter 150ms ease;
+}
+@starting-style {
+  .delete-btn.confirm, .delete-btn.cancel { opacity: 0; filter: blur(2px); transform: scale(0.9); }
+}
+
+/* Élément ajouté : fondu court, pas d'apparition brutale. */
+.item-row { transition: background-color 100ms ease, opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+@starting-style {
+  .item-row { opacity: 0; transform: translateY(4px); }
+}
+
 
 .empty-state {
   display: flex;
@@ -303,3 +321,24 @@
 }
 
 .empty-state i { font-size: 28px; color: var(--color-sport); }
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .content-card { padding: 1.1rem; }
+  /* Trois petits compteurs côte à côte plutôt que trois cartes empilées. */
+  .stats-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .stat-card { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 12px; }
+  .stat-icon { width: 30px; height: 30px; font-size: 15px; }
+
+  /* Grille 2 colonnes : titre, date et bouton sur toute la largeur,
+     priorité et catégorie côte à côte. */
+  .add-item-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
+  .add-item-box > * { min-width: 0; width: 100%; }
+  .add-item-box input[type="text"],
+  .add-item-box app-date-picker,
+  .add-item-box .add-btn { grid-column: 1 / -1; }
+  .add-item-box .add-btn { justify-content: center; }
+
+  .filters-row { flex-direction: column; gap: 8px; }
+  /* Actions de ligne toujours visibles et assez grandes pour le doigt. */
+  .delete-btn { min-width: 36px; min-height: 36px; justify-content: center; }
+}

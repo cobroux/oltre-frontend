@@ -7,7 +7,7 @@
       <div class="stat-icon"><i class="ti ti-wallet"></i></div>
       <div class="stat-body">
         <span class="stat-label">Dépenses du mois</span>
-        <span class="stat-value">{{ totalExpenses() }} €</span>
+        <span class="stat-value">{{ totalExpenses() | number:'1.0-0' }} €</span>
         <span class="stat-sub">{{ expenses().length }} abonnement{{ expenses().length > 1 ? 's' : '' }}</span>
       </div>
     </div>

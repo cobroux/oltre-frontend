@@ -58,7 +58,7 @@
 }
 
 .account-name.muted { font-weight: 400; color: var(--color-text-muted); }
-.account-name.error { font-weight: 400; color: #dc2626; font-size: 14px; }
+.account-name.error { font-weight: 400; color: var(--color-danger); font-size: 14px; }
 
 .account-meta {
   font-size: 13px;
@@ -77,13 +77,13 @@
   font-size: 13px;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: var(--transition-ui);
 }
 
 .logout-btn:hover {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
+  background: var(--tint-red-bg);
+  color: var(--color-danger);
+  border-color: var(--tint-red-border);
 }
 
 /* ── Titres de section ────────────────────────────────── */
@@ -109,6 +109,7 @@
 
 @media (max-width: 700px) {
   .stats-row { grid-template-columns: 1fr; }
+  .expenses-breakdown { grid-template-columns: 1fr; }
 }
 
 .stat-tile {
@@ -119,12 +120,14 @@
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms ease;
 }
 
-.stat-tile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+@media (hover: hover) and (pointer: fine) {
+  .stat-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.06);
+  }
 }
 
 .tile-icon {
@@ -196,7 +199,7 @@
   border-radius: 4px 4px 0 0;
   min-height: 2px;
   position: relative;
-  transition: height 0.3s ease;
+  transition: height 250ms var(--ease-out);
   display: flex;
   justify-content: center;
 }
@@ -219,9 +222,11 @@
 
 /* ── En-tête records + toggle période ─────────────────── */
 .records-header {
-  justify-content: space-between;
+  flex-wrap: wrap;
   margin-bottom: 16px;
 }
+/* Le titre reste collé à son icône, la bascule part à droite. */
+.records-header .period-toggle { margin-left: auto; }
 
 .period-toggle {
   display: flex;
@@ -241,7 +246,7 @@
   border-radius: var(--radius-full);
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: var(--transition-ui);
 }
 
 .period-toggle button.active {
@@ -268,8 +273,6 @@
   justify-content: center; padding: 2.5rem 0;
   color: var(--color-text-muted); font-size: 14px;
 }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spin { animation: spin 0.8s linear infinite; }
 
 /* ── Skeleton loader ───────────────────────────────────── */
 @keyframes skeleton-shimmer {
@@ -292,6 +295,7 @@
   gap: 10px;
   margin-bottom: 1.5rem;
 }
+.records-grid > .empty-state { flex: 1 1 100%; }
 
 .record-tile {
   display: flex;
@@ -305,11 +309,13 @@
   flex: 0 0 140px;
   height: 116px;
   box-shadow: 0 1px 2px rgba(26, 26, 46, 0.04), 0 4px 12px rgba(26, 26, 46, 0.05);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms ease;
 }
-.record-tile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(26, 26, 46, 0.1);
+@media (hover: hover) and (pointer: fine) {
+  .record-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.1);
+  }
 }
 
 .record-tile-icon { font-size: 20px; margin-bottom: 2px; }
@@ -359,11 +365,11 @@
 .records-grid .tile-run:nth-child(7) .record-tile-value,
 .records-grid .tile-run:nth-child(7) .record-tile-meta { color: #fff; }
 
-.tile-ride   { background: #ede9ff; }
-.tile-ride .record-tile-label, .tile-ride .record-tile-icon   { color: #534AB7; }
+.tile-ride   { background: var(--tint-violet-bg); }
+.tile-ride .record-tile-label, .tile-ride .record-tile-icon   { color: var(--tint-violet); }
 
-.tile-swim   { background: #e0f2fe; }
-.tile-swim .record-tile-label, .tile-swim .record-tile-icon   { color: #0284c7; }
+.tile-swim   { background: var(--tint-sky-bg); }
+.tile-swim .record-tile-label, .tile-swim .record-tile-icon   { color: var(--color-swim); }
 
 .tile-walk, .tile-other { background: var(--color-bg); }
 .tile-walk .record-tile-label, .tile-walk .record-tile-icon,

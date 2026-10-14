@@ -8,7 +8,7 @@
       <div class="stat-icon"><i class="ti ti-wallet"></i></div>
       <div class="stat-body">
         <span class="stat-label">Ce mois-ci</span>
-        <span class="stat-value">{{ amountPerMonth() }} €</span>
+        <span class="stat-value">{{ amountPerMonth() | number:'1.0-2' }} €</span>
       </div>
     </div>
     <div class="stat-card stat-avgday">
@@ -51,7 +51,7 @@
             @for (bar of trendChartPage(); track bar.label) {
               <div class="trend-col">
                 @if (bar.amount > 0) {
-                  <span class="trend-value" [class.trend-value-current]="bar.isCurrent">{{ bar.amount }}€</span>
+                  <span class="trend-value" [class.trend-value-current]="bar.isCurrent">{{ bar.amount | number:'1.0-0' }} €</span>
                 }
                 <div class="trend-bar-track">
                   <div class="trend-bar" [class.trend-bar-current]="bar.isCurrent" [style.height.%]="bar.heightPct"></div>
@@ -87,7 +87,7 @@
                 }
               </svg>
               <div class="donut-center">
-                <span class="donut-center-value">{{ yearRecap()?.total ?? 0 }} €</span>
+                <span class="donut-center-value">{{ (yearRecap()?.total ?? 0) | number:'1.0-0' }} €</span>
                 <span class="donut-center-label">/ an</span>
               </div>
             </div>
@@ -97,7 +97,7 @@
                   <span class="legend-dot" [style.background]="slice.color"></span>
                   <span class="legend-label">{{ slice.label }}</span>
                   <span class="legend-amounts">
-                    <span class="legend-value">{{ slice.amount }} €</span>
+                    <span class="legend-value">{{ slice.amount | number:'1.0-0' }} €</span>
                     <span class="legend-percent">{{ slice.percent }}%</span>
                   </span>
                 </div>
@@ -159,9 +159,9 @@
         </div>
         <div class="item-right">
           <div class="item-amount-wrap">
-            <span class="item-amount">{{ expense.amount }} €</span>
+            <span class="item-amount">{{ expense.amount | number:'1.0-2' }} €</span>
             @if (getYearlyAmount(expense); as yearlyAmount) {
-              <span class="item-amount-year">≈ {{ yearlyAmount }} €/an</span>
+              <span class="item-amount-year">≈ {{ yearlyAmount | number:'1.0-0' }} €/an</span>
             }
           </div>
           @if (confirmDeleteId() === expense.id) {

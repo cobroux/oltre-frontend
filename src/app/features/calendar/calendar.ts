@@ -188,7 +188,7 @@ export class CalendarComponent implements OnInit {
       .forEach(a => events.push({
         type: 'appt',
         label: a.title,
-        sub: a.apptTime ? `${a.apptTime}${a.location ? ' — ' + a.location : ''}` : (a.location ?? ''),
+        sub: a.apptTime ? `${a.apptTime.slice(0, 5)}${a.location ? ' — ' + a.location : ''}` : (a.location ?? ''),
         icon: 'ti-calendar-event',
         cls: 'c-appt',
         badge: this.getApptTypeLabel(a.apptType)
