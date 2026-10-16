@@ -28,3 +28,11 @@
   padding: 0;        /* ← pas de padding sur login */
   background: var(--color-bg);
 }
+.demo-banner {
+  background: #fef3c7;
+  color: #78350f;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}

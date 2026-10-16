@@ -67,8 +67,12 @@
 
     </form>
 
-    <p class="login-footer">
-      Pas de compte ? <a routerLink="/register" class="login-link">S'inscrire</a>
-    </p>
+    @if (demo) {
+      <p class="login-footer">Identifiants de démo pré-remplis (mot de passe : {{ demoPassword }})</p>
+    } @else {
+      <p class="login-footer">
+        Pas de compte ? <a routerLink="/register" class="login-link">S'inscrire</a>
+      </p>
+    }
   </div>
 </div>

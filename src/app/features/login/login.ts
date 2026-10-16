@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { DEMO_EMAIL, DEMO_PASSWORD, isDemoMode } from '../../core/config/runtime-config';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -16,13 +17,15 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  demo = isDemoMode();
+  demoPassword = DEMO_PASSWORD;
   isLoading = signal(false);
   errorMsg  = signal<string | null>(null);
   showPassword = signal(false);
 
   loginForm = new FormGroup({
-    email:    new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
+    email:    new FormControl(isDemoMode() ? DEMO_EMAIL : '', [Validators.required, Validators.email]),
+    password: new FormControl(isDemoMode() ? DEMO_PASSWORD : '', [Validators.required])
   });
 
   onSubmit() {

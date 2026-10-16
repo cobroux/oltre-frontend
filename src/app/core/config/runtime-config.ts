@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    __env?: { apiUrl?: string };
+    __env?: { apiUrl?: string; demoMode?: string };
   }
 }
 
@@ -12,3 +12,12 @@ export function getApiUrl(): string {
     ? configured
     : DEFAULT_API_URL;
 }
+
+// Vrai seulement si DEMO_MODE=true au démarrage du conteneur (voir docker-entrypoint.sh).
+export function isDemoMode(): boolean {
+  return typeof window !== 'undefined' && window.__env?.demoMode === 'true';
+}
+
+// Faux athlète du profil `demo` du back : identifiants publics.
+export const DEMO_EMAIL = 'demo@oltre.dev';
+export const DEMO_PASSWORD = 'demo-oltre-2026';

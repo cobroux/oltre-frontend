@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ThemeService } from './core/services/theme.service';
+import { isDemoMode } from './core/config/runtime-config';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { ThemeService } from './core/services/theme.service';
   styleUrl: './app.css'
 })
 export class App {
+  protected readonly demo = isDemoMode();
   protected readonly title = signal('oltre-frontend');
   private router = inject(Router);
   // Injecté uniquement pour forcer son instanciation au démarrage - sinon

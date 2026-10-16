@@ -21,4 +21,10 @@ describe('Login', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('sans DEMO_MODE : champs vides et lien d\'inscription', () => {
+    expect(component.loginForm.getRawValue().email).toBe('');
+    expect(fixture.nativeElement.textContent).toContain('S\'inscrire');
+  });
+
 });
