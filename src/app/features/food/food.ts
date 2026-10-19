@@ -2,7 +2,7 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { MealService } from '../../core/services/meal.service';
 import { FoodSearchService } from '../../core/services/food-search.service';
 import { MealDTO, OpenFoodFactsProductDTO } from '../../core/models/meal.dto';
@@ -181,9 +181,13 @@ export class FoodComponent implements OnInit {
     this.loadWeek();
   }
 
+  // On annule la requête précédente : une réponse tardive ne doit pas écraser la dernière semaine demandée
+  private weekSub?: Subscription;
+
   loadWeek() {
     this.loadError.set(null);
-    this.mealService.loadWeek(this.toDateStr(this.monday())).subscribe({
+    this.weekSub?.unsubscribe();
+    this.weekSub = this.mealService.loadWeek(this.toDateStr(this.monday())).subscribe({
       error: () => this.loadError.set('Impossible de charger les repas de la semaine.')
     });
   }

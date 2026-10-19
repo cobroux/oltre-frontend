@@ -12,6 +12,11 @@ export class TasksService {
   tasksListSignal = signal<TasksDTO[]>([]);
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.tasksListSignal.set([]);
+  }
+
   loadAllTasks() {
     return this.http.get<TasksDTO[]>(this.API+"/all").pipe(
       tap(tasks => this.tasksListSignal.set(tasks))

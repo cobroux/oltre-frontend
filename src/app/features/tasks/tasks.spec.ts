@@ -198,3 +198,19 @@ const mockService = {
     expect(component.getPriorityLabel('LOW')).toBe('Basse');
   });
 });
+describe('TasksComponent.isUrgent - fuseau local', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('une tâche pour demain est urgente même juste après minuit', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 9, 14, 1, 0)); // 14 oct. 01:00 local
+    await TestBed.configureTestingModule({
+      imports: [TasksComponent],
+      providers: [{ provide: TasksService, useValue: { tasksListSignal: signal([]), loadAllTasks: vi.fn(() => of([])) } }, provideRouter([])]
+    }).compileComponents();
+    const c = TestBed.createComponent(TasksComponent).componentInstance;
+
+    const task: TasksDTO = { id: 1, tasksName: 'x', tasksType: 'PERSO', tasksPriority: 'LOW', tasksDate: '2026-10-15' };
+    expect(c.isUrgent(task)).toBe(true);
+  });
+});

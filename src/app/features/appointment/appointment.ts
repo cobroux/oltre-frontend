@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppointmentDTO } from '../../core/models/appointment.dto';
@@ -70,9 +71,13 @@ export class AppointmentComponent implements OnInit {
   nextWeek() { this.weekOffset.update(v => v + 1); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
   goToday()  { this.weekOffset.set(0); this.selectedDay.set(null); this.editingId.set(null); this.loadWeek(); }
 
+  // On annule la requête précédente : une réponse tardive ne doit pas écraser la dernière semaine demandée
+  private weekSub?: Subscription;
+
   loadWeek() {
     this.loadError.set(null);
-    this.apptService.loadWeek(this.toDateStr(this.monday())).subscribe({
+    this.weekSub?.unsubscribe();
+    this.weekSub = this.apptService.loadWeek(this.toDateStr(this.monday())).subscribe({
       error: () => this.loadError.set('Impossible de charger les rendez-vous de la semaine.')
     });
   }

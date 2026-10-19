@@ -10,6 +10,11 @@ export class AppointmentService {
   appointmentsSignal = signal<AppointmentDTO[]>([]);
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.appointmentsSignal.set([]);
+  }
+
   loadWeek(monday: string) {
     return this.http.get<AppointmentDTO[]>(`${this.API}/week?monday=${monday}`).pipe(
       tap(appts => this.appointmentsSignal.set(appts))

@@ -12,6 +12,8 @@ export const routes: Routes = [
   { path: 'calendar', loadComponent: () => import('./features/calendar/calendar').then(m => m.CalendarComponent), canActivate: [authGuard] },
   { path: 'sport', loadComponent: () => import('./features/sport/sport').then(m => m.SportComponent), canActivate: [authGuard] },
   { path: 'sport/coach', loadComponent: () => import('./features/coach/coach').then(m => m.CoachComponent), canActivate: [authGuard] },
-  { path: 'habits', loadComponent: () => import('./features/appointment/appointment').then(m => m.AppointmentComponent), canActivate: [authGuard] },
-  { path: '', redirectTo: 'expenses', pathMatch: 'full' }
+  { path: 'appointments', loadComponent: () => import('./features/appointment/appointment').then(m => m.AppointmentComponent), canActivate: [authGuard] },
+  { path: 'habits', redirectTo: 'appointments' },
+  { path: '', redirectTo: 'expenses', pathMatch: 'full' },
+  { path: '**', redirectTo: 'expenses' }
 ];

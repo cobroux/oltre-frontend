@@ -14,6 +14,12 @@ export class CoachService {
 
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.goalsSignal.set([]);
+    this.planSignal.set(null);
+  }
+
   loadGoals() {
     return this.http.get<SportGoalDTO[]>(`${this.API}/goals`).pipe(
       tap(goals => this.goalsSignal.set(goals))

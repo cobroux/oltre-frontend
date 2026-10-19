@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, finalize, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GarminActivity, GarminWeekStats, GarminRecords, GarminRecordsResponse, GarminActivityDetail } from '../models/garmin.dto';
 import { getApiUrl } from '../config/runtime-config';
 
@@ -22,6 +22,17 @@ export class GarminService {
   isLoadingLastWeek        = signal(false);
 
   constructor(private http: HttpClient) {}
+
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.activitiesSignal.set([]);
+    this.weekStatsSignal.set(null);
+    this.lastWeekActivitiesSignal.set([]);
+    this.lastWeekStatsSignal.set(null);
+    this.isConnected.set(false);
+    this.connectError.set(null);
+    this.disconnectError.set(null);
+  }
 
   checkStatus() {
     return this.http.get<{ connected: boolean }>(`${this.API}/status`).pipe(
@@ -65,10 +76,7 @@ export class GarminService {
   loadActivities() {
     this.isLoading.set(true);
 
-    const now = new Date();
-    const day = now.getUTCDay() || 7;
-    const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day + 1));
-    const mondayStr = monday.toISOString().split('T')[0];
+    const mondayStr = this.toDateStr(this.mondayOfWeek());
 
     return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${mondayStr}`).pipe(
       tap(activities => {
@@ -79,7 +87,7 @@ export class GarminService {
       catchError((err: HttpErrorResponse) => {
         this.isLoading.set(false);
         if (err.status === 401) this.isConnected.set(false);
-        return of(null);
+        return throwError(() => err); // c'est la page qui affiche l'erreur
       })
     );
   }
@@ -91,15 +99,12 @@ export class GarminService {
   loadLastWeek() {
     this.isLoadingLastWeek.set(true);
 
-    const now = new Date();
-    const day = now.getUTCDay() || 7;
-    const thisMonday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day + 1));
-    const lastMonday = new Date(thisMonday);
-    lastMonday.setUTCDate(thisMonday.getUTCDate() - 7);
-    const lastMondayStr = lastMonday.toISOString().split('T')[0];
+    const lastMonday = this.mondayOfWeek();
+    lastMonday.setDate(lastMonday.getDate() - 7);
+    const lastMondayStr = this.toDateStr(lastMonday);
     const lastSunday = new Date(lastMonday);
-    lastSunday.setUTCDate(lastMonday.getUTCDate() + 6);
-    const lastSundayStr = lastSunday.toISOString().split('T')[0];
+    lastSunday.setDate(lastMonday.getDate() + 6);
+    const lastSundayStr = this.toDateStr(lastSunday);
 
     return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${lastMondayStr}&limit=200`).pipe(
       tap(activities => {
@@ -114,7 +119,7 @@ export class GarminService {
       catchError((err: HttpErrorResponse) => {
         this.isLoadingLastWeek.set(false);
         if (err.status === 401) this.isConnected.set(false);
-        return of(null);
+        return throwError(() => err); // c'est la page qui affiche l'erreur
       })
     );
   }
@@ -137,20 +142,26 @@ export class GarminService {
     );
   }
 
-  private computeWeekStats(activities: GarminActivity[]): GarminWeekStats {
+  // Lundi (minuit local) de la semaine en cours : startLocal est en heure
+  // locale, l'UTC décalerait la semaine le lundi entre 00:00 et 02:00.
+  private mondayOfWeek(): Date {
     const now = new Date();
-    const day = now.getUTCDay() || 7;
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    monday.setDate(monday.getDate() - ((now.getDay() || 7) - 1));
+    return monday;
+  }
 
-    const monday = new Date(Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() - day + 1
-    ));
-    const mondayStr = monday.toISOString().split('T')[0];
+  private toDateStr(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  private computeWeekStats(activities: GarminActivity[]): GarminWeekStats {
+    const monday = this.mondayOfWeek();
+    const mondayStr = this.toDateStr(monday);
 
     const sunday = new Date(monday);
-    sunday.setUTCDate(monday.getUTCDate() + 6);
-    const sundayStr = sunday.toISOString().split('T')[0];
+    sunday.setDate(monday.getDate() + 6);
+    const sundayStr = this.toDateStr(sunday);
 
     const weekActivities = activities.filter(a => {
       const dateStr = a.startLocal.slice(0, 10); // 'T' ou espace selon la source

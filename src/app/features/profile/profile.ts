@@ -127,7 +127,8 @@ export class ProfileComponent implements OnInit {
 
     for (const a of activities) {
       if (!a.distance) continue;
-      const weekStart = this.mondayOf(new Date(a.startLocal)).getTime();
+      // Safari refuse le format "date espace heure"
+      const weekStart = this.mondayOf(new Date(a.startLocal.replace(' ', 'T'))).getTime();
       const bucket = weeks.find(w => w.start.getTime() === weekStart);
       if (bucket) bucket.km += a.distance / 1000;
     }

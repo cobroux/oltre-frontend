@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { AppointmentComponent } from './appointment';
 import { AppointmentService } from '../../core/services/appointment.service';
 import { AppointmentDTO } from '../../core/models/appointment.dto';
@@ -55,6 +55,16 @@ describe('AppointmentsComponent', () => {
 
   it('devrait être créé', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('annule le chargement précédent quand on change vite de semaine', () => {
+    const slow = new Subject<AppointmentDTO[]>();
+    mockService.loadWeek.mockReturnValueOnce(slow as never);
+    component.loadWeek();
+    expect(slow.observed).toBe(true);
+
+    component.loadWeek();
+    expect(slow.observed).toBe(false);
   });
 
   it('devrait appeler loadWeek au démarrage', () => {

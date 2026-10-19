@@ -14,6 +14,13 @@ export class ExpensesSevice {
   expensesListSignal = signal<ExpensesDTO[]>([]);
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.intSignal.set(null);
+    this.expensesSignal.set(null);
+    this.expensesListSignal.set([]);
+  }
+
   loadAllExpenses() {
     return this.http.get<ExpensesDTO[]>(this.API+"/all").pipe(
       tap(expenses => this.expensesListSignal.set(expenses))
