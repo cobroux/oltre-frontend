@@ -104,7 +104,7 @@ export class GarminService {
     return this.http.get<GarminActivity[]>(`${this.API}/activities?monday=${lastMondayStr}&limit=200`).pipe(
       tap(activities => {
         const weekActivities = activities.filter(a => {
-          const dateStr = a.startLocal.split('T')[0];
+          const dateStr = a.startLocal.slice(0, 10); // 'T' ou espace selon la source
           return dateStr >= lastMondayStr && dateStr <= lastSundayStr;
         });
         this.lastWeekActivitiesSignal.set(weekActivities);
@@ -153,7 +153,7 @@ export class GarminService {
     const sundayStr = sunday.toISOString().split('T')[0];
 
     const weekActivities = activities.filter(a => {
-      const dateStr = a.startLocal.split('T')[0];
+      const dateStr = a.startLocal.slice(0, 10); // 'T' ou espace selon la source
       return dateStr >= mondayStr && dateStr <= sundayStr;
     });
 
