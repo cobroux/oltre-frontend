@@ -12,9 +12,16 @@ import { AppointmentDTO } from '../../core/models/appointment.dto';
 const today = new Date().toISOString().split('T')[0];
 
 const mockAppts: AppointmentDTO[] = [
-  { id: 1, title: 'Médecin', apptDate: today, apptTime: '09:30', apptType: 'MEDICAL', location: 'Cabinet Martin' },
+  {
+    id: 1,
+    title: 'Médecin',
+    apptDate: today,
+    apptTime: '09:30',
+    apptType: 'MEDICAL',
+    location: 'Cabinet Martin',
+  },
   { id: 2, title: 'Yoga', apptDate: today, apptTime: '18:30', apptType: 'SPORT' },
-  { id: 3, title: 'Réunion', apptDate: '2026-08-10', apptTime: '14:00', apptType: 'TRAVAIL' }
+  { id: 3, title: 'Réunion', apptDate: '2026-08-10', apptTime: '14:00', apptType: 'TRAVAIL' },
 ];
 
 describe('AppointmentsComponent', () => {
@@ -25,7 +32,7 @@ describe('AppointmentsComponent', () => {
     appointmentsSignal: signal(mockAppts),
     loadWeek: vi.fn(() => of(mockAppts)),
     save: vi.fn((_appt: Partial<AppointmentDTO>) => of({ ...mockAppts[0], id: 99 })),
-    delete: vi.fn((_id: number) => of(undefined))
+    delete: vi.fn((_id: number) => of(undefined)),
   };
 
   beforeEach(async () => {
@@ -37,8 +44,8 @@ describe('AppointmentsComponent', () => {
         { provide: AppointmentService, useValue: mockService },
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideRouter([])
-      ]
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppointmentComponent);
@@ -99,14 +106,16 @@ describe('AppointmentsComponent', () => {
       apptTime: '10:00',
       location: 'Dr Dupont',
       description: 'Détartrage',
-      apptType: 'MEDICAL'
+      apptType: 'MEDICAL',
     });
     component.onSubmit();
-    expect(mockService.save).toHaveBeenCalledWith(expect.objectContaining({
-      title: 'Dentiste',
-      apptType: 'MEDICAL',
-      apptDate: today
-    }));
+    expect(mockService.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Dentiste',
+        apptType: 'MEDICAL',
+        apptDate: today,
+      }),
+    );
   });
 
   it('devrait appeler delete avec le bon id', () => {
@@ -115,7 +124,7 @@ describe('AppointmentsComponent', () => {
     expect(mockService.delete).toHaveBeenCalledWith(1);
   });
 
-  it('devrait détecter aujourd\'hui', () => {
+  it("devrait détecter aujourd'hui", () => {
     expect(component.isToday(new Date())).toBe(true);
   });
 
@@ -142,10 +151,11 @@ describe('AppointmentsComponent', () => {
     component.nextWeek();
     const nextMonday = component.monday();
     const diff = (nextMonday.getTime() - initialMonday.getTime()) / (1000 * 60 * 60 * 24);
-    expect(diff).toBe(7);
+    // arrondi : une semaine qui traverse un changement d'heure dure 7 j ± 1 h
+    expect(Math.round(diff)).toBe(7);
   });
 
-  it('devrait revenir à aujourd\'hui avec goToday', () => {
+  it("devrait revenir à aujourd'hui avec goToday", () => {
     component.nextWeek();
     component.nextWeek();
     component.goToday();
