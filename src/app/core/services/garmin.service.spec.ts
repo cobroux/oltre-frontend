@@ -86,3 +86,40 @@ describe('GarminService - activités du dimanche', () => {
     expect(service.lastWeekActivitiesSignal().map(a => a.id)).toEqual(['1']);
   });
 });
+
+describe('GarminService - semaine en heure locale', () => {
+  let service: GarminService;
+  let http: HttpTestingController;
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    // Lundi 19 octobre 00:30 heure locale : en France c'est encore dimanche en UTC.
+    vi.setSystemTime(new Date(2026, 9, 19, 0, 30));
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()]
+    });
+    service = TestBed.inject(GarminService);
+    http = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    http.verify();
+    vi.useRealTimers();
+  });
+
+  it('prend le lundi du jour local, pas celui de la veille UTC', () => {
+    service.loadActivities().subscribe();
+    const req = http.expectOne(r => r.url.includes('/activities'));
+    expect(req.request.url).toContain('monday=2026-10-19');
+    req.flush([]);
+  });
+
+  it('propage l\'erreur de loadLastWeek et coupe le chargement', () => {
+    let failed = false;
+    service.loadLastWeek().subscribe({ error: () => (failed = true) });
+    http.expectOne(r => r.url.includes('/activities')).flush(null, { status: 500, statusText: 'KO' });
+
+    expect(failed).toBe(true);
+    expect(service.isLoadingLastWeek()).toBe(false);
+  });
+});

@@ -12,6 +12,11 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.currentUser.set(null);
+  }
+
   loadUser() {
     return this.http.get<UserDTO>(this.API).pipe(
       tap(user => this.currentUser.set(user))

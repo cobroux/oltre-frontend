@@ -109,7 +109,8 @@ export class TasksComponent {
 
   isUrgent(taskDto: TasksDTO): boolean {
     if (!taskDto.tasksDate || taskDto.tasksStatus === 'DONE') return false;
-    const diff = Math.ceil((new Date(taskDto.tasksDate).getTime() - Date.now()) / 86400000);
+    // Minuit local : 'YYYY-MM-DD' seul serait lu en UTC
+    const diff = Math.ceil((new Date(`${taskDto.tasksDate.slice(0, 10)}T00:00:00`).getTime() - Date.now()) / 86400000);
     return diff <= 1;
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed, effect, viewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as L from 'leaflet';
@@ -30,6 +31,9 @@ export class SportComponent implements OnInit, OnDestroy {
   // chargée que la première fois qu'on y va, pas au chargement de la page.
   selectedWeek = signal<'current' | 'last'>('current');
   lastWeekLoaded = false;
+  loadError = signal<string | null>(null);
+  lastWeekError = signal<string | null>(null);
+  private detailSub?: Subscription;
 
   activeActivities = computed(() =>
     this.selectedWeek() === 'current' ? this.activities() : this.garminService.lastWeekActivitiesSignal());
@@ -70,9 +74,14 @@ export class SportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.garminService.checkStatus().subscribe(status => {
-      if (status.connected) {
-        this.garminService.loadActivities().subscribe();
-      }
+      if (status.connected) this.loadActivities();
+    });
+  }
+
+  private loadActivities() {
+    this.loadError.set(null);
+    this.garminService.loadActivities().subscribe({
+      error: () => this.loadError.set('Impossible de charger les activités.')
     });
   }
 
@@ -82,7 +91,7 @@ export class SportComponent implements OnInit, OnDestroy {
     this.garminService.connect(email!, password!).subscribe(() => {
       if (this.isConnected()) {
         this.connectForm.reset();
-        this.garminService.loadActivities().subscribe();
+        this.loadActivities();
       }
     });
   }
@@ -93,9 +102,13 @@ export class SportComponent implements OnInit, OnDestroy {
 
   selectWeek(week: 'current' | 'last'): void {
     this.selectedWeek.set(week);
-    if (week === 'last' && !this.lastWeekLoaded) {
-      this.lastWeekLoaded = true;
-      this.garminService.loadLastWeek().subscribe();
+    if (week === 'last' && !this.lastWeekLoaded && !this.garminService.isLoadingLastWeek()) {
+      this.lastWeekError.set(null);
+      // Marquée chargée seulement en cas de succès, pour pouvoir réessayer
+      this.garminService.loadLastWeek().subscribe({
+        next: () => (this.lastWeekLoaded = true),
+        error: () => this.lastWeekError.set('Impossible de charger la semaine dernière.')
+      });
     }
   }
 
@@ -104,7 +117,9 @@ export class SportComponent implements OnInit, OnDestroy {
     this.activityDetail.set(null);
     this.detailError.set(null);
     this.detailLoading.set(true);
-    this.garminService.getActivityDetails(activity.id).subscribe({
+    // Annule le détail précédent : sinon celui de A pourrait s'afficher sous B
+    this.detailSub?.unsubscribe();
+    this.detailSub = this.garminService.getActivityDetails(activity.id).subscribe({
       next: detail => {
         this.activityDetail.set(detail);
         this.detailLoading.set(false);
@@ -126,6 +141,7 @@ export class SportComponent implements OnInit, OnDestroy {
   }
 
   closeActivity(): void {
+    this.detailSub?.unsubscribe();
     this.selectedActivity.set(null);
     this.activityDetail.set(null);
     this.detailError.set(null);

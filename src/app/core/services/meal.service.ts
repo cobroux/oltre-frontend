@@ -12,6 +12,11 @@ export class MealService {
 
   constructor(private http: HttpClient) {}
 
+  // Vidé à la déconnexion pour qu'un autre compte ne voie pas ces données
+  reset() {
+    this.mealsSignal.set([]);
+  }
+
   // Charge tous les repas de la semaine
   loadWeek(monday: string) {
     return this.http.get<MealDTO[]>(`${this.API}/week?monday=${monday}`).pipe(

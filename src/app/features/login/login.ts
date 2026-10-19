@@ -35,7 +35,7 @@ export class LoginComponent {
     this.authService.login(email!, password!).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/calendar']);
+        this.router.navigate(['/expenses']);
       },
       error: err => {
         this.isLoading.set(false);

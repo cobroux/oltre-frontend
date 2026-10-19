@@ -64,6 +64,10 @@
       </button>
     </div>
 
+    @if (selectedWeek() === 'current' ? loadError() : lastWeekError(); as err) {
+      <div class="connect-error" role="alert">{{ err }}</div>
+    }
+
     @if (activeLoading()) {
       <div class="stats-row">
         @for (i of [1,2,3,4]; track i) {

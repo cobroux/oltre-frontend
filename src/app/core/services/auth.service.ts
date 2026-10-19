@@ -1,8 +1,15 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { getApiUrl } from '../config/runtime-config';
+import { MealService } from './meal.service';
+import { TasksService } from './tasks.service';
+import { ExpensesSevice } from './expenses.service';
+import { GarminService } from './garmin.service';
+import { UserService } from './user.service';
+import { CoachService } from './coach.service';
+import { AppointmentService } from './appointment.service';
 
 export interface AuthUser {
   token: string;
@@ -14,6 +21,12 @@ export interface AuthUser {
 export class AuthService {
   private readonly API = `${getApiUrl()}/auth`;
   private readonly TOKEN_KEY = 'oltre_token';
+
+  // Services à vider à la déconnexion (ils vivent tant que l'onglet reste ouvert)
+  private readonly resettables = [
+    inject(MealService), inject(TasksService), inject(ExpensesSevice), inject(GarminService),
+    inject(UserService), inject(CoachService), inject(AppointmentService)
+  ];
 
   currentUser = signal<AuthUser | null>(this.loadFromStorage());
 
@@ -63,6 +76,7 @@ export class AuthService {
   private clearSession() {
     localStorage.removeItem(this.TOKEN_KEY);
     this.currentUser.set(null);
+    this.resettables.forEach(s => s.reset());
   }
 
   private isTokenExpired(token: string): boolean {

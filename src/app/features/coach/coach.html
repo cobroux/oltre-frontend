@@ -36,9 +36,18 @@
         </div>
         <div class="goal-right">
           <span class="goal-countdown">J-{{ daysUntil(goal.eventDate) }}</span>
-          <button type="button" class="goal-delete" (click)="onDeleteGoal(goal.id)" title="Supprimer">
-            <i class="ti ti-trash"></i>
-          </button>
+          @if (confirmDeleteId() === goal.id) {
+            <button type="button" class="goal-delete confirm" (click)="requestDelete(goal.id)" title="Confirmer la suppression">
+              <i class="ti ti-check"></i>
+            </button>
+            <button type="button" class="goal-delete" (click)="cancelDelete()" title="Annuler">
+              <i class="ti ti-x"></i>
+            </button>
+          } @else {
+            <button type="button" class="goal-delete" (click)="requestDelete(goal.id)" title="Supprimer">
+              <i class="ti ti-trash"></i>
+            </button>
+          }
         </div>
       </div>
     } @empty {

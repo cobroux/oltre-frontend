@@ -31,6 +31,7 @@ export class CoachComponent implements OnInit {
   generateError = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
   showGoalForm = signal(false);
+  confirmDeleteId = signal<number | null>(null);
 
   goalForm = new FormGroup({
     goalType: new FormControl<SportGoalType | null>(null, [Validators.required]),
@@ -115,12 +116,22 @@ export class CoachComponent implements OnInit {
     });
   }
 
-  onDeleteGoal(id: number | undefined): void {
+  // Suppression en deux clics, comme les autres pages
+  requestDelete(id: number | undefined): void {
     if (id == null) return;
+    if (this.confirmDeleteId() !== id) {
+      this.confirmDeleteId.set(id);
+      return;
+    }
+    this.confirmDeleteId.set(null);
     this.errorMessage.set(null);
     this.coachService.deleteGoal(id).subscribe({
       error: () => this.errorMessage.set("Impossible de supprimer l'objectif. Réessaie plus tard.")
     });
+  }
+
+  cancelDelete(): void {
+    this.confirmDeleteId.set(null);
   }
 
   // Jours restants calculés à partir des composants locaux de la date
