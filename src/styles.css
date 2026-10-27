@@ -555,3 +555,15 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   flex-shrink: 0;
   display: flex;
 }
+
+/* Écrans tactiles : les petits boutons (cases, poubelles, croix) gardent leur
+   visuel mais reçoivent une zone de toucher invisible d'environ 40px. */
+@media (pointer: coarse) {
+  .check-btn, .clear-btn, .goal-delete, .delete-btn, .trend-nav-btn, .disconnect-btn { position: relative; }
+  .check-btn::after, .clear-btn::after, .goal-delete::after, .delete-btn::after, .trend-nav-btn::after, .disconnect-btn::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+  }
+  .filter-group button, .period-toggle button { min-height: 36px; }
+}

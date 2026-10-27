@@ -36,6 +36,8 @@
 
 @media (max-width: 900px) {
   .banner { padding: 0 1rem 0 64px; }
+  /* Bandeau collant : le bouton menu (fixe) reste posé dessus au lieu de flotter sur le contenu. */
+  :host { display: block; position: sticky; top: 0; z-index: 10; }
   .greeting { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 @media (max-width: 560px) {
