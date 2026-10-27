@@ -119,3 +119,15 @@
 @starting-style {
   .cal-popover { opacity: 0; transform: translateY(-4px) scale(0.97); }
 }
+
+/* Sur téléphone le popover (288px, ancré à gauche du champ) sortait de l'écran
+   quand le champ est dans la colonne de droite : on le centre en bas de l'écran. */
+@media (max-width: 560px) {
+  .cal-popover {
+    position: fixed;
+    top: auto; bottom: 16px; left: 0; right: 0;
+    margin-inline: auto;
+    width: min(320px, calc(100vw - 32px));
+    transform-origin: bottom center;
+  }
+}

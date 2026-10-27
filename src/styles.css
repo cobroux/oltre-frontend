@@ -540,6 +540,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   display: flex;
   gap: 12px;
 }
+/* Champs côte à côte (âge + date) : empilés sur téléphone, sinon la date est tronquée. */
+@media (max-width: 560px) {
+  .field-row { flex-direction: column; }
+}
 .clear-btn {
   border: none;
   background: none;
