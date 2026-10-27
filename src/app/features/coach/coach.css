@@ -388,7 +388,7 @@
 /* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .content-card { padding: 1.1rem 1.1rem; }
-  .goal-card { min-width: 0; width: 100%; }
+  .goal-card { min-width: 0; flex-basis: 100%; }
   .goal-form { flex-direction: column; align-items: stretch; }
   .goal-form input, .goal-form select, .add-btn { width: 100%; }
   .exercises-grid { grid-template-columns: repeat(2, 1fr); }

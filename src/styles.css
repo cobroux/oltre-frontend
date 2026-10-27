@@ -540,6 +540,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   display: flex;
   gap: 12px;
 }
+/* Champs côte à côte (âge + date) : empilés sur téléphone, sinon la date est tronquée. */
+@media (max-width: 560px) {
+  .field-row { flex-direction: column; }
+}
 .clear-btn {
   border: none;
   background: none;
@@ -550,4 +554,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   line-height: 0;
   flex-shrink: 0;
   display: flex;
+}
+
+/* Écrans tactiles : les petits boutons (cases, poubelles, croix) gardent leur
+   visuel mais reçoivent une zone de toucher invisible d'environ 40px. */
+@media (pointer: coarse) {
+  .check-btn, .clear-btn, .goal-delete, .delete-btn, .trend-nav-btn, .disconnect-btn { position: relative; }
+  .check-btn::after, .clear-btn::after, .goal-delete::after, .delete-btn::after, .trend-nav-btn::after, .disconnect-btn::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+  }
+  .filter-group button, .period-toggle button { min-height: 36px; }
 }
