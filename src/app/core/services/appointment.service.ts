@@ -33,6 +33,19 @@ export class AppointmentService {
     );
   }
 
+  // Abonnement .ics en lecture seule (Google/Apple/Outlook) : null = désactivé.
+  getFeedToken() {
+    return this.http.get<{ token: string | null }>(`${getApiUrl()}/api/calendar/token`);
+  }
+
+  regenerateFeedToken() {
+    return this.http.post<{ token: string }>(`${getApiUrl()}/api/calendar/token`, null);
+  }
+
+  disableFeed() {
+    return this.http.delete<void>(`${getApiUrl()}/api/calendar/token`);
+  }
+
   delete(id: number) {
     return this.http.delete<void>(`${this.API}/${id}`).pipe(
       tap(() => this.appointmentsSignal.update(list => list.filter(a => a.id !== id)))
