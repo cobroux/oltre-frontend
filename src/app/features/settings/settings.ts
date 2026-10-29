@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,6 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GarminService } from '../../core/services/garmin.service';
+import { AppointmentService } from '../../core/services/appointment.service';
+import { getApiUrl } from '../../core/config/runtime-config';
 import { ThemeService, ThemeMode } from '../../core/services/theme.service';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
 
@@ -22,6 +24,7 @@ export class SettingsComponent implements OnInit {
   private authService = inject(AuthService);
   private garminService = inject(GarminService);
   private themeService = inject(ThemeService);
+  private appointmentService = inject(AppointmentService);
 
   user = this.userService.currentUser;
   isGarminConnected = this.garminService.isConnected;
@@ -37,6 +40,21 @@ export class SettingsComponent implements OnInit {
   passwordError = signal<string | null>(null);
 
   garminDisconnecting = signal(false);
+
+  feedToken = signal<string | null>(null);
+  feedBusy = signal(false);
+  feedCopied = signal(false);
+  feedError = signal<string | null>(null);
+  // URL absolue même si apiUrl est relative : Google/Apple la récupèrent depuis leurs serveurs.
+  feedUrl = computed(() => {
+    const t = this.feedToken();
+    return t ? new URL(`${getApiUrl()}/api/calendar/feed/${t}.ics`, window.location.origin).href : null;
+  });
+  feedWebcal = computed(() => this.feedUrl()?.replace(/^https?:/, 'webcal:') ?? null);
+  feedGoogle = computed(() => {
+    const w = this.feedWebcal();
+    return w ? `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(w)}` : null;
+  });
 
   deleteConfirming = signal(false);
   deleteConfirmText = signal('');
@@ -76,6 +94,10 @@ export class SettingsComponent implements OnInit {
       error: () => this.profileError.set('Impossible de charger ton profil. Réessaie plus tard.')
     });
     this.garminService.checkStatus().subscribe();
+    this.appointmentService.getFeedToken().subscribe({
+      next: r => this.feedToken.set(r.token),
+      error: () => this.feedError.set('Impossible de charger le lien d’abonnement.')
+    });
   }
 
   saveProfile(): void {
@@ -140,6 +162,34 @@ export class SettingsComponent implements OnInit {
     this.garminService.disconnect().subscribe({
       complete: () => this.garminDisconnecting.set(false)
     });
+  }
+
+  regenerateFeed(): void {
+    this.feedBusy.set(true);
+    this.feedError.set(null);
+    this.feedCopied.set(false);
+    this.appointmentService.regenerateFeedToken().subscribe({
+      next: r => { this.feedToken.set(r.token); this.feedBusy.set(false); },
+      error: () => { this.feedBusy.set(false); this.feedError.set('Impossible de créer le lien.'); }
+    });
+  }
+
+  disableFeed(): void {
+    this.feedBusy.set(true);
+    this.feedError.set(null);
+    this.appointmentService.disableFeed().subscribe({
+      next: () => { this.feedToken.set(null); this.feedBusy.set(false); },
+      error: () => { this.feedBusy.set(false); this.feedError.set('Impossible de désactiver le lien.'); }
+    });
+  }
+
+  copyFeed(): void {
+    const url = this.feedUrl();
+    if (!url) return;
+    navigator.clipboard.writeText(url).then(
+      () => this.feedCopied.set(true),
+      () => this.feedError.set('Copie impossible : sélectionne le lien et copie-le à la main.')
+    );
   }
 
   startDeleteConfirm(): void {

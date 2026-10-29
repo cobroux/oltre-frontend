@@ -121,6 +121,44 @@
   }
 </div>
 
+<!-- Abonnement agenda (.ics) -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-calendar-share"></i> Abonnement agenda</div>
+  <p class="feed-help">
+    Affiche tes rendez-vous Oltre dans Google Agenda, Apple Calendrier ou Outlook (lecture seule).
+  </p>
+
+  @if (feedUrl(); as url) {
+    <div class="feed-row">
+      <input class="field-input" type="text" readonly [value]="url" aria-label="Lien d'abonnement agenda"
+             (focus)="$any($event.target).select()">
+      <button type="button" class="save-btn" (click)="copyFeed()">
+        @if (feedCopied()) { <i class="ti ti-check"></i> Copié } @else { Copier }
+      </button>
+    </div>
+    <div class="feed-row">
+      <a class="link-btn" [href]="feedGoogle()" target="_blank" rel="noopener">Ajouter à Google Agenda</a>
+      <a class="link-btn" [href]="feedWebcal()">Ouvrir dans Apple Calendrier</a>
+    </div>
+    <p class="feed-help">
+      Garde ce lien privé : quiconque l'a voit tes rendez-vous. Google met jusqu'à 24 h à se mettre à jour.
+    </p>
+    <div class="feed-row">
+      <button type="button" class="link-btn as-button" [disabled]="feedBusy()" (click)="regenerateFeed()">
+        Régénérer le lien (l'ancien ne marchera plus)
+      </button>
+      <button type="button" class="danger-btn-outline" [disabled]="feedBusy()" (click)="disableFeed()">Désactiver</button>
+    </div>
+  } @else {
+    <button type="button" class="save-btn" [disabled]="feedBusy()" (click)="regenerateFeed()">
+      @if (feedBusy()) { <i class="ti ti-loader-2 spin"></i> } Créer le lien d'abonnement
+    </button>
+  }
+  @if (feedError()) {
+    <div class="form-error" role="alert">{{ feedError() }}</div>
+  }
+</div>
+
 <!-- Suppression du compte -->
 <div class="content-card danger-zone">
   <div class="section-title"><i class="ti ti-alert-triangle"></i> Zone dangereuse</div>
