@@ -107,7 +107,14 @@
     </div>
   }
 
-  @if (!loadingPlan() && isStale() && !generateError()) {
+  @if (generating()) {
+    <div class="stale-banner" role="status">
+      <i class="ti ti-hourglass"></i>
+      <span>Le Coach prépare ton plan… ça peut prendre jusqu'à une minute quand l'IA est très sollicitée.</span>
+    </div>
+  }
+
+  @if (!loadingPlan() && isStale() && !generateError() && !generating()) {
     <div class="stale-banner">
       <i class="ti ti-info-circle"></i>
       <span>Ce plan date de plus d'une semaine — pense à le régénérer pour qu'il reste pertinent.</span>
