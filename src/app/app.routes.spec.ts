@@ -15,4 +15,11 @@ describe('routes', () => {
   it('la route par défaut est l\'écran Aujourd\'hui', () => {
     expect(find('')?.loadComponent).toBeDefined();
   });
+
+  it('/cgu et /confidentialite sont publiques (sans authGuard)', () => {
+    for (const p of ['cgu', 'confidentialite']) {
+      expect(find(p)?.loadComponent).toBeDefined();
+      expect(find(p)?.canActivate).toBeUndefined();
+    }
+  });
 });

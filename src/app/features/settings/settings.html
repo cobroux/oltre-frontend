@@ -159,6 +159,28 @@
   }
 </div>
 
+<!-- Mes données (RGPD) -->
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-download"></i> Mes données</div>
+  <p class="feed-help">
+    Télécharge toutes tes données (profil, rendez-vous, tâches, repas, dépenses, sport) dans un fichier JSON.
+  </p>
+  <button type="button" class="save-btn" [disabled]="exporting()" (click)="exportData()">
+    @if (exporting()) {
+      <i class="ti ti-loader-2 spin"></i> Préparation...
+    } @else {
+      Télécharger mes données
+    }
+  </button>
+  @if (exportError()) {
+    <div class="form-error" role="alert">{{ exportError() }}</div>
+  }
+  <p class="feed-help">
+    <a routerLink="/cgu" class="link-btn">CGU</a> ·
+    <a routerLink="/confidentialite" class="link-btn">Politique de confidentialité</a>
+  </p>
+</div>
+
 <!-- Suppression du compte -->
 <div class="content-card danger-zone">
   <div class="section-title"><i class="ti ti-alert-triangle"></i> Zone dangereuse</div>

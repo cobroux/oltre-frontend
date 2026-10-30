@@ -1,0 +1,69 @@
+<!-- Modèle à relire par l'éditeur, pas un avis juridique -->
+<main class="legal">
+  <a routerLink="/" class="back">&larr; Retour</a>
+  <h1>Politique de confidentialité</h1>
+  <p class="updated">Dernière mise à jour : 30 octobre 2026</p>
+
+  <nav aria-label="Sommaire">
+    <ol>
+      <li><a href="#editeur">Qui est responsable</a></li>
+      <li><a href="#donnees">Données collectées</a></li>
+      <li><a href="#finalites">Pourquoi et sur quelle base</a></li>
+      <li><a href="#soustraitants">Sous-traitants</a></li>
+      <li><a href="#conservation">Durées de conservation</a></li>
+      <li><a href="#droits">Tes droits</a></li>
+      <li><a href="#cookies">Cookies et traceurs</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="editeur">1. Qui est responsable</h2>
+  <p>Oltre est édité par un particulier : cobroux. Contact pour toute question sur tes données : <a href="mailto:enzo.lvq12@gmail.com">enzo.lvq12@gmail.com</a>.</p>
+
+  <h2 id="donnees">2. Données collectées</h2>
+  <ul>
+    <li>Compte : nom d'utilisateur, email, âge, date de naissance, mot de passe (stocké uniquement sous forme chiffrée irréversible).</li>
+    <li>Rendez-vous : titre, description, lieu, date et heures. Un rendez-vous de type médical peut révéler une donnée de santé : n'y mets que ce que tu veux.</li>
+    <li>Tâches : nom, date, priorité, statut.</li>
+    <li>Repas : nom, type, date, calories et macronutriments, code-barres du produit.</li>
+    <li>Dépenses : nom, montant, récurrence, dates.</li>
+    <li>Sport : objectifs (épreuve, date, temps visé) et le plan généré par le Coach IA.</li>
+    <li>Garmin, uniquement si tu connectes ton compte : tes activités (date, type de sport, distance, durée) sont importées dans ton calendrier.</li>
+  </ul>
+  <p>Certaines de ces données (activités sportives, rendez-vous médicaux, alimentation) touchent à ta santé. Tu les saisis ou les importes volontairement, et elles ne servent qu'à faire fonctionner l'application pour toi.</p>
+
+  <h2 id="finalites">3. Pourquoi et sur quelle base</h2>
+  <p>Ces données servent uniquement à faire fonctionner Oltre pour toi : afficher tes informations, générer ton plan du Coach IA, importer tes activités. Oltre n'envoie pas d'email aujourd'hui, ne fait pas de publicité et ne revend aucune donnée. La base légale est l'exécution du service que tu as demandé en créant ton compte.</p>
+
+  <h2 id="soustraitants">4. Sous-traitants et données envoyées</h2>
+  <table>
+    <thead><tr><th scope="col">Service</th><th scope="col">Rôle</th><th scope="col">Ce qui est envoyé</th></tr></thead>
+    <tbody>
+      <tr><td>Google Gemini</td><td>Génération du plan du Coach IA</td><td>Tes objectifs sportifs et tes activités des 4 dernières semaines (date, type de sport, distance, durée). Ni ton nom, ni ton email, ni ton âge, ni tes autres données.</td></tr>
+      <tr><td>Garmin Connect</td><td>Récupération de tes activités</td><td>Ton email et ton mot de passe Garmin, au moment de la connexion seulement. Ton mot de passe Garmin n'est pas conservé : seul un jeton de session est gardé sur le serveur, et il est effacé quand tu déconnectes Garmin ou supprimes ton compte.</td></tr>
+      <tr><td>OpenFoodFacts</td><td>Recherche de produits alimentaires</td><td>Seulement le texte que tu recherches, depuis le serveur d'Oltre (OpenFoodFacts ne voit ni ton adresse IP ni ton identité).</td></tr>
+      <tr><td>Oracle Cloud</td><td>Hébergement (Union européenne, région Paris)</td><td>Toutes les données de l'application</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="conservation">5. Durées de conservation</h2>
+  <ul>
+    <li>Tes données sont conservées tant que ton compte existe.</li>
+    <li>« Supprimer mon compte » (dans Réglages) les efface immédiatement, ainsi que ta connexion Garmin.</li>
+    <li>Ta session de connexion expire au bout de 24 heures.</li>
+    <li>Une sauvegarde de la base est faite chaque nuit. Une copie reste 14 jours sur le serveur d'hébergement ; une copie chiffrée est gardée 90 jours sur un stockage Oracle Cloud séparé. Passé ces délais, elles sont effacées : une donnée supprimée disparaît donc de toutes les sauvegardes au bout de 90 jours au plus.</li>
+  </ul>
+
+  <h2 id="droits">6. Tes droits</h2>
+  <ul>
+    <li>Accès et portabilité : « Télécharger mes données » dans Réglages te donne un fichier JSON.</li>
+    <li>Rectification : tu modifies ton profil et tes données dans l'application.</li>
+    <li>Suppression : « Supprimer mon compte » dans Réglages.</li>
+    <li>Pour tout autre droit ou question : <a href="mailto:enzo.lvq12@gmail.com">enzo.lvq12@gmail.com</a>.</li>
+    <li>Réclamation : tu peux saisir la CNIL, <a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>.</li>
+  </ul>
+
+  <h2 id="cookies">7. Cookies et traceurs</h2>
+  <p>Oltre n'utilise ni cookie tiers ni traceur. Seul un jeton de connexion est stocké localement dans ton navigateur pour te garder connecté ; il est supprimé quand tu te déconnectes.</p>
+
+  <p>Voir aussi les <a routerLink="/cgu">conditions générales d'utilisation</a>.</p>
+</main>

@@ -21,9 +21,9 @@ export class App {
   // le thème sauvegardé ne s'applique qu'à la première visite de /settings.
   private themeService = inject(ThemeService);
 
-  private static readonly AUTH_ROUTES = ['/login', '/register'];
+  private static readonly AUTH_ROUTES = ['/login', '/register', '/cgu', '/confidentialite'];
 
-  // Vrai quand on est sur une page d'authentification (login/register),
+  // Vrai quand on est sur une page d'authentification (login/register/pages légales),
   // qui s'affiche en pleine page sans sidebar ni banner.
   isAuthPage = toSignal(
     this.router.events.pipe(

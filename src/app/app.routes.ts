@@ -5,6 +5,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/today/today').then(m => m.TodayComponent), canActivate: [authGuard], pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./features/register/register').then(m => m.RegisterComponent) },
+  { path: 'cgu', loadComponent: () => import('./features/legal/cgu').then(m => m.CguComponent) },
+  { path: 'confidentialite', loadComponent: () => import('./features/legal/confidentialite').then(m => m.ConfidentialiteComponent) },
   { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent), canActivate: [authGuard] },
   { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsComponent), canActivate: [authGuard] },
   { path: 'expenses', loadComponent: () => import('./features/expenses/expenses').then(m => m.ExpensesComponent), canActivate: [authGuard] },

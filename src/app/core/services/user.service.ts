@@ -37,6 +37,10 @@ export class UserService {
     return this.http.put<void>(`${this.API}/password`, request);
   }
 
+  exportData() {
+    return this.http.get(`${this.API}/export`, { responseType: 'blob' });
+  }
+
   deleteAccount() {
     return this.http.delete<void>(this.API);
   }
