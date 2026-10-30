@@ -56,6 +56,9 @@ export class SettingsComponent implements OnInit {
     return w ? `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(w)}` : null;
   });
 
+  exporting = signal(false);
+  exportError = signal<string | null>(null);
+
   deleteConfirming = signal(false);
   deleteConfirmText = signal('');
   deleting = signal(false);
@@ -190,6 +193,26 @@ export class SettingsComponent implements OnInit {
       () => this.feedCopied.set(true),
       () => this.feedError.set('Copie impossible : sélectionne le lien et copie-le à la main.')
     );
+  }
+
+  exportData(): void {
+    this.exporting.set(true);
+    this.exportError.set(null);
+    this.userService.exportData().subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'oltre-export.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.exporting.set(false);
+      },
+      error: () => {
+        this.exporting.set(false);
+        this.exportError.set('Impossible de télécharger tes données. Réessaie plus tard.');
+      }
+    });
   }
 
   startDeleteConfirm(): void {
