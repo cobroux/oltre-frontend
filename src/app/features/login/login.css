@@ -7,11 +7,11 @@
   padding: 1rem;
 }
 
+.logo-icon img { width: 100%; height: 100%; }
+
 .logo-icon {
   width: 52px;
   height: 52px;
-  background: var(--color-accent-subtle);
-  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;

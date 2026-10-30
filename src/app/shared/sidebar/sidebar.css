@@ -36,7 +36,7 @@
   flex-shrink: 0;
 }
 
-.logo-icon i { font-size: 18px; color: #fff; }
+.logo-icon img { width: 24px; height: 24px; }
 
 .logo-text {
   font-size: 17px;
