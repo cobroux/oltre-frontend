@@ -10,11 +10,12 @@ import { AppointmentService } from '../../core/services/appointment.service';
 import { getApiUrl } from '../../core/config/runtime-config';
 import { ThemeService, ThemeMode } from '../../core/services/theme.service';
 import { DatePickerComponent } from '../../shared/date-picker/date-picker';
+import { PushCardComponent } from './push-card';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, DatePickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, DatePickerComponent, PushCardComponent],
   templateUrl: './settings.html',
   styleUrl: './settings.css'
 })

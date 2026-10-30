@@ -1,0 +1,92 @@
+<div class="content-card">
+  <div class="section-title"><i class="ti ti-bell"></i> Notifications</div>
+
+  <div aria-live="polite">
+    @switch (status()) {
+      @case ('unavailable') {
+        <p class="feed-help">Notifications indisponibles sur ce navigateur</p>
+      }
+      @case ('ios') {
+        <p class="feed-help">
+          Sur iPhone, ajoute d'abord Oltre à l'écran d'accueil (Partager → Sur l'écran d'accueil), puis ouvre-le
+          depuis l'icône. Nécessite iOS 16.4 ou plus.
+        </p>
+      }
+      @case ('denied') {
+        <p class="feed-help">
+          Les notifications sont bloquées pour Oltre. Réautorise-les dans les réglages de ton navigateur
+          (icône cadenas à côté de l'adresse → Notifications → Autoriser), puis recharge la page.
+        </p>
+      }
+    }
+    @if (serverOff()) {
+      <p class="feed-help">Notifications pas encore activées sur le serveur</p>
+    }
+    @if (message()) { <div class="form-success">{{ message() }}</div> }
+    @if (error()) { <div class="form-error" role="alert">{{ error() }}</div> }
+  </div>
+
+  @if (status() === 'ready') {
+    <div class="feed-row">
+      @if (subscribed()) {
+        <button type="button" class="danger-btn-outline" [disabled]="busy()" (click)="disable()">
+          Désactiver sur cet appareil
+        </button>
+        <button type="button" class="link-btn as-button" [disabled]="busy()" (click)="test()">
+          Envoyer une notification de test
+        </button>
+      } @else {
+        <button type="button" class="save-btn" [disabled]="busy() || serverOff()" (click)="enable()">
+          @if (busy()) { <i class="ti ti-loader-2 spin"></i> } Activer sur cet appareil
+        </button>
+      }
+    </div>
+
+    <form class="settings-form" (submit)="$event.preventDefault(); savePrefs()">
+      <div class="field-group">
+        <label class="push-check">
+          <input type="checkbox" [checked]="prefs().apptEnabled"
+                 (change)="patch({ apptEnabled: $any($event.target).checked })">
+          Rappel des rendez-vous
+        </label>
+        <label class="field-label" for="push-minutes">Prévenir</label>
+        <select id="push-minutes" class="field-input" [disabled]="!prefs().apptEnabled"
+                (change)="patch({ apptMinutesBefore: +$any($event.target).value })">
+          @for (m of minutesOptions; track m.v) {
+            <option [value]="m.v" [selected]="m.v === prefs().apptMinutesBefore">{{ m.l }} avant</option>
+          }
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="push-check">
+          <input type="checkbox" [checked]="prefs().tasksEnabled"
+                 (change)="patch({ tasksEnabled: $any($event.target).checked })">
+          Tâches du jour
+        </label>
+        <label class="field-label" for="push-time">Heure d'envoi</label>
+        <input id="push-time" type="time" class="field-input" [value]="prefs().tasksTime"
+               [disabled]="!prefs().tasksEnabled" (change)="patch({ tasksTime: $any($event.target).value })">
+      </div>
+
+      <div class="field-group">
+        <label class="push-check">
+          <input type="checkbox" [checked]="prefs().coachEnabled"
+                 (change)="patch({ coachEnabled: $any($event.target).checked })">
+          Séance du plan Coach
+        </label>
+        <p class="feed-help">Envoyée à la même heure que les tâches du jour.</p>
+      </div>
+
+      <p class="feed-help">{{ subscriptionCount() }} appareil(s) abonné(s)</p>
+
+      <div aria-live="polite">
+        @if (prefsMessage()) { <div class="form-success">{{ prefsMessage() }}</div> }
+        @if (prefsError()) { <div class="form-error" role="alert">{{ prefsError() }}</div> }
+      </div>
+      <button type="submit" class="save-btn" [disabled]="prefsSaving()">
+        @if (prefsSaving()) { <i class="ti ti-loader-2 spin"></i> Enregistrement... } @else { Enregistrer }
+      </button>
+    </form>
+  }
+</div>
