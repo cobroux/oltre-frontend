@@ -1,10 +1,11 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
 import { BannerComponent } from './shared/banner/banner';
 import { SidebarComponent } from './shared/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
@@ -31,4 +32,27 @@ export class App {
     ),
     { initialValue: App.AUTH_ROUTES.includes(this.router.url) }
   );
+
+  // Sans ça, le service worker garde l'ancienne version tant que tous les
+  // onglets ne sont pas fermés. On recharge à la navigation suivante (pas tout
+  // de suite) pour ne jamais perdre un formulaire en cours de saisie.
+  private updateReady = false;
+
+  constructor() {
+    const swUpdate = inject(SwUpdate, { optional: true });
+    if (swUpdate?.isEnabled) {
+      swUpdate.versionUpdates.pipe(
+        filter(e => e.type === 'VERSION_READY'),
+        takeUntilDestroyed()
+      ).subscribe(() => this.updateReady = true);
+    }
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd && this.updateReady),
+      takeUntilDestroyed()
+    ).subscribe(() => this.reload());
+  }
+
+  protected reload(): void {
+    document.location.reload();
+  }
 }
