@@ -2,6 +2,7 @@ import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { BannerComponent } from './shared/banner/banner';
+import { OnboardingComponent } from './shared/onboarding/onboarding';
 import { SidebarComponent } from './shared/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
@@ -10,7 +11,7 @@ import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [BannerComponent, RouterOutlet, SidebarComponent, CommonModule],
+  imports: [BannerComponent, RouterOutlet, SidebarComponent, OnboardingComponent, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

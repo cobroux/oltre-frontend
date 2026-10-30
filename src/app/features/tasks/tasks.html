@@ -30,7 +30,7 @@
 <div class="content-card">
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
-    <input type="text" placeholder="Titre de la tâche..." formControlName="tasksName" />
+    <input #nameInput type="text" placeholder="Titre de la tâche..." formControlName="tasksName" />
     <select formControlName="tasksPriority">
       <option [ngValue]="null" disabled>Priorité</option>
       <option value="LOW">Basse</option>
@@ -117,7 +117,8 @@
     } @empty {
       <div class="empty-state">
         <i class="ti ti-mood-happy"></i>
-        <span>Aucune tâche ici !</span>
+        <span>Aucune tâche ici ! Ajoute ta première tâche.</span>
+        <button type="button" class="add-btn" (click)="nameInput.focus()"><i class="ti ti-plus"></i> Ajouter une tâche</button>
       </div>
     }
   </ul>

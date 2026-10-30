@@ -33,6 +33,10 @@ export class UserService {
     );
   }
 
+  completeOnboarding() {
+    return this.http.post<void>(`${this.API}/onboarding`, null);
+  }
+
   changePassword(request: ChangePasswordRequest) {
     return this.http.put<void>(`${this.API}/password`, request);
   }

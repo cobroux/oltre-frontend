@@ -21,14 +21,22 @@ export class RegisterComponent {
   errorMsg  = signal<string | null>(null);
   showPassword = signal(false);
 
+  closed = signal(false);
+
   registerForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     email:    new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required]),
     age: new FormControl<number | null>(null),
-    birthDate: new FormControl('')
+    birthDate: new FormControl(''),
+    acceptTerms: new FormControl(false, [Validators.requiredTrue])
   });
+
+  constructor() {
+    // Erreur réseau : on laisse le formulaire, le serveur tranchera au submit.
+    this.authService.registrationEnabled().subscribe({ next: r => this.closed.set(!r.enabled), error: () => {} });
+  }
 
   onSubmit() {
     if (this.registerForm.invalid) return;
@@ -45,11 +53,12 @@ export class RegisterComponent {
     this.authService.register(username!, email!, password!, age ?? null, birthDate || null).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/calendar']);
+        this.router.navigate(['/']);
       },
       error: err => {
         this.isLoading.set(false);
-        this.errorMsg.set(err.error?.message ?? 'Inscription impossible.');
+        if (err.status === 403) this.closed.set(true);
+        else this.errorMsg.set(err.error?.message ?? 'Inscription impossible.');
       }
     });
   }

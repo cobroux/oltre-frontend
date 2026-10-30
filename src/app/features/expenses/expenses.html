@@ -112,7 +112,7 @@
 
   <!-- Formulaire -->
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="add-item-box">
-    <input type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />
+    <input #nameInput type="text" placeholder="Ex: Loyer, Netflix..." formControlName="expensesName" />
     <input type="number" step="0.01" min="0" inputmode="decimal" placeholder="Prix (€)" formControlName="amount" />
     <select formControlName="recType">
       <option [ngValue]="null" disabled>Récurrence</option>
@@ -188,7 +188,8 @@
     } @empty {
       <p class="empty-state">
         <i class="ti ti-mood-empty"></i>
-        Aucune dépense enregistrée.
+        Ajoute ta première dépense
+        <button type="button" class="add-btn" (click)="nameInput.focus()"><i class="ti ti-plus"></i> Ajouter une dépense</button>
       </p>
     }
   </ul>
