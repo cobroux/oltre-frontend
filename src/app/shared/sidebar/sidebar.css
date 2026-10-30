@@ -99,6 +99,7 @@
 /* La sidebar reste sombre dans les deux thèmes : pastilles translucides
    teintées plutôt que des pastels clairs qui « allument » la colonne. */
 .nav-icon { --c: #a8abcf; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+.icon-today    { --c: #fbbf24; }
 .icon-calendar { --c: #a39cf5; }
 .icon-tasks    { --c: #8b9cf7; }
 .icon-habits   { --c: #2dd4bf; }

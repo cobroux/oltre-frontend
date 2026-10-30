@@ -1,0 +1,90 @@
+<h2 class="page-title">Aujourd'hui <span class="date">{{ today | date:'EEEE d MMMM' }}</span></h2>
+
+@if (actionError()) {
+  <div class="error-banner" role="alert">Action impossible, réessaie.</div>
+}
+
+<div class="today-grid">
+
+  <section class="card today-card c-tasks" aria-labelledby="t-appts">
+    <h3 class="section-title" id="t-appts"><i class="ti ti-calendar-event"></i> Rendez-vous</h3>
+    @if (apptState().loading) { <div class="skeleton sk" aria-busy="true"></div> }
+    @else if (apptState().error) { <p class="muted" role="alert">Impossible de charger les rendez-vous.</p> }
+    @else if (appts().length === 0) { <p class="muted">Aucun rendez-vous aujourd'hui.</p> }
+    @else {
+      <ul class="rows">
+        @for (a of appts(); track a.id) {
+          <li><span class="time">{{ a.apptTime?.slice(0, 5) ?? 'Journée' }}</span>
+            <span class="grow">{{ a.title }}@if (a.location) { <small class="muted"> · {{ a.location }}</small> }</span></li>
+        }
+      </ul>
+    }
+    <a class="more" routerLink="/appointments">Tous les rendez-vous <i class="ti ti-arrow-right"></i></a>
+  </section>
+
+  <section class="card today-card c-tasks" aria-labelledby="t-tasks">
+    <h3 class="section-title" id="t-tasks"><i class="ti ti-checkbox"></i> Tâches</h3>
+    @if (tasksState().loading) { <div class="skeleton sk" aria-busy="true"></div> }
+    @else if (tasksState().error) { <p class="muted" role="alert">Impossible de charger les tâches.</p> }
+    @else if (tasks().length === 0) { <p class="muted">Rien de prévu aujourd'hui.</p> }
+    @else {
+      <ul class="rows">
+        @for (t of tasks(); track t.id) {
+          <li>
+            <label class="check">
+              <input type="checkbox" [checked]="t.tasksStatus === 'DONE'" (change)="toggleTask(t.id, t.tasksStatus)" />
+              <span class="grow" [class.done]="t.tasksStatus === 'DONE'">{{ t.tasksName }}</span>
+            </label>
+            @if (t.tasksDate < todayStr) { <span class="late">En retard</span> }
+          </li>
+        }
+      </ul>
+    }
+    <a class="more" routerLink="/tasks">Toutes les tâches <i class="ti ti-arrow-right"></i></a>
+  </section>
+
+  <section class="card today-card c-sport" aria-labelledby="t-plan">
+    <h3 class="section-title" id="t-plan"><i class="ti ti-run"></i> Séance du jour</h3>
+    @if (planState().loading) { <div class="skeleton sk" aria-busy="true"></div> }
+    @else if (planState().error) { <p class="muted" role="alert">Impossible de charger le plan.</p> }
+    @else if (!planDay()) { <p class="muted">Aucun plan Coach pour cette semaine.</p> }
+    @else if (planDay()!.type === 'Rest') { <p class="muted">Jour de repos.</p> }
+    @else {
+      <label class="check">
+        <input type="checkbox" [checked]="planDay()!.done" (change)="togglePlanDay()" />
+        <span class="grow" [class.done]="planDay()!.done">{{ planDay()!.label }}
+          @if (planDay()!.distanceKm) { <small class="muted"> · {{ planDay()!.distanceKm }} km</small> }</span>
+      </label>
+    }
+    <a class="more" routerLink="/sport/coach">Plan Coach <i class="ti ti-arrow-right"></i></a>
+  </section>
+
+  <section class="card today-card c-food" aria-labelledby="t-meals">
+    <h3 class="section-title" id="t-meals"><i class="ti ti-salad"></i> Repas</h3>
+    @if (mealsState().loading) { <div class="skeleton sk" aria-busy="true"></div> }
+    @else if (mealsState().error) { <p class="muted" role="alert">Impossible de charger les repas.</p> }
+    @else if (meals().length === 0) { <p class="muted">Aucun repas enregistré aujourd'hui.</p> }
+    @else {
+      <ul class="rows">
+        @for (m of meals(); track m.id) {
+          <li><span class="grow">{{ m.mealName }}</span>@if (m.calories) { <small class="muted">{{ m.calories }} kcal</small> }</li>
+        }
+      </ul>
+    }
+    <a class="more" routerLink="/food">{{ meals().length ? 'Alimentation' : 'Ajouter un repas' }} <i class="ti ti-arrow-right"></i></a>
+  </section>
+
+  <section class="card today-card c-budget" aria-labelledby="t-exp">
+    <h3 class="section-title" id="t-exp"><i class="ti ti-wallet"></i> Dépenses du mois</h3>
+    @if (expensesState().loading) { <div class="skeleton sk" aria-busy="true"></div> }
+    @else if (expensesState().error) { <p class="muted" role="alert">Impossible de charger les dépenses.</p> }
+    @else {
+      <p class="amount">{{ monthAmount() | currency:'EUR':'symbol':'1.0-0' }}</p>
+      @if (prevMonthAmount() !== null) {
+        <p class="muted">Mois précédent : {{ prevMonthAmount() | currency:'EUR':'symbol':'1.0-0' }}</p>
+      }
+    }
+    <a class="more" routerLink="/expenses">Dépenses <i class="ti ti-arrow-right"></i></a>
+  </section>
+
+</div>
