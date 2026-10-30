@@ -12,7 +12,7 @@ describe('Sport', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SportComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SportComponent);
@@ -24,36 +24,46 @@ describe('Sport', () => {
     expect(component).toBeTruthy();
   });
 
+  it('affiche la distance cumulée des splits', () => {
+    const splits = [{ distance: 1000 }, { distance: 1000 }, { distance: 600 }];
+    expect(component.formatDistance(component.cumulativeDistance(splits, 2))).toBe('2.6 km');
+  });
+
   describe('requêtes', () => {
     let http: HttpTestingController;
     beforeEach(() => (http = TestBed.inject(HttpTestingController)));
 
-    const act = (id: string) => ({ id, name: id, sportType: 'running', startLocal: '2026-10-12T07:00:00' }) as never;
+    const act = (id: string) =>
+      ({ id, name: id, sportType: 'running', startLocal: '2026-10-12T07:00:00' }) as never;
 
     it('annule le détail de A quand on ouvre B', () => {
       component.openActivity(act('A'));
-      const reqA = http.expectOne(r => r.url.endsWith('/activities/A/details'));
+      const reqA = http.expectOne((r) => r.url.endsWith('/activities/A/details'));
       component.openActivity(act('B'));
 
       expect(reqA.cancelled).toBe(true);
-      http.expectOne(r => r.url.endsWith('/activities/B/details'));
+      http.expectOne((r) => r.url.endsWith('/activities/B/details'));
     });
 
     it('affiche une erreur si la semaine dernière échoue et réessaie au clic suivant', () => {
       component.selectWeek('last');
-      http.expectOne(r => r.url.includes('/activities')).flush(null, { status: 500, statusText: 'KO' });
+      http
+        .expectOne((r) => r.url.includes('/activities'))
+        .flush(null, { status: 500, statusText: 'KO' });
       expect(component.lastWeekError()).toBe('Impossible de charger la semaine dernière.');
 
       component.selectWeek('current');
       component.selectWeek('last');
       expect(component.lastWeekError()).toBeNull();
-      http.expectOne(r => r.url.includes('/activities')).flush([]);
+      http.expectOne((r) => r.url.includes('/activities')).flush([]);
       expect(component.lastWeekError()).toBeNull();
     });
 
     it('affiche une erreur si la semaine en cours échoue', () => {
-      http.expectOne(r => r.url.endsWith('/status')).flush({ connected: true });
-      http.expectOne(r => r.url.includes('/activities')).flush(null, { status: 500, statusText: 'KO' });
+      http.expectOne((r) => r.url.endsWith('/status')).flush({ connected: true });
+      http
+        .expectOne((r) => r.url.includes('/activities'))
+        .flush(null, { status: 500, statusText: 'KO' });
       expect(component.loadError()).toBe('Impossible de charger les activités.');
     });
   });

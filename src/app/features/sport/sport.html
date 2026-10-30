@@ -257,7 +257,7 @@
             <tbody>
               @for (split of detail.splits; track $index) {
                 <tr>
-                  <td>{{ formatDistance(split.distance) }}</td>
+                  <td>{{ formatDistance(cumulativeDistance(detail.splits, $index)) }}</td>
                   <td>{{ formatDuration(split.duration) }}</td>
                   <td>{{ formatPace(split.averageSpeed) }}</td>
                   <td>{{ split.elevationGain ? (split.elevationGain + 'm') : '—' }}</td>
