@@ -22,16 +22,18 @@ export class App {
   // le thème sauvegardé ne s'applique qu'à la première visite de /settings.
   private themeService = inject(ThemeService);
 
-  private static readonly AUTH_ROUTES = ['/login', '/register', '/cgu', '/confidentialite'];
+  private static readonly AUTH_ROUTES = ['/login', '/register', '/cgu', '/confidentialite', '/forgot-password', '/reset-password'];
 
   // Vrai quand on est sur une page d'authentification (login/register/pages légales),
   // qui s'affiche en pleine page sans sidebar ni banner.
+  private static isAuthUrl = (url: string) => App.AUTH_ROUTES.includes(url.split(/[?#]/)[0]);
+
   isAuthPage = toSignal(
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map(e => App.AUTH_ROUTES.includes((e as NavigationEnd).url))
+      map(e => App.isAuthUrl((e as NavigationEnd).url))
     ),
-    { initialValue: App.AUTH_ROUTES.includes(this.router.url) }
+    { initialValue: App.isAuthUrl(this.router.url) }
   );
 
   // Sans ça, le service worker garde l'ancienne version tant que tous les

@@ -27,6 +27,24 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
+  it('traite /reset-password?token=x comme une page d\'auth (sans sidebar)', async () => {
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [
+        provideRouter([{ path: 'reset-password', children: [] }, { path: 'a', children: [] }]),
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
+    }).compileComponents();
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/reset-password?token=x');
+    expect(fixture.componentInstance.isAuthPage()).toBe(true);
+    await router.navigateByUrl('/a?x=1');
+    expect(fixture.componentInstance.isAuthPage()).toBe(false);
+  });
+
   it('recharge à la navigation suivante quand une nouvelle version est prête', async () => {
     const fixture = TestBed.createComponent(App);
     const reload = vi.spyOn(fixture.componentInstance as never as { reload: () => void }, 'reload').mockImplementation(() => {});
