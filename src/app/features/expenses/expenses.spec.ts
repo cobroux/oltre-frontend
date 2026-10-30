@@ -121,4 +121,14 @@ describe('ExpensesComponent', () => {
     expect(component.getIcon('Daily')).toBe('ti-sun');
     expect(component.getIcon('Unknown')).toBe('ti-wallet');
   });
+
+  it('liste vide : état vide avec bouton qui focus le formulaire', () => {
+    mockService.expensesListSignal.set([]);
+    fixture.detectChanges();
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain('Ajoute ta première dépense');
+    el.querySelector<HTMLButtonElement>('.empty-state button')!.click();
+    expect(document.activeElement).toBe(el.querySelector('input[formControlName="expensesName"]'));
+    mockService.expensesListSignal.set(mockExpenses);
+  });
 });

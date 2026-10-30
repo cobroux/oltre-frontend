@@ -1,0 +1,54 @@
+@if (open()) {
+  <div class="ob-backdrop">
+    <div #dialog class="ob-dialog" role="dialog" aria-modal="true" aria-labelledby="ob-title" (keydown)="onKeydown($event)">
+
+      <p class="ob-step" aria-live="polite">Étape {{ step() }} sur {{ total }}</p>
+
+      @switch (step()) {
+        @case (1) {
+          <h2 id="ob-title" tabindex="-1">Bienvenue sur Oltre</h2>
+          <p>Tout ton quotidien au même endroit&nbsp;:</p>
+          <ul class="ob-modules">
+            @for (m of modules; track m.name) {
+              <li>
+                <span class="ob-icon" [class]="m.cls"><i class="ti" [class]="m.icon"></i></span>
+                <span><strong>{{ m.name }}</strong><br />{{ m.desc }}</span>
+              </li>
+            }
+          </ul>
+        }
+        @case (2) {
+          <h2 id="ob-title" tabindex="-1">Ton profil</h2>
+          <p>Ces infos aident le Coach à adapter ses conseils (facultatif).</p>
+          <form [formGroup]="profile" class="ob-form">
+            <label>Âge
+              <input type="number" formControlName="age" min="0" max="130" />
+            </label>
+            <label>Date de naissance
+              <app-date-picker formControlName="birthDate" placeholder="Date de naissance"></app-date-picker>
+            </label>
+          </form>
+          @if (profileError()) { <p class="ob-error" role="alert">Profil non enregistré, tu pourras le modifier dans Profil.</p> }
+          <a routerLink="/sport/coach" class="ob-link" (click)="finish()">Définir un objectif sportif</a>
+        }
+        @case (3) {
+          <h2 id="ob-title" tabindex="-1">Connecte Garmin</h2>
+          <p>Optionnel&nbsp;: connecte ton compte Garmin Connect pour retrouver tes activités dans Oltre.</p>
+          <a routerLink="/sport" class="ob-link" (click)="finish()"><i class="ti ti-run"></i> Connecter Garmin</a>
+        }
+        @case (4) {
+          <h2 id="ob-title" tabindex="-1">Notifications</h2>
+          <p>Reçois des rappels pour tes rendez-vous et tes tâches.</p>
+          <app-push-card />
+        }
+      }
+
+      <div class="ob-actions">
+        <button type="button" class="ob-skip" (click)="finish()">Passer</button>
+        <span class="ob-spacer"></span>
+        @if (step() > 1) { <button type="button" class="ob-btn" (click)="prev()">Précédent</button> }
+        <button type="button" class="ob-btn primary" (click)="next()">{{ step() === total ? 'Terminer' : 'Suivant' }}</button>
+      </div>
+    </div>
+  </div>
+}

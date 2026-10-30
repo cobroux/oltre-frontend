@@ -2,6 +2,7 @@ export interface UserDTO {
   username: string;
   birthDate: string | null;
   age: number | null;
+  onboardingDone: boolean;
 }
 
 export interface UpdateProfileRequest {

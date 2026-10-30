@@ -81,3 +81,5 @@
   justify-content: center;
   background: var(--color-bg);
 }
+.terms { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--color-text-secondary); }
+.terms input { margin-top: 3px; accent-color: var(--color-accent); }
