@@ -75,3 +75,9 @@
   justify-content: center;
   background: var(--color-bg);
 }
+.error-banner.neutral-banner {
+  background: var(--color-accent-subtle);
+  color: var(--color-text-primary);
+}
+
+.field-group > .login-link { display: inline-block; margin-top: 6px; font-size: 13px; }

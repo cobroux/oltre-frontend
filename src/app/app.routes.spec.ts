@@ -17,7 +17,7 @@ describe('routes', () => {
   });
 
   it('/cgu et /confidentialite sont publiques (sans authGuard)', () => {
-    for (const p of ['cgu', 'confidentialite']) {
+    for (const p of ['cgu', 'confidentialite', 'forgot-password', 'reset-password']) {
       expect(find(p)?.loadComponent).toBeDefined();
       expect(find(p)?.canActivate).toBeUndefined();
     }

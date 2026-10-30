@@ -58,6 +58,14 @@ export class AuthService {
     );
   }
 
+  forgotPassword(email: string) {
+    return this.http.post<void>(`${this.API}/password/forgot`, { email });
+  }
+
+  resetPassword(token: string, password: string) {
+    return this.http.post<void>(`${this.API}/password/reset`, { token, password });
+  }
+
   logout() {
     this.clearSession();
     this.router.navigate(['/login']);

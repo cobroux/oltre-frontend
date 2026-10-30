@@ -55,6 +55,7 @@
         @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
           <span class="field-error">Mot de passe requis</span>
         }
+        <a routerLink="/forgot-password" class="login-link">Mot de passe oublié ?</a>
       </div>
 
       <button class="login-btn" type="submit" [disabled]="loginForm.invalid || isLoading()">

@@ -5,6 +5,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/today/today').then(m => m.TodayComponent), canActivate: [authGuard], pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./features/register/register').then(m => m.RegisterComponent) },
+  { path: 'forgot-password', loadComponent: () => import('./features/forgot-password/forgot-password').then(m => m.ForgotPasswordComponent) },
+  { path: 'reset-password', loadComponent: () => import('./features/reset-password/reset-password').then(m => m.ResetPasswordComponent) },
   { path: 'cgu', loadComponent: () => import('./features/legal/cgu').then(m => m.CguComponent) },
   { path: 'confidentialite', loadComponent: () => import('./features/legal/confidentialite').then(m => m.ConfidentialiteComponent) },
   { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent), canActivate: [authGuard] },
