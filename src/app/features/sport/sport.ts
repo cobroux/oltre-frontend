@@ -183,6 +183,11 @@ export class SportComponent implements OnInit, OnDestroy {
   }
 
   // ── Helpers affichage ────────────────────────────────
+  // Distance parcourue à la fin du split : chaque split Garmin fait ~1 km.
+  cumulativeDistance(splits: { distance: number }[], index: number): number {
+    return splits.slice(0, index + 1).reduce((sum, s) => sum + (s.distance ?? 0), 0);
+  }
+
   formatDistance(meters: number): string {
     if (!meters) return '—';
     return meters >= 1000
