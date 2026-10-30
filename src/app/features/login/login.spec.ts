@@ -33,6 +33,6 @@ describe('Login', () => {
 
     component.onSubmit();
 
-    expect(navigate).toHaveBeenCalledWith(['/expenses']);
+    expect(navigate).toHaveBeenCalledWith(['/']);
   });
 });

@@ -1,0 +1,24 @@
+.page-title { font-size: var(--font-size-2xl); font-weight: 700; color: var(--color-text-primary); margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.date { font-size: 14px; font-weight: 400; color: var(--color-text-muted); text-transform: capitalize; }
+.today-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
+.today-card { display: flex; flex-direction: column; gap: 4px; border-top: 3px solid var(--c); }
+.c-tasks { --c: var(--color-tasks); } .c-food { --c: var(--color-food); }
+.c-sport { --c: var(--color-sport); } .c-budget { --c: var(--color-budget); }
+.section-title i { color: var(--c); }
+.rows { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rows li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-text-primary); }
+.grow { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.time { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 3.2rem; color: var(--c); }
+.muted { color: var(--color-text-muted); font-size: 13px; margin: 0 0 8px; }
+small.muted { margin: 0; }
+.check { display: flex; align-items: center; gap: 10px; flex: 1; min-height: 44px; cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--c); flex-shrink: 0; }
+.done { text-decoration: line-through; color: var(--color-text-muted); }
+.late { font-size: 12px; color: var(--color-danger); font-weight: 600; }
+.amount { font-size: 28px; font-weight: 700; color: var(--color-text-primary); margin: 0 0 4px; }
+.sk { height: 56px; margin-bottom: 8px; }
+.more { margin-top: auto; padding-top: 8px; font-size: 13px; font-weight: 500; color: var(--c); text-decoration: none; }
+.more:hover { text-decoration: underline; }
+:is(.more, .check input):focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 4px; }
+.error-banner { background: var(--tint-red-bg); color: var(--tint-red-strong); border: 1px solid var(--tint-red-border); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 12px; font-size: 14px; }

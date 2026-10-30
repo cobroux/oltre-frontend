@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
+  { path: '', loadComponent: () => import('./features/today/today').then(m => m.TodayComponent), canActivate: [authGuard], pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./features/register/register').then(m => m.RegisterComponent) },
   { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfileComponent), canActivate: [authGuard] },
@@ -14,6 +15,5 @@ export const routes: Routes = [
   { path: 'sport/coach', loadComponent: () => import('./features/coach/coach').then(m => m.CoachComponent), canActivate: [authGuard] },
   { path: 'appointments', loadComponent: () => import('./features/appointment/appointment').then(m => m.AppointmentComponent), canActivate: [authGuard] },
   { path: 'habits', redirectTo: 'appointments' },
-  { path: '', redirectTo: 'expenses', pathMatch: 'full' },
-  { path: '**', redirectTo: 'expenses' }
+  { path: '**', redirectTo: '' }
 ];

@@ -4,7 +4,7 @@ describe('routes', () => {
   const find = (path: string) => routes.find(r => r.path === path);
 
   it('redirige une URL inconnue vers la page d\'accueil', () => {
-    expect(find('**')?.redirectTo).toBe('expenses');
+    expect(find('**')?.redirectTo).toBe('');
   });
 
   it('sert les rendez-vous sur /appointments et garde /habits en redirection', () => {
@@ -12,7 +12,7 @@ describe('routes', () => {
     expect(find('habits')?.redirectTo).toBe('appointments');
   });
 
-  it('la route par défaut est expenses', () => {
-    expect(find('')?.redirectTo).toBe('expenses');
+  it('la route par défaut est l\'écran Aujourd\'hui', () => {
+    expect(find('')?.loadComponent).toBeDefined();
   });
 });

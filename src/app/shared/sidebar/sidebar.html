@@ -16,6 +16,9 @@
 
   <nav class="nav-group">
     <p class="nav-label">Menu</p>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item" (click)="close()">
+      <span class="nav-icon icon-today"><i class="ti ti-sun"></i></span> Aujourd'hui
+    </a>
     <a routerLink="/calendar" routerLinkActive="active" class="nav-item" (click)="close()">
       <span class="nav-icon icon-calendar"><i class="ti ti-calendar-week"></i></span> Calendrier
     </a>
